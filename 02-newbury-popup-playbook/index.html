@@ -1940,8 +1940,19 @@ function setScenario(key, btn) {
 }
 
 // ── Leaflet map ──────────────────────────────────────────────────────────
-const map = L.map('map', { zoomControl: true, scrollWheelZoom: false })
-  .setView([42.3498, -71.0800], 15);
+const map = L.map('map', { zoomControl: true, scrollWheelZoom: false });
+
+function refitMap() {
+  var allLayers = L.featureGroup();
+  map.eachLayer(function(layer) {
+    if (layer instanceof L.Marker || layer instanceof L.Circle || layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
+      allLayers.addLayer(layer);
+    }
+  });
+  if (allLayers.getLayers().length > 0) {
+    map.fitBounds(allLayers.getBounds().pad(0.1), { maxZoom: 18 });
+  }
+}
 
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -1997,9 +2008,11 @@ function fetchRoute(waypoints, opts, targetMap) {
         var path = data.routes[0].geometry.coordinates.map(function(c) { return [c[1], c[0]]; });
         L.polyline(path, opts).addTo(targetMap);
       }
+      refitMap();
     })
     .catch(function() {
       L.polyline(waypoints, opts).addTo(targetMap);
+      refitMap();
     });
 }
 
@@ -2029,6 +2042,9 @@ tStops.forEach(t => {
     })
   }).addTo(map).bindPopup(`<strong>${t.name}</strong>`);
 });
+
+// Fit map to all sync elements; will refit again after OSRM route loads
+refitMap();
 </script>
 <script>
 // ===================== HAMBURGER MENU =====================

@@ -1346,7 +1346,7 @@
     { name:'Ball Square (Green Line)', lat:42.4004, lon:-71.1118, line:'GL' }
   ];
 
-  var map = L.map('map', { zoomControl: true }).setView([42.393, -71.103], 13);
+  var map = L.map('map', { zoomControl: true, scrollWheelZoom: false });
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -1377,6 +1377,17 @@
     var tIcon = L.divIcon({ html: tHtml, iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-14], className:'' });
     L.marker([t.lat, t.lon], { icon: tIcon }).addTo(map).bindPopup('<div style="font-family:Inter,sans-serif;font-size:0.82rem;font-weight:600;">' + t.name + '</div>');
   });
+
+  // Fit map to all data elements
+  var allLayers = L.featureGroup();
+  map.eachLayer(function(layer) {
+    if (layer instanceof L.Marker || layer instanceof L.Circle || layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
+      allLayers.addLayer(layer);
+    }
+  });
+  if (allLayers.getLayers().length > 0) {
+    map.fitBounds(allLayers.getBounds().pad(0.1), { maxZoom: 18 });
+  }
 </script>
 <script>
 // ===================== HAMBURGER MENU =====================

@@ -1658,8 +1658,8 @@ setTimeout(() => toggleCard('card-mcgrath'), 700);
 
 // ── LEAFLET MAP ──
 const map = L.map('evacuation-map', {
-  center: [42.374, -71.095],
-  zoom: 13
+  zoomControl: true,
+  scrollWheelZoom: false
 });
 
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -1667,6 +1667,18 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   subdomains: 'abcd',
   maxZoom: 20
 }).addTo(map);
+
+function refitMap() {
+  var allLayers = L.featureGroup();
+  map.eachLayer(function(layer) {
+    if (layer instanceof L.Marker || layer instanceof L.Circle || layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
+      allLayers.addLayer(layer);
+    }
+  });
+  if (allLayers.getLayers().length > 0) {
+    map.fitBounds(allLayers.getBounds().pad(0.1), { maxZoom: 18 });
+  }
+}
 
 // Custom marker factory
 function makeMarker(color, border, glowColor) {
@@ -1705,9 +1717,11 @@ function fetchRoute(waypoints, opts, targetMap) {
         var path = data.routes[0].geometry.coordinates.map(function(c) { return [c[1], c[0]]; });
         L.polyline(path, opts).addTo(targetMap);
       }
+      refitMap();
     })
     .catch(function() {
       L.polyline(waypoints, opts).addTo(targetMap);
+      refitMap();
     });
 }
 
@@ -1755,6 +1769,9 @@ fetchRoute(
     .addTo(map)
     .bindPopup('<span style="font-size:0.8rem;">&#9855; ' + p.label + '</span>');
 });
+
+// Fit map to all sync elements; will refit again after each OSRM route loads
+refitMap();
 </script>
 <script>
 // ===================== HAMBURGER MENU =====================

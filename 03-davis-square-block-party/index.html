@@ -1985,9 +1985,8 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Dark tile layer
   const map = L.map('davis-map', {
-    center: [42.3963615, -71.1222329],
-    zoom: 16,
     zoomControl: true,
+    scrollWheelZoom: false,
   });
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -1995,6 +1994,18 @@ document.addEventListener('DOMContentLoaded', function() {
     subdomains: 'abcd',
     maxZoom: 20
   }).addTo(map);
+
+  function refitMap() {
+    var allLayers = L.featureGroup();
+    map.eachLayer(function(layer) {
+      if (layer instanceof L.Marker || layer instanceof L.Circle || layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
+        allLayers.addLayer(layer);
+      }
+    });
+    if (allLayers.getLayers().length > 0) {
+      map.fitBounds(allLayers.getBounds().pad(0.1), { maxZoom: 18 });
+    }
+  }
 
   // ---- ROAD-SNAPPED ROUTING HELPER ----
   // Fetches a pedestrian route from OSRM and draws it as a polyline.
@@ -2009,6 +2020,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var latLngs = data.routes[0].geometry.coordinates.map(function(c) { return [c[1], c[0]]; });
         var pl = L.polyline(latLngs, options).addTo(map);
         if (popupHtml) pl.bindPopup(popupHtml);
+        refitMap();
         return pl;
       }
     } catch(e) {
@@ -2016,6 +2028,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     var pl = L.polyline(coords, options).addTo(map);
     if (popupHtml) pl.bindPopup(popupHtml);
+    refitMap();
     return pl;
   }
 
@@ -2234,6 +2247,9 @@ document.addEventListener('DOMContentLoaded', function() {
     weight: 2,
     dashArray: '6, 4',
   }).addTo(map);
+
+  // Fit map to all sync elements; will refit again after each OSRM route loads
+  refitMap();
 
 });
 

@@ -2575,8 +2575,6 @@
   ];
 
   var map = L.map('route-map', {
-    center: [42.387, -71.107],
-    zoom: 12,
     zoomControl: true,
     scrollWheelZoom: false
   });
@@ -2591,6 +2589,18 @@
   var routeCoords = stops.map(function(s) { return s.lon + ',' + s.lat; }).join(';');
   var osrmUrl = 'https://router.project-osrm.org/route/v1/foot/' + routeCoords + '?overview=full&geometries=geojson';
 
+  function refitMap() {
+    var allLayers = L.featureGroup();
+    map.eachLayer(function(layer) {
+      if (layer instanceof L.Marker || layer instanceof L.Circle || layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
+        allLayers.addLayer(layer);
+      }
+    });
+    if (allLayers.getLayers().length > 0) {
+      map.fitBounds(allLayers.getBounds().pad(0.1), { maxZoom: 18 });
+    }
+  }
+
   fetch(osrmUrl)
     .then(function(res) { return res.json(); })
     .then(function(data) {
@@ -2603,6 +2613,7 @@
           dashArray: '8, 6'
         }).addTo(map);
       }
+      refitMap();
     })
     .catch(function() {
       // Fallback: straight line if OSRM fails
@@ -2610,6 +2621,7 @@
       L.polyline(fallback, {
         color: '#DAFF00', weight: 3, opacity: 0.65, dashArray: '8, 6'
       }).addTo(map);
+      refitMap();
     });
 
   // Markers
@@ -2663,6 +2675,9 @@
 
   L.marker([42.3797, -71.0946], { icon: warnIcon }).addTo(map)
     .bindPopup('<div style="font-family:Inter,sans-serif;"><strong style="color:#C62828;">PCI 45.29 \u2014 Poor</strong><br/><span style="font-size:0.8rem;color:#505A56;">Depressions &amp; bumps on Washington St.<br/>Trip hazard at night \u2014 repair needed.</span></div>');
+
+  // Fit map to sync elements immediately; will refit again after OSRM route loads
+  refitMap();
 })();
 
 // ===================== INTERSECTION OBSERVER (reveal) =====================

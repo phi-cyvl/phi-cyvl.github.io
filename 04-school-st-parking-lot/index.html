@@ -1547,8 +1547,6 @@
 <script>
   // ===== Leaflet Map =====
   const map = L.map('site-map', {
-    center: [42.3851785, -71.1000001],
-    zoom: 16,
     zoomControl: true
   });
 
@@ -1556,6 +1554,18 @@
     attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
     maxZoom: 19
   }).addTo(map);
+
+  function refitMap() {
+    var allLayers = L.featureGroup();
+    map.eachLayer(function(layer) {
+      if (layer instanceof L.Marker || layer instanceof L.Circle || layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
+        allLayers.addLayer(layer);
+      }
+    });
+    if (allLayers.getLayers().length > 0) {
+      map.fitBounds(allLayers.getBounds().pad(0.1), { maxZoom: 18 });
+    }
+  }
 
   // ===== Road-snapped routing helper =====
   async function fetchRoadRoute(coords, options) {
@@ -1567,10 +1577,12 @@
       if (data.code === 'Ok') {
         var latLngs = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
         L.polyline(latLngs, options).addTo(map);
+        refitMap();
         return;
       }
     } catch(e) {}
     L.polyline(coords, options).addTo(map);
+    refitMap();
   }
 
   // ===== Async map overlays (road-routed) =====
@@ -1677,6 +1689,9 @@
   L.marker([42.3872, -71.0940], { icon: mbta })
     .addTo(map)
     .bindPopup('<strong>Gilman Square Station</strong><br>Green Line · 6 min walk to venue');
+
+  // Fit map to all sync elements; will refit again after OSRM route loads
+  refitMap();
 
   // ===== Cost bar animations =====
   function animateBars() {
