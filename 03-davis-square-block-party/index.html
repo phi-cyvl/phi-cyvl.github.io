@@ -503,6 +503,7 @@
     @media (max-width: 640px) { .sensory-grid { grid-template-columns: 1fr; } }
     .sensory-card {
       background: white;
+      color: var(--asphalt-black, #0D0D0C);
       border-radius: 12px;
       padding: 18px;
       border: 1px solid rgba(13,13,12,0.07);
@@ -510,7 +511,7 @@
       line-height: 1.5;
     }
     .sensory-card .icon { font-size: 1.5rem; margin-bottom: 8px; }
-    .sensory-card h4 { font-size: 0.9rem; margin-bottom: 6px; }
+    .sensory-card h4 { font-size: 0.9rem; margin-bottom: 6px; color: var(--asphalt-black, #0D0D0C); }
 
     /* Street closure plan */
     .closure-zone {
@@ -1037,15 +1038,15 @@
       <!-- Pavement condition imagery -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
         <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.3);">
-          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX040786_MP4_1764009496392022_front_3000.jpg" alt="Pavement distress — cracking and deterioration" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010763_MP4_1763409148680405_front_3000.jpg" alt="Pavement distress — Davis Square area cracking and deterioration (42.4014, -71.1219)" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
           <div style="padding:6px 10px;background:rgba(13,13,12,0.9);font-size:0.68rem;color:rgba(255,255,255,0.5);">
-            <span style="color:#FF6B47;font-weight:700;">PCI 36.0 — Poor</span> · Somerville, MA · pavement distress scan
+            <span style="color:#FF6B47;font-weight:700;">PCI 45.3 — Poor</span> · Davis Square area · 550m north · pavement distress scan
           </div>
         </div>
         <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.5);">
-          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010783_MP4_1763746792282478_front_3000.jpg" alt="Failed pavement segment — serious structural damage" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010786_MP4_1763997978587229_front_3000.jpg" alt="Failed pavement segment — Davis Square area, serious structural damage (42.4008, -71.1191)" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
           <div style="padding:6px 10px;background:rgba(13,13,12,0.9);font-size:0.68rem;color:rgba(255,255,255,0.5);">
-            <span style="color:#FF470A;font-weight:700;">PCI 31.5 — Very Poor</span> · Somerville, MA · priority repair segment
+            <span style="color:#FF470A;font-weight:700;">PCI 65.8 — Fair</span> · Davis Square area · 460m north · priority repair segment
           </div>
         </div>
       </div>
@@ -1304,13 +1305,13 @@
       <!-- Failed pavement imagery -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 16px;">
         <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.5);">
-          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX040786_MP4_1764009496392022_front_3000.jpg" alt="Failed pavement segment PCI 36 — Somerville scan" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010763_MP4_1763409148680405_front_3000.jpg" alt="Failed pavement segment PCI 36 — Somerville scan" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
           <div style="padding:6px 10px;background:rgba(13,13,12,0.9);font-size:0.68rem;color:rgba(255,255,255,0.5);">
             <span style="color:#FF470A;font-weight:700;">Pavement Distress Detected</span> · PCI 36.0 · scan_1185_SOMERVILLE_MA
           </div>
         </div>
         <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.5);">
-          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX040786_MP4_1764010342377685_front_3000.jpg" alt="Serious pavement deterioration — DPW action required" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010786_MP4_1763997978587229_front_3000.jpg" alt="Serious pavement deterioration — DPW action required" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
           <div style="padding:6px 10px;background:rgba(13,13,12,0.9);font-size:0.68rem;color:rgba(255,255,255,0.5);">
             <span style="color:#FF470A;font-weight:700;">Severe Deterioration</span> · Repair Required · scan_1185_SOMERVILLE_MA
           </div>
@@ -1923,7 +1924,7 @@
         </div>
       </div>
       <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.3);">
-        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX040786_MP4_1764010342377685_front_3000.jpg" alt="Failed pavement — DPW action required" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010786_MP4_1763997978587229_front_3000.jpg" alt="Failed pavement — DPW action required" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
         <div style="padding:5px 8px;background:rgba(13,13,12,0.9);font-size:0.65rem;color:rgba(255,71,10,0.7);">
           Critical — pavement failure detected
         </div>
@@ -1996,14 +1997,28 @@ document.addEventListener('DOMContentLoaded', function() {
   }).addTo(map);
 
   function refitMap() {
-    var allLayers = L.featureGroup();
-    map.eachLayer(function(layer) {
-      if (layer instanceof L.Marker || layer instanceof L.Circle || layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
-        allLayers.addLayer(layer);
-      }
+    var bounds = [];
+    map.eachLayer(function(l) {
+      try {
+        if (l instanceof L.Marker) {
+          bounds.push(l.getLatLng());
+        } else if (l instanceof L.Polyline) {
+          var latlngs = l.getLatLngs();
+          if (latlngs.length) {
+            if (Array.isArray(latlngs[0])) {
+              latlngs[0].forEach(function(ll) { bounds.push(ll); });
+            } else {
+              latlngs.forEach(function(ll) { bounds.push(ll); });
+            }
+          }
+        }
+        // Skip L.Circle/L.CircleMarker — requires _map to be set, causes errors
+      } catch(e) {}
     });
-    if (allLayers.getLayers().length > 0) {
-      map.fitBounds(allLayers.getBounds().pad(0.1), { maxZoom: 18 });
+    if (bounds.length > 1) {
+      map.fitBounds(L.latLngBounds(bounds).pad(0.1), { maxZoom: 18 });
+    } else if (bounds.length === 1) {
+      map.setView(bounds[0], 15);
     }
   }
 

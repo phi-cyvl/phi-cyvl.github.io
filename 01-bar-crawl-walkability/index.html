@@ -1887,9 +1887,9 @@
         <p class="cyvl-callout-text">49 scored pavement segments with avg PCI 76.8 (Satisfactory). Best segment 96.37, worst 45.29 &mdash; typical arterial wear pattern on Somerville Ave's high-bus-traffic corridor. 12 Cyvl imagery captures confirm crosswalks, signals, and shelter infrastructure along this stretch.</p>
       </div>
       <div class="cyvl-imagery" style="margin:0 28px 24px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
-        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010766_MP4_1763482493763630_front_3000.jpg" alt="Cyvl street-level imagery near Sally O'Brien's, Union Square" style="width:100%;height:200px;object-fit:cover;display:block;" loading="lazy">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX030770_MP4_1763578010819417_front_3000.jpg" alt="Cyvl street-level imagery near Sally O'Brien's, Union Square (42.3800, -71.0981)" style="width:100%;height:200px;object-fit:cover;display:block;" loading="lazy">
         <div style="padding:8px 12px;background:rgba(13,13,12,0.85);font-size:0.7rem;color:rgba(255,255,255,0.5);">
-          Cyvl scan · PCI 82.16 · Union Square approach · Detected: handbag, person, traffic light, car
+          Cyvl scan · PCI 75.16 · Union Square approach · Somerville Ave · Detected: truck, stop sign, car, fire hydrant, bicycle
         </div>
       </div>
     </div>
@@ -2397,12 +2397,12 @@
           <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(218,255,0,0.7);margin-bottom:12px;">Cyvl Distress Evidence</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
             <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
-              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX060786_MP4_1764016559772311_front_3000.jpg" alt="Cyvl pavement distress scan — cracking and weathering" style="width:100%;height:130px;object-fit:cover;display:block;" loading="lazy">
-              <div style="padding:7px 10px;background:rgba(13,13,12,0.9);font-size:0.65rem;color:rgba(255,255,255,0.45);">PCI 73.02 · lt_cracking, sealant, weathering, edge_cracking</div>
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010770_MP4_1763571264969295_front_3000.jpg" alt="Cyvl pavement distress scan — Union Square, PCI 45.29 (42.3804, -71.0967)" style="width:100%;height:130px;object-fit:cover;display:block;" loading="lazy">
+              <div style="padding:7px 10px;background:rgba(13,13,12,0.9);font-size:0.65rem;color:rgba(255,255,255,0.45);">PCI 45.29 · Union Square corridor · High-priority repair segment</div>
             </div>
             <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
-              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX050786_MP4_1764012412842594_front_3000.jpg" alt="Cyvl pavement distress scan — PCI 51 segment" style="width:100%;height:130px;object-fit:cover;display:block;" loading="lazy">
-              <div style="padding:7px 10px;background:rgba(13,13,12,0.9);font-size:0.65rem;color:rgba(255,255,255,0.45);">PCI 51.31 · East Somerville corridor · High-priority repair</div>
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020766_MP4_1763484033733706_front_3000.jpg" alt="Cyvl pavement distress scan — Union Square Washington St, PCI 37.66 (42.3770, -71.0933)" style="width:100%;height:130px;object-fit:cover;display:block;" loading="lazy">
+              <div style="padding:7px 10px;background:rgba(13,13,12,0.9);font-size:0.65rem;color:rgba(255,255,255,0.45);">PCI 37.66 · Washington St, Union Square · Worst segment on route</div>
             </div>
           </div>
         </div>
@@ -2590,14 +2590,28 @@
   var osrmUrl = 'https://router.project-osrm.org/route/v1/foot/' + routeCoords + '?overview=full&geometries=geojson';
 
   function refitMap() {
-    var allLayers = L.featureGroup();
-    map.eachLayer(function(layer) {
-      if (layer instanceof L.Marker || layer instanceof L.Circle || layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
-        allLayers.addLayer(layer);
-      }
+    var bounds = [];
+    map.eachLayer(function(l) {
+      try {
+        if (l instanceof L.Marker) {
+          bounds.push(l.getLatLng());
+        } else if (l instanceof L.Polyline) {
+          var latlngs = l.getLatLngs();
+          if (latlngs.length) {
+            if (Array.isArray(latlngs[0])) {
+              latlngs[0].forEach(function(ll) { bounds.push(ll); });
+            } else {
+              latlngs.forEach(function(ll) { bounds.push(ll); });
+            }
+          }
+        }
+        // Skip L.Circle/L.CircleMarker — requires _map to be set, causes errors
+      } catch(e) {}
     });
-    if (allLayers.getLayers().length > 0) {
-      map.fitBounds(allLayers.getBounds().pad(0.1), { maxZoom: 18 });
+    if (bounds.length > 1) {
+      map.fitBounds(L.latLngBounds(bounds).pad(0.1), { maxZoom: 18 });
+    } else if (bounds.length === 1) {
+      map.setView(bounds[0], 15);
     }
   }
 

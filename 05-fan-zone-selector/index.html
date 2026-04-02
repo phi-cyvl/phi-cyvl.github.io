@@ -623,16 +623,16 @@
           <!-- Cyvl street-level imagery — Assembly Row -->
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
             <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
-              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX050786_MP4_1764015483290556_front_3000.jpg" alt="Assembly Row area street view" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
-              <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Assembly Row · PCI 66.2</div>
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX050786_MP4_1764014517306927_front_3000.jpg" alt="Assembly Row street view — 25m from venue (42.3930, -71.0775)" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Assembly Row · 25m from venue</div>
             </div>
             <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
-              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX060786_MP4_1764016000281793_front_3000.jpg" alt="Assembly Row street infrastructure" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX060786_MP4_1764016000281793_front_3000.jpg" alt="Assembly Row street infrastructure (42.3929, -71.0816)" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
               <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Assembly Row · PCI 72.81</div>
             </div>
             <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
-              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX050786_MP4_1764015489290454_front_3000.jpg" alt="Assembly Row open space pavement" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
-              <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Assembly Row · PCI 81.05</div>
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX050786_MP4_1764015115296792_front_3000.jpg" alt="Assembly Row area pavement scan (42.3934, -71.0807)" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Assembly Row · PCI 78.2</div>
             </div>
           </div>
           <div class="score-criteria">
@@ -1379,14 +1379,28 @@
   });
 
   // Fit map to all data elements
-  var allLayers = L.featureGroup();
-  map.eachLayer(function(layer) {
-    if (layer instanceof L.Marker || layer instanceof L.Circle || layer instanceof L.CircleMarker || layer instanceof L.Polyline) {
-      allLayers.addLayer(layer);
-    }
+  var bounds = [];
+  map.eachLayer(function(l) {
+    try {
+      if (l instanceof L.Marker) {
+        bounds.push(l.getLatLng());
+      } else if (l instanceof L.Polyline) {
+        var latlngs = l.getLatLngs();
+        if (latlngs.length) {
+          if (Array.isArray(latlngs[0])) {
+            latlngs[0].forEach(function(ll) { bounds.push(ll); });
+          } else {
+            latlngs.forEach(function(ll) { bounds.push(ll); });
+          }
+        }
+      }
+      // Skip L.Circle/L.CircleMarker — requires _map to be set, causes errors
+    } catch(e) {}
   });
-  if (allLayers.getLayers().length > 0) {
-    map.fitBounds(allLayers.getBounds().pad(0.1), { maxZoom: 18 });
+  if (bounds.length > 1) {
+    map.fitBounds(L.latLngBounds(bounds).pad(0.1), { maxZoom: 18 });
+  } else if (bounds.length === 1) {
+    map.setView(bounds[0], 15);
   }
 </script>
 <script>

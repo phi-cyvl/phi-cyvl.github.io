@@ -4,7 +4,9 @@
 
 What happens when a city's infrastructure data meets AI? You get instant, comprehensive event planning — without a single site visit, without weeks of permit research, without guessing which sidewalks are safe for 10,000 fans.
 
-These six demos show how **any city** can use AI agents + infrastructure intelligence to plan safer, more accessible community events. Every number is real. Every image is from an actual street scan. Every pavement score, business license, and permit requirement comes from live data — queried in real time through [Cyvl's MCP server](https://cyvl.ai) and [Boston's Open Data portal](https://data.boston.gov).
+These six demos are powered by **Cyvl's Infrastructure Intelligence Index (I3)** — an AI-powered data layer that delivers asset-level condition scores, georeferenced inventory data, and queryable infrastructure insights at city scale. I3 transforms raw sensor data (3D LiDAR, imagery, aerial) through five data orders — from processed imagery to distress detection to condition assessments (PCI, ASTM) to budgets and treatment plans — and exposes it all through an **Agent-to-Agent MCP** interface that any AI system can query directly.
+
+Every number is real. Every image is from an actual street scan. Every pavement score, business license, and permit requirement comes from live data — queried in real time through [Cyvl's I3 MCP server](https://cyvl.ai) and [Boston's Open Data portal](https://data.boston.gov).
 
 Built for the **City of Boston** ahead of the **2026 FIFA World Cup** — 7 matches at Gillette Stadium, 450,000 visitors expected, $10M in state grants for community watch parties, and a city that needs to know exactly where it's safe to host them.
 
@@ -74,26 +76,37 @@ Pedestrian evacuation corridor assessment — the finding that makes city leader
 
 ---
 
-## The Data Behind It
+## The I3 Data Pipeline
 
-Every claim in every demo traces back to one of three live data sources:
+Every claim in every demo traces back to Cyvl's **Infrastructure Intelligence Index (I3)** — a knowledge graph built from sensor data through five derivative orders:
 
-| Source | Coverage | Data Points |
-|--------|----------|-------------|
-| **[Cyvl](https://cyvl.ai)** | 1,003 miles (Boston + Somerville) | 271K street-level images, pavement scores, signs, assets, distresses, markings |
-| **[Boston Open Data](https://data.boston.gov)** | City of Boston | Event licenses, business licenses, Vision Zero crashes, accessible parks |
-| **[OSRM](https://project-osrm.org)** | Global | Pedestrian routing (maps follow real streets, not straight lines) |
+| Order | What It Contains | Example in These Demos |
+|-------|-----------------|----------------------|
+| **0th** | Raw sensor & auxiliary data | 3D LiDAR, 271K street images, 311 reports |
+| **1st** | Processed imagery, point clouds, asset inventory | Georeferenced photos at each bar stop |
+| **2nd** | Distress detection, materials, geometry | Alligator cracking on McGrath Hwy (591 sq ft) |
+| **3rd** | Condition assessments (PCI, ASTM) | PCI 23.55 structural failure — the headline finding |
+| **nth** | Budgets, treatment plans, construction specs | $23,705 event budget built from 9 data points |
 
-### What Cyvl Sees
+### Data Sources
 
-Cyvl's sensor-equipped vehicles scan every street, automatically detecting and scoring:
-- **Pavement condition** — PCI scores from 0 (Failed) to 100 (Excellent)
-- **Traffic signs** — MUTCD classification, condition, location
-- **Above-ground assets** — Trees, hydrants, ramps, poles, signals, bike racks, CCTV
-- **Distresses** — Cracking, potholes, rutting, weathering with severity and area
+| Source | Interface | Coverage |
+|--------|-----------|----------|
+| **[Cyvl I3](https://cyvl.ai)** | Agent-to-Agent MCP | 1,003 miles · 271K images · Boston + Somerville |
+| **[Boston Open Data](https://data.boston.gov)** | CKAN MCP | Event licenses, business licenses, Vision Zero, parks |
+| **[OSRM](https://project-osrm.org)** | REST API | Road-snapped pedestrian routing for all maps |
+
+### What I3 Detects
+
+Cyvl's sensor-equipped vehicles scan every street. I3 processes that raw data into queryable infrastructure intelligence:
+- **Pavement condition** — PCI scores from 0 (Failed) to 100 (Excellent), per 30-ft segment
+- **Traffic signs** — MUTCD classification, condition, location (17,321 in Somerville alone)
+- **Above-ground assets** — Trees, hydrants, ramps, poles, signals, bike racks, CCTV (3,289 within 500m of Davis Square)
+- **Distresses** — Cracking, potholes, rutting, weathering with severity and area measurements
 - **Markings** — Striping, crosswalks, lane markings
+- **Street-level imagery** — Searchable by natural language, with detected objects and distress annotations
 
-The 59 street-level photos embedded in these demos are real images from Cyvl scans — not stock photos, not renderings.
+The 59 photos embedded in these demos are real I3 imagery — not stock photos, not renderings. Each one comes from an actual Cyvl scan with PCI scores and detected objects in the caption.
 
 ---
 
@@ -109,9 +122,9 @@ Claude Code (orchestrator)
 └── Output: 12,724 lines of static HTML → GitHub Pages
 ```
 
-**The key insight:** Cyvl and Boston both expose their data through **MCP (Model Context Protocol)** servers. Claude Code queries them the same way — structured requests in, structured data out. The AI agent handles the orchestration: geocoding locations, assessing infrastructure, searching imagery, cross-referencing crash data, and assembling it all into a coherent narrative.
+**The key insight:** I3 exposes Cyvl's entire infrastructure knowledge graph through an **Agent-to-Agent MCP** interface — the same protocol AI agents use to query any data source. Claude Code queries I3 and Boston's open data the same way: structured requests in, verified data out. The AI handles orchestration — geocoding locations, assessing infrastructure, searching imagery, cross-referencing crash data — while I3 handles the intelligence: which segments are failing, which ramps are non-compliant, which routes are safe for 50,000 pedestrians.
 
-This is what the future of civic technology looks like. Not dashboards that require training. Not APIs that require developers. Just AI agents that understand your data and answer your questions.
+This is what the future of civic technology looks like. Not dashboards that require training. Not APIs that require developers. AI agents with direct access to the I3 knowledge graph, answering real planning questions with verifiable infrastructure data.
 
 ---
 
