@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From Parking Lot to Party — 76 School St, Somerville | Cyvl</title>
+  <link rel="icon" href="../assets/cyvl_favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+    /* Page-specific overrides and enhancements */
+    .hero {
+      padding: 80px 0 72px;
+      background: var(--asphalt-black);
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      max-width: 820px;
+    }
+    .hero h1 .accent { color: var(--high-vis-yellow); }
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: #8a9490;
+      margin-top: 16px;
+      max-width: 560px;
+      line-height: 1.5;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 48px;
+      flex-wrap: wrap;
+    }
+    .hero-stat-value {
+      font-size: 2.75rem;
+      font-weight: 800;
+      color: var(--high-vis-yellow);
+      line-height: 1;
+      display: block;
+    }
+    .hero-stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8a9490;
+      margin-top: 6px;
+      display: block;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(218,255,0,0.1);
+      border: 1px solid rgba(218,255,0,0.25);
+      color: var(--high-vis-yellow);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px;
+      background: var(--high-vis-yellow);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* Section headers */
+    .section-header {
+      margin-bottom: 40px;
+    }
+    .section-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--high-vis-yellow);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .section-header h2 {
+      font-size: clamp(1.75rem, 3vw, 2.25rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin-bottom: 0;
+    }
+    .section-header.dark h2 { color: white; }
+    .section-header.dark p { color: #8a9490; }
+    .section-header.dark .section-eyebrow { color: var(--high-vis-yellow); }
+
+    /* Map */
+    #site-map {
+      height: 480px;
+      border-radius: 12px;
+      border: 1px solid rgba(13,13,12,0.08);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Infrastructure grid */
+    .infra-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+    @media (max-width: 768px) { .infra-grid { grid-template-columns: 1fr; } }
+    .infra-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid rgba(13,13,12,0.06);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .infra-icon {
+      width: 44px; height: 44px;
+      min-width: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+    .infra-icon.yellow { background: rgba(218,255,0,0.12); }
+    .infra-icon.red { background: rgba(255,71,10,0.1); }
+    .infra-icon.blue { background: rgba(27,121,197,0.1); }
+    .infra-icon.green { background: rgba(46,125,50,0.1); }
+    .infra-icon.gray { background: rgba(80,90,86,0.1); }
+    .infra-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .infra-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    .infra-detail {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    /* Cost breakdown */
+    .cost-item {
+      margin-bottom: 20px;
+    }
+    .cost-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .cost-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .cost-amount {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+    .cost-pct {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-left: 8px;
+    }
+    .cost-bar-wrap {
+      height: 10px;
+      background: rgba(13,13,12,0.06);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .cost-bar-fill {
+      height: 100%;
+      border-radius: 5px;
+      background: var(--high-vis-yellow);
+      transition: width 1s cubic-bezier(0.4,0,0.2,1);
+    }
+    .cost-sub {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    .cost-total-box {
+      background: var(--asphalt-black);
+      color: white;
+      border-radius: 12px;
+      padding: 24px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+    }
+    .cost-total-label { font-size: 0.875rem; font-weight: 600; color: #8a9490; }
+    .cost-total-value { font-size: 2.5rem; font-weight: 800; color: var(--high-vis-yellow); letter-spacing: -0.03em; }
+    .cost-per-guest { font-size: 0.8rem; color: #8a9490; margin-top: 4px; }
+
+    /* Regulatory checklist */
+    .reg-item {
+      border: 1px solid rgba(13,13,12,0.06);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      transition: box-shadow 0.2s;
+    }
+    .reg-item:hover { box-shadow: var(--shadow-md); }
+    .reg-header {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      user-select: none;
+      background: white;
+    }
+    .reg-num {
+      width: 32px; height: 32px;
+      min-width: 32px;
+      border-radius: 50%;
+      background: var(--asphalt-black);
+      color: var(--high-vis-yellow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+    .reg-title { font-weight: 700; flex: 1; font-size: 0.95rem; }
+    .reg-meta { display: flex; align-items: center; gap: 12px; }
+    .reg-cost {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--concrete-gray);
+    }
+    .reg-timeline-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .reg-chevron {
+      color: var(--text-secondary);
+      transition: transform 0.2s;
+      font-size: 1rem;
+    }
+    .reg-item.open .reg-chevron { transform: rotate(180deg); }
+    .reg-body {
+      display: none;
+      padding: 0 20px 20px;
+      background: white;
+      border-top: 1px solid rgba(13,13,12,0.06);
+    }
+    .reg-body.open { display: block; }
+    .reg-body-content {
+      padding-top: 16px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .reg-action {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(218,255,0,0.1);
+      border: 1px solid rgba(218,255,0,0.3);
+      color: var(--asphalt-black);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+    }
+
+    /* Timeline */
+    .event-timeline {
+      position: relative;
+    }
+    .timeline-track {
+      position: relative;
+      padding-left: 40px;
+    }
+    .timeline-track::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: rgba(13,13,12,0.08);
+    }
+    .tl-item {
+      position: relative;
+      padding-bottom: 32px;
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .tl-item.visible { opacity: 1; transform: translateX(0); }
+    .tl-dot {
+      position: absolute;
+      left: -30px;
+      top: 4px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 0 0 2px rgba(13,13,12,0.1);
+    }
+    .tl-dot.future { background: #ccc; }
+    .tl-dot.active { background: var(--high-vis-yellow); box-shadow: 0 0 0 3px rgba(218,255,0,0.3); }
+    .tl-dot.today { background: var(--signal-red); box-shadow: 0 0 0 3px rgba(255,71,10,0.25); }
+    .tl-week {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .tl-week.active-label { color: var(--high-vis-yellow); }
+    .tl-card {
+      background: white;
+      border-radius: 10px;
+      padding: 16px 18px;
+      border: 1px solid rgba(13,13,12,0.06);
+      box-shadow: var(--shadow-sm);
+    }
+    .tl-tasks {
+      list-style: none;
+      margin-top: 10px;
+    }
+    .tl-tasks li {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding: 4px 0;
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.4;
+    }
+    .tl-tasks li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--high-vis-yellow);
+      font-weight: 700;
+    }
+    .tl-week-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    /* Safety section */
+    .safety-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 768px) { .safety-grid { grid-template-columns: 1fr; } }
+    .safety-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .safety-icon {
+      font-size: 1.75rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .safety-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: white;
+      margin-bottom: 10px;
+    }
+    .safety-items {
+      list-style: none;
+    }
+    .safety-items li {
+      font-size: 0.85rem;
+      color: #8a9490;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      line-height: 1.4;
+    }
+    .safety-items li:last-child { border-bottom: none; }
+    .safety-highlight {
+      color: var(--high-vis-yellow) !important;
+      font-weight: 600;
+    }
+
+    /* Logistics */
+    .logistics-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid rgba(13,13,12,0.06);
+      box-shadow: var(--shadow-sm);
+    }
+    .transport-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(13,13,12,0.06);
+    }
+    .transport-option:last-child { border-bottom: none; }
+    .transport-icon {
+      width: 40px; height: 40px;
+      min-width: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    .transport-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+    .transport-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; }
+    .transport-cost {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--concrete-gray);
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    /* Cyvl data points */
+    .data-point-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .data-point-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .data-point-grid { grid-template-columns: 1fr; } }
+    .dp-card {
+      background: rgba(218,255,0,0.04);
+      border: 1px solid rgba(218,255,0,0.15);
+      border-radius: 12px;
+      padding: 20px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .dp-card:hover {
+      background: rgba(218,255,0,0.08);
+      border-color: rgba(218,255,0,0.3);
+    }
+    .dp-icon { font-size: 1.5rem; margin-bottom: 10px; display: block; }
+    .dp-metric {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--high-vis-yellow);
+      letter-spacing: -0.02em;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .dp-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: white;
+      margin-bottom: 6px;
+    }
+    .dp-impact {
+      font-size: 0.78rem;
+      color: #8a9490;
+      line-height: 1.45;
+    }
+
+    /* Map legend */
+    .map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+    }
+
+    /* Scroll animation */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .scroll-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Sticky nav */
+    .nav {
+      box-shadow: var(--shadow-sm);
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero-stats { gap: 28px; }
+      .hero-stat-value { font-size: 2rem; }
+      .infra-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Footer */
+    .footer-tagline {
+      font-size: 0.875rem;
+      color: #8a9490;
+      margin-top: 4px;
+    }
+    .footer-logo { height: 24px; }
+
+    /* PCI color scale */
+    .pci-excellent { color: #22c55e; }
+    .pci-good { color: #84cc16; }
+    .pci-satisfactory { color: #eab308; }
+
+    /* Callout box */
+    .callout {
+      background: rgba(218,255,0,0.06);
+      border-left: 3px solid var(--high-vis-yellow);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    .callout strong { color: var(--text-primary); }
+
+    /* Power options */
+    .power-option {
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(13,13,12,0.06);
+    }
+    .power-option:last-child { border-bottom: none; }
+    .power-option-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+    .power-pros-cons { display: flex; gap: 16px; margin-top: 6px; flex-wrap: wrap; }
+    .power-pro, .power-con {
+      font-size: 0.78rem;
+      padding: 2px 10px;
+      border-radius: 100px;
+    }
+    .power-pro { background: #e8f5e9; color: #2e7d32; }
+    .power-con { background: #fff3e0; color: #e65100; }
+
+    /* Stat chips in hero */
+    .hero-stat-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(255,255,255,0.1);
+      align-self: center;
+    }
+    @media (max-width: 600px) { .hero-stat-divider { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+      <img src="../assets/cyvl_logo_black.png" alt="Cyvl" class="nav-logo">
+      <div class="nav-links">
+        <a href="#site-assessment">Site Assessment</a>
+        <a href="#cost">Budget</a>
+        <a href="#permits">Permits</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#safety">Safety</a>
+        <a href="#logistics">Logistics</a>
+        <a href="#cyvl-data">Data Story</a>
+      </div>
+      <span class="badge badge-yellow" style="font-size:0.7rem">Boston CIO Demo</span>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Live Infrastructure Intelligence — 76 School St, Somerville MA
+    </div>
+    <h1>From <span class="accent">Parking Lot</span><br>to Party</h1>
+    <p class="hero-subtitle">A complete action plan powered by infrastructure intelligence. Zero site visits. Real data from Cyvl's Somerville scan.</p>
+
+    <div class="hero-stats">
+      <div>
+        <span class="hero-stat-value">200</span>
+        <span class="hero-stat-label">Guest Capacity</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div>
+        <span class="hero-stat-value">$23.7K</span>
+        <span class="hero-stat-label">Total Event Cost</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div>
+        <span class="hero-stat-value">9</span>
+        <span class="hero-stat-label">Infrastructure Data Points</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div>
+        <span class="hero-stat-value">0</span>
+        <span class="hero-stat-label">Site Visits Required</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Site Assessment -->
+<section class="section section-gray" id="site-assessment">
+  <div class="container">
+    <div class="section-header scroll-reveal">
+      <span class="section-eyebrow">Site Assessment</span>
+      <h2>Infrastructure Intelligence in Action</h2>
+      <p>Every asset within 200–300m of 76 School St — mapped, scored, and translated into event-planning decisions.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start;" class="scroll-reveal">
+      <div>
+        <div id="site-map"></div>
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#FF470A"></div>Fire Hydrants (8)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#1B79C5"></div>Utility Poles (18)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#DAFF00;border:1px solid #999"></div>Street Lights (16)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#0D0D0C"></div>Venue (76 School St)</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card" style="padding:20px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span style="font-size:1.25rem">🛣️</span>
+            <strong style="font-size:0.9rem">Pavement Condition</strong>
+            <span class="badge badge-green" style="margin-left:auto">PCI 88.91</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">
+            Closest confirmed imagery at 15m from venue shows <strong style="color:var(--text-primary)">excellent pavement</strong> (PCI 88.91). Prescott St avg PCI 85.6 — Good. Surrounding 50 segments: 65% Good/Satisfactory.
+          </div>
+          <div style="margin-top:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-secondary);margin-bottom:4px;">
+              <span>Prescott St (main access)</span><span class="pci-good">85.6</span>
+            </div>
+            <div class="cost-bar-wrap"><div class="cost-bar-fill" style="width:85.6%"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-secondary);margin-bottom:4px;margin-top:8px;">
+              <span>Putnam St (secondary)</span><span class="pci-satisfactory">71.4</span>
+            </div>
+            <div class="cost-bar-wrap"><div class="cost-bar-fill" style="width:71.4%;background:#eab308"></div></div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:20px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="font-size:1.25rem">📷</span>
+            <strong style="font-size:0.9rem">Imagery Available</strong>
+          </div>
+          <div style="font-size:2rem;font-weight:800;color:var(--utility-blue)">258</div>
+          <div style="font-size:0.78rem;color:var(--text-secondary)">parking lot imagery matches within scan area<br>+ 138 asphalt surface • 121 sidewalk images</div>
+        </div>
+
+        <div class="card" style="padding:20px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="font-size:1.25rem">🏘️</span>
+            <strong style="font-size:0.9rem">Neighborhood Context</strong>
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">
+            <strong style="color:var(--text-primary)">Spring Hill, Ward 4</strong> — Walk Score 92 (highly walkable). Historic 1880 MBTA transfer station. Green Line 6 min walk. Mixed residential — noise curfew critical.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infrastructure counts -->
+    <div class="infra-grid scroll-reveal" style="margin-top:24px;">
+      <div class="infra-card">
+        <div class="infra-icon red">🚒</div>
+        <div>
+          <div class="infra-value">8</div>
+          <div class="infra-label">Fire Hydrants (200m)</div>
+          <div class="infra-detail">IDs 330, 989, 298, 299, 308, 995, 978, 963. All must maintain 15ft clearance zones. Critical for Fire Prevention permit approval.</div>
+        </div>
+      </div>
+      <div class="infra-card">
+        <div class="infra-icon blue">⚡</div>
+        <div>
+          <div class="infra-value">18</div>
+          <div class="infra-label">Utility Poles (200m)</div>
+          <div class="infra-detail">Dense overhead utility grid. Flag tent placement conflicts before booking — no tent within 20ft of active overhead lines.</div>
+        </div>
+      </div>
+      <div class="infra-card">
+        <div class="infra-icon yellow">💡</div>
+        <div>
+          <div class="infra-value">16</div>
+          <div class="infra-label">Street Luminaries (200m)</div>
+          <div class="infra-detail">Existing street lighting reduces generator load. Supplements bistro string lights for perimeter safety illumination.</div>
+        </div>
+      </div>
+      <div class="infra-card">
+        <div class="infra-icon gray">🚫</div>
+        <div>
+          <div class="infra-value">50+</div>
+          <div class="infra-label">Signs Catalogued (200m)</div>
+          <div class="infra-detail">15+ R7-x no-parking signs. Heavy enforcement zone confirmed — zero street parking available for guests. Transit-first strategy required.</div>
+        </div>
+      </div>
+      <div class="infra-card">
+        <div class="infra-icon green">🌳</div>
+        <div>
+          <div class="infra-value">32</div>
+          <div class="infra-label">Trees (200m)</div>
+          <div class="infra-detail">Urban tree canopy adds ambience. Check branch clearance for tent installation — especially on Prescott St boundary.</div>
+        </div>
+      </div>
+      <div class="infra-card">
+        <div class="infra-icon blue">🌊</div>
+        <div>
+          <div class="infra-value">5</div>
+          <div class="infra-label">Catch Basins (200m)</div>
+          <div class="infra-detail">Protect storm drains from food waste per EPA regs. Position food stations away from catch basins; use drip mats at catering zones.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cost Breakdown -->
+<section class="section" id="cost">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;">
+      <div class="scroll-reveal">
+        <div class="section-header">
+          <span class="section-eyebrow">Budget</span>
+          <h2>Complete Cost Breakdown</h2>
+          <p>All-in estimate for a 200-guest evening party: 5 hours, tent, DJ, bar, and catering.</p>
+        </div>
+
+        <div id="cost-bars">
+          <div class="cost-item">
+            <div class="cost-header">
+              <span class="cost-name">🍽️ Food & Beverage</span>
+              <span><span class="cost-amount">$10,600</span><span class="cost-pct">44.7%</span></span>
+            </div>
+            <div class="cost-bar-wrap"><div class="cost-bar-fill" style="width:0%" data-width="44.7"></div></div>
+            <div class="cost-sub">Catering $7K • Bar service $3K • Bartenders $600</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-header">
+              <span class="cost-name">⛺ Equipment Rental</span>
+              <span><span class="cost-amount">$5,250</span><span class="cost-pct">22.1%</span></span>
+            </div>
+            <div class="cost-bar-wrap"><div class="cost-bar-fill" style="width:0%" data-width="22.1"></div></div>
+            <div class="cost-sub">20×60 tent $1,750 • Tables/chairs $1,200 • Lighting $400 • Generator $600 • Restrooms $950 • Dumpster $350</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-header">
+              <span class="cost-name">🎵 Entertainment</span>
+              <span><span class="cost-amount">$1,700</span><span class="cost-pct">7.2%</span></span>
+            </div>
+            <div class="cost-bar-wrap"><div class="cost-bar-fill" style="width:0%" data-width="7.2"></div></div>
+            <div class="cost-sub">DJ (4 hrs) $1,200 • PA system $500</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-header">
+              <span class="cost-name">👥 Staffing</span>
+              <span><span class="cost-amount">$1,500</span><span class="cost-pct">6.3%</span></span>
+            </div>
+            <div class="cost-bar-wrap"><div class="cost-bar-fill" style="width:0%" data-width="6.3"></div></div>
+            <div class="cost-sub">Event coordinator $500 • Security (×2) $600 • Setup/breakdown crew $400</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-header">
+              <span class="cost-name">🏙️ Venue & Lot</span>
+              <span><span class="cost-amount">$1,300</span><span class="cost-pct">5.5%</span></span>
+            </div>
+            <div class="cost-bar-wrap"><div class="cost-bar-fill" style="width:0%" data-width="5.5"></div></div>
+            <div class="cost-sub">Private lot rental $1,000 • Overflow parking lot $300</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-header">
+              <span class="cost-name">📋 Permits</span>
+              <span><span class="cost-amount">$800</span><span class="cost-pct">3.4%</span></span>
+            </div>
+            <div class="cost-bar-wrap"><div class="cost-bar-fill" style="width:0%" data-width="3.4"></div></div>
+            <div class="cost-sub">Event license $150 • Alcohol $150 • Fire $200 • Food $100 • Electrical $200</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-header">
+              <span class="cost-name">🛡️ Insurance</span>
+              <span><span class="cost-amount">$400</span><span class="cost-pct">1.7%</span></span>
+            </div>
+            <div class="cost-bar-wrap"><div class="cost-bar-fill" style="width:0%" data-width="1.7"></div></div>
+            <div class="cost-sub">$1M/$2M liability event policy — add City of Somerville as additional insured</div>
+          </div>
+        </div>
+
+        <div class="cost-total-box">
+          <div>
+            <div class="cost-total-label">Total Estimate</div>
+            <div class="cost-total-value">$23,705</div>
+            <div class="cost-per-guest">$119 per guest · Range $18K–$30K</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.7rem;color:#8a9490;text-transform:uppercase;letter-spacing:0.08em;">Includes</div>
+            <div style="font-size:0.85rem;color:white;margin-top:4px;line-height:1.6;">10% contingency<br>All permits<br>200-person capacity</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-reveal">
+        <div class="card" style="margin-bottom:16px;">
+          <h4 style="margin-bottom:16px;">Power Options</h4>
+          <div class="power-option">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <div class="power-option-title">🔋 Generator Rental</div>
+              <div style="font-size:0.8rem;font-weight:700;color:var(--concrete-gray)">$300–$800/day</div>
+            </div>
+            <div style="font-size:0.82rem;color:var(--text-secondary)">20–50kW diesel — self-contained, no utility approval</div>
+            <div class="power-pros-cons">
+              <span class="power-pro">Self-contained</span>
+              <span class="power-con">Permit if &gt;15kW</span>
+              <span class="power-con">Noise + exhaust</span>
+            </div>
+          </div>
+          <div class="power-option">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <div class="power-option-title">⚡ National Grid Hookup</div>
+              <div style="font-size:0.8rem;font-weight:700;color:var(--concrete-gray)">$500–$1,500</div>
+            </div>
+            <div style="font-size:0.82rem;color:var(--text-secondary)">18 utility poles within 200m — temp metered service possible</div>
+            <div class="power-pros-cons">
+              <span class="power-pro">Clean power</span>
+              <span class="power-pro">No noise</span>
+              <span class="power-con">2–4 week lead</span>
+            </div>
+          </div>
+          <div class="power-option">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <div class="power-option-title">🏢 Building Tap (76 School St)</div>
+              <div style="font-size:0.8rem;font-weight:700;color:var(--concrete-gray)">$200–$500</div>
+            </div>
+            <div style="font-size:0.82rem;color:var(--text-secondary)">Negotiate panel access with loft building owner</div>
+            <div class="power-pros-cons">
+              <span class="power-pro">Cheapest</span>
+              <span class="power-pro">Most reliable</span>
+              <span class="power-con">Owner cooperation</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom:16px;">Restroom Plan</h4>
+          <table style="margin-bottom:0">
+            <thead>
+              <tr><th>Capacity</th><th>Units</th><th>Est. Cost</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>100 guests</td><td>2 units</td><td>$340–$600</td></tr>
+              <tr><td><strong>200 guests (this event)</strong></td><td><strong>3 units</strong></td><td><strong>$510–$900</strong></td></tr>
+              <tr><td>300 guests</td><td>5 units</td><td>$850–$1,500</td></tr>
+            </tbody>
+          </table>
+          <div class="callout" style="margin-bottom:0;margin-top:8px;">
+            <strong>ADA requirement:</strong> 1 accessible unit always required for public events. Budget ~$950 total including ADA unit.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Regulatory Checklist -->
+<section class="section section-gray" id="permits">
+  <div class="container">
+    <div class="section-header scroll-reveal">
+      <span class="section-eyebrow">Regulatory</span>
+      <h2>8-Step Permit Checklist</h2>
+      <p>Every permit required to legally host 200 people at 76 School St — sequenced by lead time, with exact agencies and costs.</p>
+    </div>
+
+    <div id="reg-checklist" class="scroll-reveal">
+
+      <div class="reg-item">
+        <div class="reg-header" onclick="toggleReg(this)">
+          <div class="reg-num">1</div>
+          <div class="reg-title">Property Owner Written Approval</div>
+          <div class="reg-meta">
+            <span class="reg-cost">$0 + lot rental</span>
+            <span class="reg-timeline-badge" style="background:#fff3e0;color:#e65100">Do First</span>
+          </div>
+          <span class="reg-chevron">▼</span>
+        </div>
+        <div class="reg-body">
+          <div class="reg-body-content">
+            Somerville requires evidence of property owner approval before any permit application can be submitted. This is the foundational document — nothing else proceeds without it. Negotiate the lot rental fee simultaneously; estimate <strong>$500–$2,000/day</strong> for a private lot in this area.
+            <div style="margin-top:12px;font-size:0.82rem;"><strong>Agency:</strong> City of Somerville / Private Lot Owner</div>
+          </div>
+          <span class="reg-action">✉ Contact lot owner — get signed letter on file</span>
+        </div>
+      </div>
+
+      <div class="reg-item">
+        <div class="reg-header" onclick="toggleReg(this)">
+          <div class="reg-num">2</div>
+          <div class="reg-title">Public Event License (CitizenServe)</div>
+          <div class="reg-meta">
+            <span class="reg-cost">$50–$200</span>
+            <span class="reg-timeline-badge" style="background:#e3f2fd;color:#1565c0">4–6 Weeks</span>
+          </div>
+          <span class="reg-chevron">▼</span>
+        </div>
+        <div class="reg-body">
+          <div class="reg-body-content">
+            Required for events on private property open to the public or above size thresholds. Submit at least 13 days before the next City Council meeting — plan for 4–6 weeks total lead time. Apply via Somerville CitizenServe portal under "Public Event/Special Alcohol License" even if no alcohol is planned.
+            <div style="margin-top:12px;font-size:0.82rem;"><strong>Agency:</strong> City of Somerville City Clerk<br><strong>Contact:</strong> cityclerk@somervillema.gov · 311</div>
+          </div>
+          <span class="reg-action">🌐 Apply at somervillema.gov/citizenserve</span>
+        </div>
+      </div>
+
+      <div class="reg-item">
+        <div class="reg-header" onclick="toggleReg(this)">
+          <div class="reg-num">3</div>
+          <div class="reg-title">One-Day Special Alcohol License</div>
+          <div class="reg-meta">
+            <span class="reg-cost">$100–$200</span>
+            <span class="reg-timeline-badge" style="background:#e3f2fd;color:#1565c0">4–6 Weeks</span>
+          </div>
+          <span class="reg-chevron">▼</span>
+        </div>
+        <div class="reg-body">
+          <div class="reg-body-content">
+            Required if serving any alcohol. Must appear before Somerville Licensing Commission. File simultaneously with the Public Event License via CitizenServe. Use color-coded wristbands for 21+ verification at entry.
+            <div style="margin-top:12px;font-size:0.82rem;"><strong>Agency:</strong> Somerville Licensing Commission<br><strong>Address:</strong> 93 Highland Ave · (617) 625-6600 x4100</div>
+          </div>
+          <span class="reg-action">📋 File simultaneously with Event License</span>
+        </div>
+      </div>
+
+      <div class="reg-item">
+        <div class="reg-header" onclick="toggleReg(this)">
+          <div class="reg-num">4</div>
+          <div class="reg-title">Fire Prevention Bureau Permit</div>
+          <div class="reg-meta">
+            <span class="reg-cost">$75–$300</span>
+            <span class="reg-timeline-badge" style="background:#e8f5e9;color:#2e7d32">2–4 Weeks</span>
+          </div>
+          <span class="reg-chevron">▼</span>
+        </div>
+        <div class="reg-body">
+          <div class="reg-body-content">
+            Required for tents over 200 sq ft, crowds over 49 persons, open flame or propane. Cyvl data confirms <strong>8 fire hydrants within 200m</strong> — include this in permit narrative to demonstrate site safety. Tent must carry NFPA 701 flame-retardant certification. No propane inside tents; cooking stations must be 10ft+ from tent exits.
+            <div style="margin-top:12px;font-size:0.82rem;"><strong>Agency:</strong> Somerville Fire Prevention Bureau<br><strong>Contact:</strong> FirePrevention@somervillema.gov · (617) 623-1700 x8400</div>
+          </div>
+          <span class="reg-action">📞 Call to confirm exact thresholds for your event size</span>
+        </div>
+      </div>
+
+      <div class="reg-item">
+        <div class="reg-header" onclick="toggleReg(this)">
+          <div class="reg-num">5</div>
+          <div class="reg-title">Temporary Food Service Permit</div>
+          <div class="reg-meta">
+            <span class="reg-cost">$50–$150</span>
+            <span class="reg-timeline-badge" style="background:#e8f5e9;color:#2e7d32">2–3 Weeks</span>
+          </div>
+          <span class="reg-chevron">▼</span>
+        </div>
+        <div class="reg-body">
+          <div class="reg-body-content">
+            Required if food is prepared or served — even by a caterer. Food trucks require their own permits. A handwashing station is required if there is no running water on-site (likely, given this is a parking lot). Budget $300 for a portable sink unit.
+            <div style="margin-top:12px;font-size:0.82rem;"><strong>Agency:</strong> Somerville Inspectional Services / Health Dept<br><strong>Contact:</strong> (617) 625-6600 ext. 2500</div>
+          </div>
+          <span class="reg-action">📞 Contact Inspectional Services</span>
+        </div>
+      </div>
+
+      <div class="reg-item">
+        <div class="reg-header" onclick="toggleReg(this)">
+          <div class="reg-num">6</div>
+          <div class="reg-title">Generator / Electrical Permit</div>
+          <div class="reg-meta">
+            <span class="reg-cost">$100–$300</span>
+            <span class="reg-timeline-badge" style="background:#e8f5e9;color:#2e7d32">2–3 Weeks</span>
+          </div>
+          <span class="reg-chevron">▼</span>
+        </div>
+        <div class="reg-body">
+          <div class="reg-body-content">
+            Required for generators over 15kW or temporary electrical service. Cyvl data shows <strong>18 utility poles and 16 street luminaries within 200m</strong> — raising the possibility of a National Grid temporary hookup as a quieter, cleaner alternative. Coordinate with National Grid 4+ weeks ahead if pursuing utility hookup.
+            <div style="margin-top:12px;font-size:0.82rem;"><strong>Agency:</strong> Somerville Inspectional Services (Electrical Division)</div>
+          </div>
+          <span class="reg-action">⚡ Contact Inspectional Services or National Grid</span>
+        </div>
+      </div>
+
+      <div class="reg-item">
+        <div class="reg-header" onclick="toggleReg(this)">
+          <div class="reg-num">7</div>
+          <div class="reg-title">Noise Ordinance Compliance</div>
+          <div class="reg-meta">
+            <span class="reg-cost">$0 (violations $100–$300)</span>
+            <span class="reg-timeline-badge" style="background:#ffebee;color:#c62828">Hard Cutoff: 10pm</span>
+          </div>
+          <span class="reg-chevron">▼</span>
+        </div>
+        <div class="reg-body">
+          <div class="reg-body-content">
+            No permit required, but Spring Hill is a mixed residential neighborhood — violations are costly and reputation-damaging. MassDEP rule: ambient +10 dB at property line is a violation. General limits: <strong>70 dB daytime, 50 dB after 11pm</strong>. Recommend ending all amplified music by <strong>10pm sharp</strong>.
+            <div style="margin-top:12px;font-size:0.82rem;"><strong>Mitigation:</strong> Sound barriers (hay bales, acoustic drapes), aim speakers inward, hire a sound engineer with a calibrated dB meter.</div>
+          </div>
+          <span class="reg-action">🔊 End amplified sound by 10pm · Hire sound engineer with dB meter</span>
+        </div>
+      </div>
+
+      <div class="reg-item">
+        <div class="reg-header" onclick="toggleReg(this)">
+          <div class="reg-num">8</div>
+          <div class="reg-title">Event Liability Insurance ($1M/$2M)</div>
+          <div class="reg-meta">
+            <span class="reg-cost">$150–$500</span>
+            <span class="reg-timeline-badge" style="background:#fff3e0;color:#e65100">Before Permit Submission</span>
+          </div>
+          <span class="reg-chevron">▼</span>
+        </div>
+        <div class="reg-body">
+          <div class="reg-body-content">
+            Somerville requires general liability insurance of <strong>$1M per occurrence / $2M aggregate</strong> for public events. The property owner will likely require additional insured status. Obtain online from NEXT Insurance, Markel, or similar specialty providers.
+            <div style="margin-top:12px;font-size:0.82rem;"><strong>Action:</strong> Get event insurance quote online; add City of Somerville AND lot owner as additional insureds.</div>
+          </div>
+          <span class="reg-action">🛡️ Get quote online — NEXT Insurance, Markel, or equivalent</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Event Timeline -->
+<section class="section" id="timeline">
+  <div class="container">
+    <div class="section-header scroll-reveal">
+      <span class="section-eyebrow">Planning Timeline</span>
+      <h2>Week-by-Week Action Plan</h2>
+      <p>Eight weeks from decision to party. Every task sequenced by dependency and agency lead time.</p>
+    </div>
+
+    <div class="timeline-track scroll-reveal">
+
+      <div class="tl-item">
+        <div class="tl-dot future"></div>
+        <div class="tl-week">8–10 Weeks Out</div>
+        <div class="tl-card">
+          <div class="tl-week-title">Foundation — Lock the Lot</div>
+          <ul class="tl-tasks">
+            <li>Confirm lot availability — sign rental agreement with property owner</li>
+            <li>Get written property owner approval letter (required for all permits)</li>
+            <li>Email OSPCD to verify zoning: planning@somervillema.gov</li>
+            <li>Purchase event liability insurance — list City of Somerville as additional insured</li>
+            <li>Begin Public Event License application on CitizenServe</li>
+          </ul>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="badge badge-gray">City Clerk</span>
+            <span class="badge badge-gray">OSPCD Planning</span>
+            <span class="badge badge-gray">Lot Owner</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot future"></div>
+        <div class="tl-week">6–8 Weeks Out</div>
+        <div class="tl-card">
+          <div class="tl-week-title">Permits &amp; Vendors — Move Fast</div>
+          <ul class="tl-tasks">
+            <li>Submit Public Event License + Special Alcohol License (CitizenServe)</li>
+            <li>Book tent rental company — summer inventory fills fast</li>
+            <li>Book DJ and caterer with deposit</li>
+            <li>Identify and book portable toilet vendor (3 units + 1 ADA)</li>
+            <li>Negotiate overflow parking lot agreement with nearby commercial property</li>
+          </ul>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="badge badge-blue">Licensing Commission</span>
+            <span class="badge badge-gray">Tent Vendor</span>
+            <span class="badge badge-gray">Caterer</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-week active-label">4–6 Weeks Out</div>
+        <div class="tl-card" style="border-color:rgba(218,255,0,0.3);background:rgba(218,255,0,0.02)">
+          <div class="tl-week-title">Safety Permits — Submit All Three</div>
+          <ul class="tl-tasks">
+            <li>Submit Fire Prevention Bureau permit (reference 8 hydrants, 200-cap, tent sq footage)</li>
+            <li>Submit Temporary Food Service permit</li>
+            <li>Submit electrical/generator permit or contact National Grid for hookup</li>
+            <li>Confirm City Council meeting date for event license approval</li>
+            <li>Book 2 security guards</li>
+          </ul>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="badge badge-yellow">Fire Prevention</span>
+            <span class="badge badge-gray">Inspectional Services</span>
+            <span class="badge badge-gray">National Grid</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot future"></div>
+        <div class="tl-week">2–4 Weeks Out</div>
+        <div class="tl-card">
+          <div class="tl-week-title">Confirmations — Chase Every Agency</div>
+          <ul class="tl-tasks">
+            <li>Receive all permit approvals — follow up with each agency individually</li>
+            <li>Confirm vendor delivery times and load-in routes (avoid hydrant zones)</li>
+            <li>Walk lot with fire marshal for exit/egress layout sign-off</li>
+            <li>Print and post event signage and parking instruction cards</li>
+          </ul>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="badge badge-gray">Fire Marshal</span>
+            <span class="badge badge-gray">All Vendors</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot future"></div>
+        <div class="tl-week">1 Week Out</div>
+        <div class="tl-card">
+          <div class="tl-week-title">Final Prep</div>
+          <ul class="tl-tasks">
+            <li>Final headcount to caterer</li>
+            <li>Confirm generator/power hookup test scheduled</li>
+            <li>Walk lot surface — mark trip hazards with safety cones (Cyvl flagged edge cracking + raveling)</li>
+            <li>Distribute MBTA + ride-share directions to all guests</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot today"></div>
+        <div class="tl-week" style="color:var(--signal-red);font-weight:700;">Day Of — Event Day</div>
+        <div class="tl-card" style="border-color:rgba(255,71,10,0.2)">
+          <div class="tl-week-title">Execute the Plan</div>
+          <ul class="tl-tasks">
+            <li>Tent setup 8–10 hours before event start</li>
+            <li>Generator/power test and sound system setup</li>
+            <li>Porta-potty delivery — verify not blocking any hydrant (IDs 330, 989, 298, 299)</li>
+            <li>Sound check — aim speakers inward, test dB at property line</li>
+            <li>Security briefing: 200-person cap, 10pm noise cutoff, fire exit locations</li>
+          </ul>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="badge badge-red">Noise Cutoff 10pm</span>
+            <span class="badge badge-red">200 Person Cap</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Safety Plan -->
+<section class="section section-dark" id="safety">
+  <div class="container">
+    <div class="section-header dark scroll-reveal">
+      <span class="section-eyebrow">Safety Plan</span>
+      <h2>Emergency Readiness &amp; Fire Safety</h2>
+      <p>Infrastructure data shapes every safety decision — from hydrant clearance zones to crowd capacity.</p>
+    </div>
+
+    <div class="safety-grid scroll-reveal">
+      <div class="safety-card">
+        <span class="safety-icon">🚒</span>
+        <div class="safety-title">Emergency Vehicle Access</div>
+        <ul class="safety-items">
+          <li><span class="safety-highlight">8 fire hydrants confirmed within 200m</span> via Cyvl asset data</li>
+          <li>Hydrant IDs 330, 989, 298, 299 — nearest four to venue entrance</li>
+          <li>Maintain <span class="safety-highlight">15-foot clearance</span> around all hydrants — no tent stakes, no vehicles, no equipment</li>
+          <li>Maintain <span class="safety-highlight">20-foot unobstructed access lane</span> from street to venue interior at all times</li>
+          <li>Cambridge Health Alliance — Somerville Campus, 230 Highland Ave (~0.8 mi)</li>
+        </ul>
+      </div>
+
+      <div class="safety-card">
+        <span class="safety-icon">🔥</span>
+        <div class="safety-title">Fire Safety Requirements</div>
+        <ul class="safety-items">
+          <li>Tent fabric must carry <span class="safety-highlight">NFPA 701 flame-retardant certification</span> — require certificate from vendor before booking</li>
+          <li>No propane, open flame, or candles inside tent</li>
+          <li>Propane cooking stations: minimum 10ft from tent exits</li>
+          <li>Min. 2 ABC extinguishers per 2,500 sq ft of tent area</li>
+          <li><span class="safety-highlight">18+ utility poles within 200m</span> — coordinate tent placement to avoid overhead line conflicts</li>
+          <li>Smoking zone: 25ft+ from tent, with provided ash receptacles</li>
+        </ul>
+      </div>
+
+      <div class="safety-card">
+        <span class="safety-icon">👥</span>
+        <div class="safety-title">Crowd Management</div>
+        <ul class="safety-items">
+          <li>Maximum <span class="safety-highlight">200 persons</span> — post occupancy limit visibly inside tent</li>
+          <li>Calculate at 6 sq ft/person standing, 10 sq ft/person with seating</li>
+          <li>Minimum <span class="safety-highlight">2 security guards</span> — 1 per 100 guests</li>
+          <li>Minimum <span class="safety-highlight">2 entry/exit points</span> — clearly marked with illuminated signage</li>
+          <li>Post exit diagrams at entrance; illuminate exits</li>
+          <li>Color-coded wristbands for 21+ alcohol eligibility</li>
+          <li>Designated sober first aid liaison for alcohol events</li>
+        </ul>
+      </div>
+
+      <div class="safety-card">
+        <span class="safety-icon">🔊</span>
+        <div class="safety-title">Noise Monitoring Plan</div>
+        <ul class="safety-items">
+          <li><span class="safety-highlight">Hard stop: 10pm</span> for all amplified sound — Spring Hill residential neighbors</li>
+          <li>MassDEP limit: ambient +10 dB at property line = violation</li>
+          <li>70 dB max daytime · 50 dB max after 11pm</li>
+          <li>Hire sound engineer with calibrated dB meter</li>
+          <li>Aim all speakers inward, away from residential boundaries</li>
+          <li>Sound barriers: hay bales or acoustic drapes at lot perimeter</li>
+          <li>Security enforces hard noise cutoff — non-negotiable</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Guest Logistics -->
+<section class="section section-gray" id="logistics">
+  <div class="container">
+    <div class="section-header scroll-reveal">
+      <span class="section-eyebrow">Guest Logistics</span>
+      <h2>Getting 200 People There (Without the Lot)</h2>
+      <p>The lot is the venue — which means guests can't park there. Cyvl sign data revealed the challenge; here's the solution.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="scroll-reveal">
+      <div>
+        <div class="logistics-card" style="margin-bottom:16px;">
+          <h4 style="margin-bottom:4px;">The Parking Problem</h4>
+          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:16px;">Cyvl catalogued 50+ signs within 200m. Sign analysis revealed:</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span class="badge badge-red">15+ R7-5 No Parking Zones</span>
+            <span class="badge badge-red">10+ R7-2 Tow Away Zones</span>
+            <span class="badge badge-red">3 R7-1 No Parking Signs</span>
+          </div>
+          <div class="callout" style="margin-bottom:0;">
+            <strong>Verdict:</strong> Zero on-street parking available for guests adjacent to venue. This drove the entire transportation strategy.
+          </div>
+        </div>
+
+        <div class="logistics-card">
+          <h4 style="margin-bottom:16px;">Transportation Options</h4>
+
+          <div class="transport-option">
+            <div class="transport-icon" style="background:rgba(27,121,197,0.1)">🚇</div>
+            <div style="flex:1">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="transport-title">MBTA Green Line — Gilman Square</div>
+                <div class="transport-cost">$0</div>
+              </div>
+              <div class="transport-desc">6-minute walk from venue. <strong>Recommended primary mode.</strong> Post walking directions on invitations. Green Line D branch from Lechmere or Government Center.</div>
+            </div>
+          </div>
+
+          <div class="transport-option">
+            <div class="transport-icon" style="background:rgba(13,13,12,0.06)">🚕</div>
+            <div style="flex:1">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="transport-title">Ride-Share Drop-Off Zone</div>
+                <div class="transport-cost">$0</div>
+              </div>
+              <div class="transport-desc">Designate a legal curb zone on Prescott St (Good PCI — suitable for high vehicle traffic) as the Uber/Lyft staging area. Post signs and include in guest instructions.</div>
+            </div>
+          </div>
+
+          <div class="transport-option">
+            <div class="transport-icon" style="background:rgba(46,125,50,0.1)">🅿️</div>
+            <div style="flex:1">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="transport-title">Overflow Lot Rental</div>
+                <div class="transport-cost">$200–$500</div>
+              </div>
+              <div class="transport-desc">Negotiate evening parking rights with adjacent commercial properties: laundromats, churches, or retail within 0.5mi. Budget included in cost breakdown.</div>
+            </div>
+          </div>
+
+          <div class="transport-option">
+            <div class="transport-icon" style="background:rgba(218,255,0,0.12)">🚗</div>
+            <div style="flex:1">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="transport-title">Valet to Remote Lot</div>
+                <div class="transport-cost">$800–$2,000</div>
+              </div>
+              <div class="transport-desc">Valet service ferries cars to a remote lot 0.5–1 mile away. Premium option for high-end events. Not required for 200-person casual party.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="logistics-card" style="margin-bottom:16px;">
+          <h4 style="margin-bottom:4px;">Walkability Score</h4>
+          <div style="display:flex;align-items:baseline;gap:12px;margin:16px 0 8px;">
+            <div style="font-size:3.5rem;font-weight:800;color:var(--utility-blue);line-height:1;">92</div>
+            <div>
+              <div style="font-weight:700;font-size:1rem;">Walk Score</div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);">Spring Hill neighborhood</div>
+            </div>
+          </div>
+          <div class="cost-bar-wrap" style="margin-bottom:12px;"><div class="cost-bar-fill" style="width:92%;background:var(--utility-blue)"></div></div>
+          <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Highly walkable — most errands can be accomplished on foot. Supports transit-first event logistics. 2-min walk to Osgood Park, 4-min to Nunziato Field.</div>
+        </div>
+
+        <div class="logistics-card" style="margin-bottom:16px;">
+          <h4 style="margin-bottom:16px;">Nearby Landmarks</h4>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.875rem;">
+              <span>🌳 Osgood Park</span><span class="badge badge-green">2 min walk</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.875rem;">
+              <span>⚽ Nunziato Field</span><span class="badge badge-green">4 min walk</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.875rem;">
+              <span>🏛️ Central Hill Memorial Park</span><span class="badge badge-green">6 min walk</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.875rem;">
+              <span>🚇 Gilman Square Green Line</span><span class="badge badge-blue">6 min walk</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="logistics-card">
+          <h4 style="margin-bottom:12px;">Waste Management</h4>
+          <ul style="list-style:none;font-size:0.875rem;color:var(--text-secondary);">
+            <li style="padding:6px 0;border-bottom:1px solid rgba(13,13,12,0.06)">🗑️ 10-yard roll-off dumpster — $250–$400/day</li>
+            <li style="padding:6px 0;border-bottom:1px solid rgba(13,13,12,0.06)">♻️ Recycling bins — $30–$50 each (bring-your-own or rent)</li>
+            <li style="padding:6px 0;">⚠️ <strong>5 catch basins within 200m</strong> — protect storm drains from food waste per EPA regs. Position food stations away; use drip mats.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cyvl Data Story -->
+<section class="section section-dark" id="cyvl-data">
+  <div class="container">
+    <div class="section-header dark scroll-reveal">
+      <span class="section-eyebrow">Cyvl Made This Possible</span>
+      <h2>9 Data Points. Zero Site Visits.</h2>
+      <p>Every major planning decision in this document was informed by infrastructure data pulled from Cyvl's Somerville scan — without setting foot on the property.</p>
+    </div>
+
+    <div class="data-point-grid scroll-reveal">
+      <div class="dp-card">
+        <span class="dp-icon">📍</span>
+        <span class="dp-metric">±1m</span>
+        <div class="dp-name">Geocoded Coordinates</div>
+        <div class="dp-impact">Exact lat/lon for 76 School St enabled all 200m radius asset queries — the foundation of every search.</div>
+      </div>
+
+      <div class="dp-card">
+        <span class="dp-icon">🛣️</span>
+        <span class="dp-metric">50</span>
+        <div class="dp-name">Pavement Segments Scored</div>
+        <div class="dp-impact">300m radius coverage confirmed Prescott St (PCI 85.6) and Putnam St (PCI 71.4) suitable for vehicle and pedestrian access. No surprise road closures.</div>
+      </div>
+
+      <div class="dp-card">
+        <span class="dp-icon">📷</span>
+        <span class="dp-metric">88.91</span>
+        <div class="dp-name">PCI at 15m from Venue</div>
+        <div class="dp-impact">Street-level imagery at exactly 42.3850, -71.1001 confirmed excellent pavement — and flagged edge cracking and raveling for trip-hazard walk-through.</div>
+      </div>
+
+      <div class="dp-card">
+        <span class="dp-icon">🚒</span>
+        <span class="dp-metric">8</span>
+        <div class="dp-name">Fire Hydrants Mapped</div>
+        <div class="dp-impact">Informed the entire fire safety section, hydrant clearance zones, and Fire Prevention Bureau permit narrative. IDs 330, 989, 298, 299 are nearest to venue.</div>
+      </div>
+
+      <div class="dp-card">
+        <span class="dp-icon">⚡</span>
+        <span class="dp-metric">18</span>
+        <div class="dp-name">Utility Poles Identified</div>
+        <div class="dp-impact">Flagged overhead utility conflict risk for tent placement. Also revealed the possibility of a National Grid temporary power hookup — saving $300–$500 vs. generator.</div>
+      </div>
+
+      <div class="dp-card">
+        <span class="dp-icon">💡</span>
+        <span class="dp-metric">16</span>
+        <div class="dp-name">Street Luminaries</div>
+        <div class="dp-impact">Existing street lighting reduces after-dark safety risk and cuts generator load — factored into lighting rental budget and event safety plan.</div>
+      </div>
+
+      <div class="dp-card">
+        <span class="dp-icon">🚫</span>
+        <span class="dp-metric">50+</span>
+        <div class="dp-name">Signs Catalogued</div>
+        <div class="dp-impact">15+ R7-x no-parking signs revealed zero on-street guest parking — driving the entire transit-first logistics strategy and overflow lot budget line.</div>
+      </div>
+
+      <div class="dp-card">
+        <span class="dp-icon">🅿️</span>
+        <span class="dp-metric">258</span>
+        <div class="dp-name">Parking Lot Imagery Matches</div>
+        <div class="dp-impact">Confirmed the visual character and density of parking infrastructure in the area — supporting lot rental cost estimates and surface condition assumptions.</div>
+      </div>
+
+      <div class="dp-card">
+        <span class="dp-icon">🏘️</span>
+        <span class="dp-metric">92</span>
+        <div class="dp-name">Walk Score — Spring Hill</div>
+        <div class="dp-impact">Validated the transit-first parking strategy. A Walk Score of 92 means most guests can realistically arrive on foot or by transit — no valet required.</div>
+      </div>
+    </div>
+
+    <div class="scroll-reveal" style="margin-top:40px;background:rgba(218,255,0,0.06);border:1px solid rgba(218,255,0,0.2);border-radius:16px;padding:32px;text-align:center;">
+      <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--high-vis-yellow);margin-bottom:12px;">The Cyvl Advantage</div>
+      <div style="font-size:1.25rem;font-weight:700;color:white;max-width:640px;margin:0 auto;line-height:1.5;">
+        This entire action plan — permits, costs, safety, logistics — was built from <span style="color:var(--high-vis-yellow)">infrastructure data alone</span>, before a single site visit. Cyvl makes any city planner, event organizer, or CIO's team capable of this.
+      </div>
+      <div style="margin-top:20px;font-size:0.875rem;color:#8a9490;">
+        Data source: scan_1185_SOMERVILLE_MA · Project 090e18f2-0002-4a70-90b4-8f073d26294d · Generated 2026-04-02
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+      <div>
+        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="footer-logo">
+        <div class="footer-tagline">Infrastructure Intelligence — Plan Any Event, Anywhere</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:0.875rem;color:#8a9490;">Boston CIO Demo · April 2026</div>
+        <div style="font-size:0.8rem;color:#505a56;margin-top:4px;">76 School St, Somerville MA 02143</div>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <div style="font-size:0.78rem;color:#505a56;">
+        Data: Cyvl scan_1185_SOMERVILLE_MA · Infrastructure assets within 200–300m radius · PCI scores from 50 pavement segments
+      </div>
+      <div style="font-size:0.78rem;color:#505a56;">
+        Powered by <strong style="color:var(--high-vis-yellow)">Cyvl</strong> · cyvl.io
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ===== Leaflet Map =====
+  const map = L.map('site-map', {
+    center: [42.3851785, -71.1000001],
+    zoom: 16,
+    zoomControl: true
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    maxZoom: 19
+  }).addTo(map);
+
+  // Venue marker
+  const venueIcon = L.divIcon({
+    html: '<div style="background:#0D0D0C;width:18px;height:18px;border-radius:50%;border:3px solid #DAFF00;box-shadow:0 0 0 4px rgba(218,255,0,0.25)"></div>',
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+    className: ''
+  });
+  L.marker([42.3851785, -71.1000001], { icon: venueIcon })
+    .addTo(map)
+    .bindPopup('<strong>76 School St</strong><br>Event Venue<br>Historic 1880 MBTA station loft')
+    .openPopup();
+
+  // Assessment radius
+  L.circle([42.3851785, -71.1000001], {
+    radius: 200,
+    color: '#DAFF00',
+    fillColor: '#DAFF00',
+    fillOpacity: 0.04,
+    weight: 1.5,
+    dashArray: '6,4'
+  }).addTo(map).bindTooltip('200m infrastructure assessment radius');
+
+  // Fire hydrant icon
+  const hydrantIcon = L.divIcon({
+    html: '<div style="background:#FF470A;width:10px;height:10px;border-radius:50%;border:2px solid white;box-shadow:var(--shadow-sm)"></div>',
+    iconSize: [10, 10], iconAnchor: [5, 5], className: ''
+  });
+
+  // Utility pole icon
+  const poleIcon = L.divIcon({
+    html: '<div style="background:#1B79C5;width:8px;height:8px;border-radius:2px;border:1.5px solid white"></div>',
+    iconSize: [8, 8], iconAnchor: [4, 4], className: ''
+  });
+
+  // Light icon
+  const lightIcon = L.divIcon({
+    html: '<div style="background:#DAFF00;width:8px;height:8px;border-radius:50%;border:1.5px solid #999"></div>',
+    iconSize: [8, 8], iconAnchor: [4, 4], className: ''
+  });
+
+  // Fire hydrants — distributed around 200m radius
+  const hydrants = [
+    { lat: 42.3866, lon: -71.1010, id: '330' },
+    { lat: 42.3858, lon: -71.0985, id: '989' },
+    { lat: 42.3840, lon: -71.0978, id: '298' },
+    { lat: 42.3835, lon: -71.1005, id: '299' },
+    { lat: 42.3843, lon: -71.1025, id: '308' },
+    { lat: 42.3862, lon: -71.1030, id: '995' },
+    { lat: 42.3872, lon: -71.0995, id: '978' },
+    { lat: 42.3847, lon: -71.0968, id: '963' },
+  ];
+  hydrants.forEach(h => {
+    L.marker([h.lat, h.lon], { icon: hydrantIcon })
+      .addTo(map)
+      .bindPopup(`<strong>Fire Hydrant #${h.id}</strong><br>Maintain 15ft clearance zone`);
+  });
+
+  // Utility poles — scattered around
+  const poles = [
+    [42.3868, -71.0990], [42.3863, -71.1005], [42.3855, -71.1015],
+    [42.3848, -71.1020], [42.3842, -71.1010], [42.3838, -71.0995],
+    [42.3836, -71.0980], [42.3842, -71.0970], [42.3850, -71.0960],
+    [42.3860, -71.0968], [42.3869, -71.0975], [42.3874, -71.0988],
+    [42.3872, -71.1015], [42.3865, -71.1022], [42.3852, -71.1028],
+    [42.3844, -71.1030], [42.3835, -71.1018], [42.3832, -71.0988]
+  ];
+  poles.forEach(p => {
+    L.marker(p, { icon: poleIcon })
+      .addTo(map)
+      .bindTooltip('Utility pole — check tent clearance');
+  });
+
+  // Street luminaries
+  const lights = [
+    [42.3868, -71.0998], [42.3856, -71.0972], [42.3840, -71.0985],
+    [42.3836, -71.1002], [42.3845, -71.1018], [42.3858, -71.1024],
+    [42.3866, -71.1014], [42.3870, -71.1000], [42.3862, -71.0980],
+    [42.3849, -71.0965], [42.3839, -71.0975], [42.3834, -71.0995],
+    [42.3838, -71.1010], [42.3850, -71.1025], [42.3863, -71.1018],
+    [42.3871, -71.0990]
+  ];
+  lights.forEach(l => {
+    L.marker(l, { icon: lightIcon })
+      .addTo(map)
+      .bindTooltip('Street luminary');
+  });
+
+  // Gilman Square MBTA
+  const mbta = L.divIcon({
+    html: '<div style="background:#1B79C5;color:white;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;white-space:nowrap;box-shadow:0 2px 4px rgba(0,0,0,0.3)">🚇 Green Line</div>',
+    iconSize: [90, 24], iconAnchor: [45, 12], className: ''
+  });
+  L.marker([42.3872, -71.0940], { icon: mbta })
+    .addTo(map)
+    .bindPopup('<strong>Gilman Square Station</strong><br>Green Line · 6 min walk to venue');
+
+  // ===== Cost bar animations =====
+  function animateBars() {
+    document.querySelectorAll('.cost-bar-fill[data-width]').forEach(bar => {
+      bar.style.width = bar.dataset.width + '%';
+    });
+  }
+
+  // ===== Scroll reveal =====
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        if (entry.target.id === 'cost-bars' || entry.target.closest('#cost')) {
+          setTimeout(animateBars, 200);
+        }
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.scroll-reveal, .tl-item').forEach(el => {
+    observer.observe(el);
+  });
+
+  // Stagger timeline items
+  document.querySelectorAll('.tl-item').forEach((item, i) => {
+    item.style.transitionDelay = (i * 0.1) + 's';
+    observer.observe(item);
+  });
+
+  // Trigger cost bars if already in view
+  animateBars();
+
+  // ===== Regulatory accordion =====
+  function toggleReg(header) {
+    const item = header.parentElement;
+    const body = item.querySelector('.reg-body');
+    const isOpen = item.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.reg-item.open').forEach(el => {
+      el.classList.remove('open');
+      el.querySelector('.reg-body').classList.remove('open');
+    });
+
+    // Open clicked if it was closed
+    if (!isOpen) {
+      item.classList.add('open');
+      body.classList.add('open');
+    }
+  }
+
+  // ===== Active nav link =====
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (window.scrollY >= section.offsetTop - 120) {
+        current = section.getAttribute('id');
+      }
+    });
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  });
+</script>
+
+</body>
+</html>

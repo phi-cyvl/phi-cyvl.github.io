@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Newbury Street Pop-Up Playbook — Cyvl</title>
+  <link rel="icon" href="../assets/cyvl_favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="../assets/styles.css" />
+  <style>
+    /* ── Page-level overrides ─────────────────────────────────────────── */
+    body { background: #F8F8F7; }
+
+    /* Nav */
+    .nav { box-shadow: 0 1px 0 rgba(13,13,12,0.08); }
+    .nav-logo { height: 26px; }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 72px;
+      background: var(--asphalt-black);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -120px; left: -80px;
+      width: 500px; height: 500px;
+      background: var(--high-vis-yellow);
+      opacity: 0.05;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(218,255,0,0.12);
+      border: 1px solid rgba(218,255,0,0.2);
+      color: var(--high-vis-yellow);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.1;
+      max-width: 900px;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--high-vis-yellow); }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: #8A9490;
+      max-width: 580px;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 36px;
+      margin-top: 8px;
+    }
+    .hero-stat {
+      padding: 0 40px 0 0;
+      margin-right: 40px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat-value {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--high-vis-yellow);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+    .hero-stat-label {
+      font-size: 0.75rem;
+      color: #6B7672;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+    }
+
+    /* Section headers */
+    .section-header { margin-bottom: 40px; }
+    .section-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--concrete-gray);
+      margin-bottom: 8px;
+    }
+    .section-header h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 8px;
+    }
+    .section-header p {
+      color: var(--concrete-gray);
+      font-size: 1rem;
+      max-width: 56ch;
+      margin-bottom: 0;
+    }
+
+    /* Section spacing */
+    .section { padding: 72px 0; }
+    .section-alt { background: var(--white); }
+
+    /* Block cards */
+    .block-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    @media(max-width:900px){ .block-grid { grid-template-columns:1fr; } }
+    .block-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(13,13,12,0.07);
+      box-shadow: var(--shadow-md);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .block-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+    .block-card-header {
+      background: var(--asphalt-black);
+      padding: 20px 22px 16px;
+      position: relative;
+    }
+    .block-number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--high-vis-yellow);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .block-range {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 2px;
+    }
+    .block-badge {
+      position: absolute;
+      top: 16px; right: 16px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .badge-best { background: var(--high-vis-yellow); color: var(--asphalt-black); }
+    .badge-sweet { background: var(--utility-blue); color: white; }
+    .badge-indie { background: #2E7D32; color: white; }
+    .block-card-body { padding: 20px 22px 24px; }
+    .block-card-body h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .block-desc { font-size: 0.85rem; color: var(--concrete-gray); margin-bottom: 14px; line-height: 1.5; }
+    .block-meta-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .block-meta-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .block-meta-list li strong { color: var(--text-primary); font-weight: 600; min-width: 60px; }
+    .block-meter { margin-top: 16px; }
+    .block-meter-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--concrete-gray); margin-bottom: 4px; }
+    .block-anchor-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
+    .anchor-chip {
+      background: #F0F0EE;
+      color: var(--text-secondary);
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    /* Permit timeline */
+    .permit-timeline { position: relative; }
+    .permit-step {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 0;
+      position: relative;
+    }
+    .permit-step-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 48px;
+    }
+    .permit-step-num {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--asphalt-black);
+      color: var(--high-vis-yellow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+      z-index: 1;
+      position: relative;
+    }
+    .permit-step-line {
+      width: 2px;
+      flex: 1;
+      background: rgba(13,13,12,0.1);
+      min-height: 20px;
+    }
+    .permit-step:last-child .permit-step-line { display: none; }
+    .permit-step-content {
+      flex: 1;
+      padding-bottom: 28px;
+    }
+    .permit-step-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .permit-step-title { font-size: 1rem; font-weight: 700; margin-bottom: 0; }
+    .permit-step-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .permit-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #F0F0EE;
+      color: var(--concrete-gray);
+    }
+    .permit-tag-cost { background: #FFF8E1; color: #B8860B; }
+    .permit-tag-time { background: #E8F5E9; color: #2E7D32; }
+    .permit-tag-agency { background: #E3F2FD; color: #1565C0; }
+    .permit-chevron {
+      font-size: 1.1rem;
+      color: var(--concrete-gray);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .permit-step-body {
+      display: none;
+      margin-top: 14px;
+      padding: 16px;
+      background: #F8F8F7;
+      border-radius: 10px;
+      border-left: 3px solid var(--high-vis-yellow);
+    }
+    .permit-step-body.open { display: block; }
+    .permit-chevron.open { transform: rotate(180deg); }
+    .permit-reqs { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .permit-reqs li {
+      display: flex;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .permit-reqs li::before {
+      content: '→';
+      color: var(--high-vis-yellow);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .permit-contact {
+      font-size: 0.8rem;
+      color: var(--concrete-gray);
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(13,13,12,0.07);
+    }
+    .permit-tip {
+      display: flex;
+      gap: 8px;
+      background: rgba(218,255,0,0.08);
+      border: 1px solid rgba(218,255,0,0.15);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      margin-top: 10px;
+    }
+    .permit-tip::before { content: '💡'; flex-shrink: 0; }
+
+    /* Running cost tracker */
+    .cost-tracker {
+      position: sticky;
+      top: 68px;
+      background: var(--asphalt-black);
+      color: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow-lg);
+      z-index: 10;
+    }
+    .cost-tracker-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6B7672; margin-bottom: 8px; }
+    .cost-tracker-total { font-size: 2rem; font-weight: 800; color: var(--high-vis-yellow); letter-spacing: -0.03em; line-height: 1; }
+    .cost-tracker-sub { font-size: 0.75rem; color: #6B7672; margin-top: 3px; }
+    .cost-tracker-breakdown { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+    .cost-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: #8A9490;
+    }
+    .cost-line span:last-child { font-weight: 600; color: var(--white); }
+
+    /* Two-col permit layout */
+    .permit-layout { display: grid; grid-template-columns: 1fr 280px; gap: 40px; align-items: start; }
+    @media(max-width:1000px){ .permit-layout { grid-template-columns: 1fr; } .cost-tracker { position: static; } }
+
+    /* Cost calculator */
+    .scenario-tabs { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 1px solid rgba(13,13,12,0.1); width: fit-content; margin-bottom: 28px; }
+    .scenario-tab {
+      padding: 8px 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--white);
+      color: var(--text-secondary);
+      border: none;
+      transition: all 0.15s;
+    }
+    .scenario-tab.active { background: var(--asphalt-black); color: var(--high-vis-yellow); }
+    .cost-section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--concrete-gray); margin-bottom: 12px; font-weight: 700; }
+    .cost-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(13,13,12,0.05);
+    }
+    .cost-item-name { flex: 1; font-size: 0.85rem; color: var(--text-primary); }
+    .cost-item-amount { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); min-width: 80px; text-align: right; }
+    .cost-bar-wrap { width: 80px; }
+    .cost-bar { height: 6px; background: #ECEAE8; border-radius: 3px; overflow: hidden; }
+    .cost-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+    .cost-total-box {
+      background: var(--asphalt-black);
+      color: white;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cost-total-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6B7672; margin-bottom: 4px; }
+    .cost-total-val { font-size: 2rem; font-weight: 800; color: var(--high-vis-yellow); letter-spacing: -0.03em; line-height: 1; }
+    .cost-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    @media(max-width:700px){ .cost-cols { grid-template-columns: 1fr; } }
+
+    /* Checklist sections */
+    .checklist-phase { margin-bottom: 32px; }
+    .checklist-phase-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .phase-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .phase-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--concrete-gray); }
+    .phase-subtitle { font-size: 0.75rem; color: var(--concrete-gray); margin-left: auto; }
+    .checklist-items { display: flex; flex-direction: column; gap: 2px; }
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      line-height: 1.5;
+      transition: background 0.15s;
+    }
+    .checklist-item:hover { background: #F3F3F1; }
+    .checklist-box {
+      width: 18px; height: 18px;
+      min-width: 18px;
+      border-radius: 4px;
+      border: 2px solid rgba(13,13,12,0.2);
+      margin-top: 2px;
+    }
+    .checklist-item.critical .checklist-box { border-color: var(--signal-red); }
+    .checklist-item.critical { }
+    .priority-pip {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 1px 5px;
+      border-radius: 3px;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .pip-critical { background: #FFEBEE; color: #C62828; }
+    .pip-high { background: #FFF8E1; color: #B8860B; }
+    .pip-medium { background: #E8F5E9; color: #2E7D32; }
+    .pip-optional { background: #F3F3F1; color: var(--concrete-gray); }
+
+    /* Business map / density */
+    #map { height: 380px; border-radius: 12px; overflow: hidden; }
+    .business-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text-secondary); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Business table */
+    .biz-table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid rgba(13,13,12,0.07); }
+    .biz-table { margin-bottom: 0; }
+    .biz-table td, .biz-table th { white-space: nowrap; font-size: 0.8rem; }
+    .biz-table td:first-child { white-space: normal; font-weight: 600; }
+
+    /* Event history table */
+    .event-table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid rgba(13,13,12,0.07); }
+    .event-table { margin-bottom: 0; }
+    .event-table td, .event-table th { font-size: 0.82rem; }
+    .status-open { color: #B8860B; font-weight: 600; font-size: 0.75rem; }
+    .status-closed { color: #2E7D32; font-weight: 600; font-size: 0.75rem; }
+
+    /* World Cup */
+    .wc-hero {
+      background: linear-gradient(135deg, #0D0D0C 0%, #1a1f1c 100%);
+      border-radius: 16px;
+      padding: 36px 40px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .wc-hero::before {
+      content: '⚽';
+      position: absolute;
+      right: 32px; top: 24px;
+      font-size: 5rem;
+      opacity: 0.12;
+    }
+    .wc-hero h3 { font-size: 1.5rem; color: var(--high-vis-yellow); margin-bottom: 8px; }
+    .wc-matches-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+    @media(max-width:700px){ .wc-matches-grid { grid-template-columns: 1fr; } }
+    .wc-match-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .wc-match-date { font-size: 0.7rem; color: var(--high-vis-yellow); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .wc-match-label { font-size: 0.82rem; color: white; font-weight: 600; }
+    .wc-match-venue { font-size: 0.72rem; color: #6B7672; margin-top: 2px; }
+    .multiplier-row { display: flex; align-items: center; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+    .multiplier-badge {
+      background: var(--high-vis-yellow);
+      color: var(--asphalt-black);
+      font-size: 1.4rem;
+      font-weight: 800;
+      padding: 8px 16px;
+      border-radius: 8px;
+      letter-spacing: -0.02em;
+    }
+    .multiplier-text { font-size: 0.9rem; color: #8A9490; }
+    .wc-ideas-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .wc-ideas-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: #8A9490;
+    }
+    .wc-ideas-list li::before { content: '→'; color: var(--high-vis-yellow); font-weight: 700; flex-shrink: 0; }
+
+    /* Infrastructure / Cyvl demo */
+    .infra-section { background: var(--asphalt-black); }
+    .infra-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .infra-detection-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .detect-chip {
+      background: rgba(218,255,0,0.1);
+      border: 1px solid rgba(218,255,0,0.2);
+      color: var(--high-vis-yellow);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 4px;
+    }
+    .pci-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(46,125,50,0.15);
+      color: #66BB6A;
+    }
+    .infra-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media(max-width:800px){ .infra-grid { grid-template-columns: 1fr; } }
+    .cyvl-logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .cyvl-demo-note {
+      background: rgba(27,121,197,0.12);
+      border: 1px solid rgba(27,121,197,0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.82rem;
+      color: #64B5F6;
+      margin-bottom: 24px;
+    }
+
+    /* Footer */
+    .footer { background: var(--asphalt-black); }
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer-bottom { padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-note { font-size: 0.78rem; color: #3E4742; }
+    .footer-powered { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #3E4742; }
+    .footer-powered img { height: 18px; opacity: 0.4; }
+
+    /* Misc utilities */
+    .pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: #F0F0EE;
+      color: var(--concrete-gray);
+    }
+    .data-source-note {
+      font-size: 0.75rem;
+      color: var(--concrete-gray);
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .data-source-note::before { content: '📊'; }
+
+    @media(max-width:640px){
+      .hero-stats { gap: 24px; }
+      .hero-stat { padding: 0; margin: 0; border-right: none; }
+      .hero-stat-value { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ─────────────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="container flex items-center justify-between" style="padding:0 var(--space-lg);">
+    <img src="../assets/cyvl_logo_black.png" alt="Cyvl" class="nav-logo" />
+    <div class="nav-links" style="display:flex;gap:20px;align-items:center;">
+      <a href="#blocks">Best Blocks</a>
+      <a href="#permits">Permits</a>
+      <a href="#costs">Costs</a>
+      <a href="#checklist">Checklist</a>
+      <a href="#map-section">Map</a>
+      <a href="#world-cup">World Cup</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ───────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">
+      <span>📍</span> Boston Back Bay · Summer 2026
+    </div>
+    <h1>Newbury Street<br /><span>Pop-Up Playbook</span></h1>
+    <p class="hero-sub">Your complete guide to hosting a summer pop-up on Boston's iconic shopping street — permits, costs, timing, and infrastructure intelligence.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">8</div>
+        <div class="hero-stat-label">Blocks · Arlington to Mass Ave</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">68</div>
+        <div class="hero-stat-label">Events on record (MOCAL data)</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">50K+</div>
+        <div class="hero-stat-label">Foot traffic on Open Sundays</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">69</div>
+        <div class="hero-stat-label">Licensed businesses on street</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Best Blocks ─────────────────────────────────────────────────────── -->
+<section class="section section-alt" id="blocks">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Location Strategy</div>
+      <h2>Choose Your Block</h2>
+      <p>Three zones with distinct character, foot traffic, and competition levels. Match your brand to the right block.</p>
+    </div>
+    <div class="block-grid">
+
+      <!-- 100 Block -->
+      <div class="block-card">
+        <div class="block-card-header">
+          <div class="block-number">100</div>
+          <div class="block-range">Berkeley → Dartmouth</div>
+          <span class="block-badge badge-best">Highest Traffic</span>
+        </div>
+        <div class="block-card-body">
+          <h4>Lower Newbury</h4>
+          <p class="block-desc">Closest to Public Garden and Arlington T stop. Most upscale retail character — photogenic brownstone facades, premium brand neighbors. Best for fashion, lifestyle, and high-end food.</p>
+          <div class="block-meter">
+            <div class="block-meter-label"><span>Foot traffic</span><span>20–25K/day</span></div>
+            <div class="cost-bar"><div class="cost-bar-fill" style="width:95%;background:var(--high-vis-yellow)"></div></div>
+          </div>
+          <div class="block-meter" style="margin-top:8px">
+            <div class="block-meter-label"><span>Permit competition</span><span>High</span></div>
+            <div class="cost-bar"><div class="cost-bar-fill" style="width:90%;background:var(--signal-red)"></div></div>
+          </div>
+          <ul class="block-meta-list" style="margin-top:14px">
+            <li><strong>T stops</strong> Arlington (Green B/C/D/E) — 2 min walk</li>
+            <li><strong>Parking</strong> Copley Place garage, metered street</li>
+            <li><strong>Best for</strong> Fashion, luxury, premium food &amp; drink</li>
+          </ul>
+          <div class="block-anchor-chips">
+            <span class="anchor-chip">H&amp;M (100)</span>
+            <span class="anchor-chip">Blue Bottle (163)</span>
+            <span class="anchor-chip">Stephanie's (188)</span>
+            <span class="anchor-chip">J.P. Licks (173)</span>
+            <span class="anchor-chip">Ben &amp; Jerry's (174)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 200 Block -->
+      <div class="block-card">
+        <div class="block-card-header">
+          <div class="block-number">200</div>
+          <div class="block-range">Exeter → Gloucester</div>
+          <span class="block-badge badge-sweet">Sweet Spot</span>
+        </div>
+        <div class="block-card-body">
+          <h4>Mid Newbury</h4>
+          <p class="block-desc">Proven brand activation territory. Nike Marathon Activation is filed here for April 2026. Google, Nike, and Adidas run sidewalk events in this zone — highest precedent for approvals.</p>
+          <div class="block-meter">
+            <div class="block-meter-label"><span>Foot traffic</span><span>18–22K/day</span></div>
+            <div class="cost-bar"><div class="cost-bar-fill" style="width:85%;background:var(--high-vis-yellow)"></div></div>
+          </div>
+          <div class="block-meter" style="margin-top:8px">
+            <div class="block-meter-label"><span>Permit competition</span><span>Medium</span></div>
+            <div class="cost-bar"><div class="cost-bar-fill" style="width:60%;background:#F9A825)"></div></div>
+          </div>
+          <ul class="block-meta-list" style="margin-top:14px">
+            <li><strong>T stops</strong> Copley (Green B/C/D/E) — 3 min walk</li>
+            <li><strong>Parking</strong> Prudential garage nearby</li>
+            <li><strong>Best for</strong> Sportswear, tech, consumer brands</li>
+          </ul>
+          <div class="block-anchor-chips">
+            <span class="anchor-chip">Nike (200)</span>
+            <span class="anchor-chip">Central Perk (205)</span>
+            <span class="anchor-chip">Baguette Cafe (224)</span>
+            <span class="anchor-chip">Amorino (249)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 300 Block -->
+      <div class="block-card">
+        <div class="block-card-header">
+          <div class="block-number">300</div>
+          <div class="block-range">Hereford → Mass Ave</div>
+          <span class="block-badge badge-indie">Indie Friendly</span>
+        </div>
+        <div class="block-card-body">
+          <h4>Upper Newbury</h4>
+          <p class="block-desc">Direct Hynes/ICA T stop. More independent business character — lower rent for private space, less corporate competition. George Howell Coffee and Pink Carrot just opened at 400. Great for authentic brands.</p>
+          <div class="block-meter">
+            <div class="block-meter-label"><span>Foot traffic</span><span>15–20K/day</span></div>
+            <div class="cost-bar"><div class="cost-bar-fill" style="width:70%;background:var(--high-vis-yellow)"></div></div>
+          </div>
+          <div class="block-meter" style="margin-top:8px">
+            <div class="block-meter-label"><span>Permit competition</span><span>Low</span></div>
+            <div class="cost-bar"><div class="cost-bar-fill" style="width:30%;background:#2E7D32)"></div></div>
+          </div>
+          <ul class="block-meta-list" style="margin-top:14px">
+            <li><strong>T stops</strong> Hynes/ICA (Green B/C/D) — 1 min walk</li>
+            <li><strong>Parking</strong> Garage at 360 Newbury</li>
+            <li><strong>Best for</strong> Indie brands, food, culture, art</li>
+          </ul>
+          <div class="block-anchor-chips">
+            <span class="anchor-chip">Chip City (316)</span>
+            <span class="anchor-chip">George Howell (400)</span>
+            <span class="anchor-chip">Pink Carrot (400)</span>
+            <span class="anchor-chip">Tao's (336)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <p class="data-source-note">Boston Licensing Board + Inspectional Services — Active licenses as of April 2026 | Boston MPO Pedestrian Count Database</p>
+  </div>
+</section>
+
+<!-- ── 8-Step Permit Process ────────────────────────────────────────────── -->
+<section class="section" id="permits" style="background:#F8F8F7;">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Step-by-Step Guide</div>
+      <h2>8-Step Permit Process</h2>
+      <p>File all permits simultaneously — not sequentially. Total lead time: <strong>6–8 weeks</strong>. All permits must be in hand before event day.</p>
+    </div>
+    <div class="permit-layout">
+
+      <!-- Timeline -->
+      <div class="permit-timeline">
+
+        <!-- Step 1 -->
+        <div class="permit-step">
+          <div class="permit-step-left">
+            <div class="permit-step-num">1</div>
+            <div class="permit-step-line"></div>
+          </div>
+          <div class="permit-step-content">
+            <div class="permit-step-header" onclick="togglePermit(this)">
+              <div>
+                <div class="permit-step-title">Special Event License</div>
+                <div class="permit-step-meta">
+                  <span class="permit-tag permit-tag-agency">MOCAL</span>
+                  <span class="permit-tag permit-tag-cost">$50–$200</span>
+                  <span class="permit-tag permit-tag-time">Apply 30+ days out</span>
+                </div>
+              </div>
+              <span class="permit-chevron">▾</span>
+            </div>
+            <div class="permit-step-body">
+              <strong style="font-size:0.82rem;color:var(--text-secondary)">Requirements</strong>
+              <ul class="permit-reqs">
+                <li>Completed application signed by Boston Police District D-4 Captain</li>
+                <li>Site plan / event layout diagram</li>
+                <li>Security plan</li>
+                <li>Certificate of insurance ($1M+ general liability)</li>
+                <li>Letter from property owner / landlord if on private property</li>
+              </ul>
+              <div class="permit-contact">
+                📧 MOCAL@boston.gov &nbsp;|&nbsp; City Hall Room 809<br/>
+                🌐 <a href="https://www.boston.gov/departments/consumer-affairs-and-licensing/how-apply-host-public-event-boston" target="_blank">boston.gov/departments/consumer-affairs-and-licensing</a>
+              </div>
+              <div class="permit-tip">This is your anchor permit — everything else flows from it. File this first. Small commercial events qualify for Tier 1 (minimal city resources).</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="permit-step">
+          <div class="permit-step-left">
+            <div class="permit-step-num">2</div>
+            <div class="permit-step-line"></div>
+          </div>
+          <div class="permit-step-content">
+            <div class="permit-step-header" onclick="togglePermit(this)">
+              <div>
+                <div class="permit-step-title">ISD Temporary Food Service Permit</div>
+                <div class="permit-step-meta">
+                  <span class="permit-tag permit-tag-agency">ISD Health Division</span>
+                  <span class="permit-tag permit-tag-cost">$30 day 1, $5/day after</span>
+                  <span class="permit-tag permit-tag-time">Apply 30+ days out</span>
+                </div>
+              </div>
+              <span class="permit-chevron">▾</span>
+            </div>
+            <div class="permit-step-body">
+              <strong style="font-size:0.82rem;color:var(--text-secondary)">Requirements</strong>
+              <ul class="permit-reqs">
+                <li>Completed temporary food establishment application</li>
+                <li>Proof of certified food manager (or current enrollment in certification)</li>
+                <li>Food handling procedures</li>
+                <li>Equipment and setup plan</li>
+              </ul>
+              <div class="permit-contact">
+                📍 1010 Massachusetts Ave, 4th Floor<br/>
+                📞 (617) 635-5326
+              </div>
+              <div class="permit-tip">Valid for up to 14 consecutive days — if running multiple Open Newbury Sundays, a multi-day permit saves money and paperwork.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="permit-step">
+          <div class="permit-step-left">
+            <div class="permit-step-num">3</div>
+            <div class="permit-step-line"></div>
+          </div>
+          <div class="permit-step-content">
+            <div class="permit-step-header" onclick="togglePermit(this)">
+              <div>
+                <div class="permit-step-title">One-Day Alcohol License <span style="font-weight:400;font-size:0.82rem;color:var(--concrete-gray)">(if serving)</span></div>
+                <div class="permit-step-meta">
+                  <span class="permit-tag permit-tag-agency">Boston Licensing Board</span>
+                  <span class="permit-tag permit-tag-cost">$75–$150/day</span>
+                  <span class="permit-tag permit-tag-time">Apply 3–4 weeks out</span>
+                </div>
+              </div>
+              <span class="permit-chevron">▾</span>
+            </div>
+            <div class="permit-step-body">
+              <strong style="font-size:0.82rem;color:var(--text-secondary)">Requirements</strong>
+              <ul class="permit-reqs">
+                <li>Application signed by Police Captain in event district (D-4)</li>
+                <li>ABCC (Alcoholic Beverages Control Commission) application</li>
+                <li>Certificate of Inspection from ISD</li>
+                <li>Fire Assembly Permit (for 49+ capacity events)</li>
+                <li>Property owner/landlord permission letter</li>
+                <li>Site plan showing alcohol service area and all egresses</li>
+                <li>Security plan with staffing ratios</li>
+                <li>Must purchase alcohol from ABCC-approved wholesaler only</li>
+              </ul>
+              <div class="permit-contact">
+                📧 Alyssa.Tobin@boston.gov (CC: LicensingBoard@boston.gov)<br/>
+                🌐 <a href="https://www.boston.gov/departments/licensing-board/how-get-special-one-day-alcohol-license" target="_blank">boston.gov/licensing-board</a>
+              </div>
+              <div class="permit-tip">Malt/wine: $75/day. All-alcohol: $150/day. Email is fastest — board reviews weekly.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="permit-step">
+          <div class="permit-step-left">
+            <div class="permit-step-num">4</div>
+            <div class="permit-step-line"></div>
+          </div>
+          <div class="permit-step-content">
+            <div class="permit-step-header" onclick="togglePermit(this)">
+              <div>
+                <div class="permit-step-title">Outdoor Dining / Sidewalk Cafe Permit <span style="font-weight:400;font-size:0.82rem;color:var(--concrete-gray)">(if on public sidewalk)</span></div>
+                <div class="permit-step-meta">
+                  <span class="permit-tag permit-tag-agency">Public Works + Licensing</span>
+                  <span class="permit-tag permit-tag-cost">$199–$399/month</span>
+                  <span class="permit-tag permit-tag-time">Apply before May 1</span>
+                </div>
+              </div>
+              <span class="permit-chevron">▾</span>
+            </div>
+            <div class="permit-step-body">
+              <strong style="font-size:0.82rem;color:var(--text-secondary)">Requirements</strong>
+              <ul class="permit-reqs">
+                <li>Business must have existing food service license</li>
+                <li>ADA-compliant layout — maintain 5-foot clear pedestrian passage at all times</li>
+                <li>Application via boston.gov portal</li>
+                <li>Bollards or delineators may be required for boundary marking</li>
+                <li>Liquor license required to serve alcohol in outdoor dining area</li>
+              </ul>
+              <div class="permit-contact">
+                📧 outdoordining@boston.gov<br/>
+                Season runs May 1 – October 31
+              </div>
+              <div class="permit-tip">For a pure pop-up (not attached to an existing licensed business), use the Special Event path instead of this permit. The seasonal permit is for brick-and-mortar operators expanding outdoors.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="permit-step">
+          <div class="permit-step-left">
+            <div class="permit-step-num">5</div>
+            <div class="permit-step-line"></div>
+          </div>
+          <div class="permit-step-content">
+            <div class="permit-step-header" onclick="togglePermit(this)">
+              <div>
+                <div class="permit-step-title">Tent / Temporary Structure Permit</div>
+                <div class="permit-step-meta">
+                  <span class="permit-tag permit-tag-agency">Boston Fire Prevention</span>
+                  <span class="permit-tag permit-tag-cost">Varies</span>
+                  <span class="permit-tag permit-tag-time">File with other permits</span>
+                </div>
+              </div>
+              <span class="permit-chevron">▾</span>
+            </div>
+            <div class="permit-step-body">
+              <strong style="font-size:0.82rem;color:var(--text-secondary)">Requirements</strong>
+              <ul class="permit-reqs">
+                <li>Required for any tent cluster larger than 4 × 10×10 with sides attached</li>
+                <li>Key exception: 4 or fewer 10×10 tents touching without sides = NO permit needed</li>
+                <li>Larger aggregations require permit</li>
+                <li>Stamped engineer/architect approval if capacity exceeds 199 people</li>
+              </ul>
+              <div class="permit-contact">
+                🌐 <a href="https://www.boston.gov/departments/fire-prevention/fire-forms-permits-applications-and-fees" target="_blank">boston.gov/fire-prevention</a>
+              </div>
+              <div class="permit-tip">Smart move: use 4 × 10×10 open-sided tents. No permit required, and you get 400 sq ft of covered space free of the fire permitting process.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="permit-step">
+          <div class="permit-step-left">
+            <div class="permit-step-num">6</div>
+            <div class="permit-step-line"></div>
+          </div>
+          <div class="permit-step-content">
+            <div class="permit-step-header" onclick="togglePermit(this)">
+              <div>
+                <div class="permit-step-title">Generator Permit</div>
+                <div class="permit-step-meta">
+                  <span class="permit-tag permit-tag-agency">Fire Prevention / ISD</span>
+                  <span class="permit-tag permit-tag-cost">$50–$100</span>
+                  <span class="permit-tag permit-tag-time">File with other permits</span>
+                </div>
+              </div>
+              <span class="permit-chevron">▾</span>
+            </div>
+            <div class="permit-step-body">
+              <strong style="font-size:0.82rem;color:var(--text-secondary)">Requirements</strong>
+              <ul class="permit-reqs">
+                <li>Generator permit application</li>
+                <li>Fuel storage documentation</li>
+                <li>Location plan showing generator placement relative to tents and structures</li>
+              </ul>
+              <div class="permit-tip">No public power outlets on Newbury Street sidewalks. Generator or battery power pack required for any powered equipment — POS systems, lighting, music.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 7 -->
+        <div class="permit-step">
+          <div class="permit-step-left">
+            <div class="permit-step-num">7</div>
+            <div class="permit-step-line"></div>
+          </div>
+          <div class="permit-step-content">
+            <div class="permit-step-header" onclick="togglePermit(this)">
+              <div>
+                <div class="permit-step-title">One-Time Entertainment License <span style="font-weight:400;font-size:0.82rem;color:var(--concrete-gray)">(if live music)</span></div>
+                <div class="permit-step-meta">
+                  <span class="permit-tag permit-tag-agency">Entertainment Licensing / MOCAL</span>
+                  <span class="permit-tag permit-tag-cost">Varies</span>
+                  <span class="permit-tag permit-tag-time">Apply 2+ weeks out</span>
+                </div>
+              </div>
+              <span class="permit-chevron">▾</span>
+            </div>
+            <div class="permit-step-body">
+              <strong style="font-size:0.82rem;color:var(--text-secondary)">Requirements</strong>
+              <ul class="permit-reqs">
+                <li>Application with signed police captain approval</li>
+                <li>Event details, performance times, security plan</li>
+                <li>May require noise management plan for amplified sound</li>
+              </ul>
+              <div class="permit-contact">
+                📧 MOCAL@boston.gov<br/>
+                🌐 <a href="https://www.boston.gov/departments/entertainment-licensing/how-get-one-time-entertainment-license" target="_blank">boston.gov/entertainment-licensing</a>
+              </div>
+              <div class="permit-tip">The Google Store Live Music event (Sep 2025) at 153 Newbury used exactly this permit. Precedent is strong for music activations on Open Newbury Sundays.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 8 -->
+        <div class="permit-step">
+          <div class="permit-step-left">
+            <div class="permit-step-num">8</div>
+            <div class="permit-step-line"></div>
+          </div>
+          <div class="permit-step-content">
+            <div class="permit-step-header" onclick="togglePermit(this)">
+              <div>
+                <div class="permit-step-title">Transient Vendor License (MA State) <span style="font-weight:400;font-size:0.82rem;color:var(--concrete-gray)">(if selling goods)</span></div>
+                <div class="permit-step-meta">
+                  <span class="permit-tag permit-tag-agency">MA Secretary of State</span>
+                  <span class="permit-tag permit-tag-cost">State fee varies</span>
+                  <span class="permit-tag permit-tag-time">Apply 2–3 weeks out</span>
+                </div>
+              </div>
+              <span class="permit-chevron">▾</span>
+            </div>
+            <div class="permit-step-body">
+              <strong style="font-size:0.82rem;color:var(--text-secondary)">Requirements</strong>
+              <ul class="permit-reqs">
+                <li>Required if selling retail goods from a temporary location</li>
+                <li>Does NOT apply to established brick-and-mortar businesses doing an outdoor extension</li>
+              </ul>
+              <div class="permit-contact">
+                🌐 <a href="https://www.mass.gov/how-to/transient-vendor" target="_blank">mass.gov/how-to/transient-vendor</a>
+              </div>
+              <div class="permit-tip">If you already have a Boston business license at a permanent address and are extending outdoors, skip this. Applies primarily to new pop-ups without an existing storefront.</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end permit-timeline -->
+
+      <!-- Cost tracker sidebar -->
+      <div>
+        <div class="cost-tracker">
+          <div class="cost-tracker-title">Running permit cost</div>
+          <div class="cost-tracker-total" id="tracker-total">$230</div>
+          <div class="cost-tracker-sub">minimum · non-alcohol · 1 day</div>
+          <div class="cost-tracker-breakdown">
+            <div class="cost-line"><span>Special Event License</span><span>$50–$200</span></div>
+            <div class="cost-line"><span>Temp Food Permit</span><span>$30–$100</span></div>
+            <div class="cost-line"><span>Alcohol License</span><span>+ $75–$150</span></div>
+            <div class="cost-line"><span>Tent Permit</span><span>+ $50–$150</span></div>
+            <div class="cost-line"><span>Generator Permit</span><span>+ $50–$100</span></div>
+            <div class="cost-line"><span>Entertainment</span><span>+ $50–$150</span></div>
+            <div class="cost-line"><span>Transient Vendor</span><span>+ $50–$100</span></div>
+            <div style="height:1px;background:rgba(255,255,255,0.07);margin:8px 0;"></div>
+            <div class="cost-line"><span style="color:var(--high-vis-yellow);font-weight:700">Total permits range</span><span>$230–$950</span></div>
+            <div class="cost-line"><span>+ Insurance</span><span>$500–$1,500</span></div>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:14px 16px;background:var(--white);border-radius:10px;border:1px solid rgba(13,13,12,0.07);">
+          <div style="font-size:0.75rem;font-weight:700;color:var(--concrete-gray);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Police District</div>
+          <div style="font-size:0.85rem;font-weight:600;">District D-4</div>
+          <div style="font-size:0.78rem;color:var(--concrete-gray);margin-top:2px;">Covers Back Bay / Newbury Street. All permit applications must be signed by the D-4 Captain before submission to MOCAL.</div>
+        </div>
+        <div style="margin-top:12px;padding:14px 16px;background:var(--white);border-radius:10px;border:1px solid rgba(13,13,12,0.07);">
+          <div style="font-size:0.75rem;font-weight:700;color:var(--concrete-gray);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Key Associations</div>
+          <a href="https://newburystreetleague.org/" target="_blank" style="display:block;font-size:0.82rem;font-weight:600;color:var(--utility-blue);margin-bottom:4px;">Newbury Street League ↗</a>
+          <div style="font-size:0.76rem;color:var(--concrete-gray);margin-bottom:10px;">~350 member businesses · est. 1972 · institutional permit knowledge</div>
+          <a href="https://www.bostonbackbay.com/" target="_blank" style="display:block;font-size:0.82rem;font-weight:600;color:var(--utility-blue);">Back Bay Association ↗</a>
+          <div style="font-size:0.76rem;color:var(--concrete-gray);margin-top:4px;">Meg Mainzer-Cohen, Exec. Director</div>
+        </div>
+      </div>
+
+    </div>
+    <p class="data-source-note" style="margin-top:24px;">City of Boston MOCAL · ISD · Boston Licensing Board · Boston Fire Prevention · MA Secretary of State — April 2026</p>
+  </div>
+</section>
+
+<!-- ── Cost Calculator ──────────────────────────────────────────────────── -->
+<section class="section section-alt" id="costs">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Budget Planning</div>
+      <h2>Cost Calculator</h2>
+      <p>Estimated costs for a 1-day Newbury Street pop-up. Select a scenario to see the full breakdown.</p>
+    </div>
+
+    <div class="scenario-tabs">
+      <button class="scenario-tab active" onclick="setScenario('low', this)">No-Frills</button>
+      <button class="scenario-tab" onclick="setScenario('mid', this)">Small Brand</button>
+      <button class="scenario-tab" onclick="setScenario('high', this)">Brand Activation</button>
+    </div>
+
+    <div class="cost-cols">
+
+      <!-- Left col: itemized -->
+      <div>
+        <div class="cost-section-title">Permits &amp; Licenses</div>
+        <div class="cost-item">
+          <div class="cost-item-name">Special Event License (MOCAL)</div>
+          <div class="cost-bar-wrap"><div class="cost-bar"><div class="cost-bar-fill" id="b-sel" style="width:15%;background:#DAFF00"></div></div></div>
+          <div class="cost-item-amount" id="v-sel">$50</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-item-name">Temp Food Permit (ISD)</div>
+          <div class="cost-bar-wrap"><div class="cost-bar"><div class="cost-bar-fill" id="b-food" style="width:10%;background:#DAFF00"></div></div></div>
+          <div class="cost-item-amount" id="v-food">$30</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-item-name">One-Day Alcohol License</div>
+          <div class="cost-bar-wrap"><div class="cost-bar"><div class="cost-bar-fill" id="b-alc" style="width:0%;background:#DAFF00"></div></div></div>
+          <div class="cost-item-amount" id="v-alc">—</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-item-name">Generator Permit</div>
+          <div class="cost-bar-wrap"><div class="cost-bar"><div class="cost-bar-fill" id="b-gen-p" style="width:12%;background:#DAFF00"></div></div></div>
+          <div class="cost-item-amount" id="v-gen-p">$50</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-item-name">Entertainment License</div>
+          <div class="cost-bar-wrap"><div class="cost-bar"><div class="cost-bar-fill" id="b-ent" style="width:0%;background:#DAFF00"></div></div></div>
+          <div class="cost-item-amount" id="v-ent">—</div>
+        </div>
+
+        <div class="cost-section-title" style="margin-top:20px">Equipment</div>
+        <div class="cost-item">
+          <div class="cost-item-name">Tent rental (10×10 × 2)</div>
+          <div class="cost-bar-wrap"><div class="cost-bar"><div class="cost-bar-fill" id="b-tent" style="width:20%;background:#1B79C5"></div></div></div>
+          <div class="cost-item-amount" id="v-tent">$200</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-item-name">Tables &amp; chairs</div>
+          <div class="cost-bar-wrap"><div class="cost-bar"><div class="cost-bar-fill" id="b-furn" style="width:18%;background:#1B79C5"></div></div></div>
+          <div class="cost-item-amount" id="v-furn">$200</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-item-name">Generator rental</div>
+          <div class="cost-bar-wrap"><div class="cost-bar"><div class="cost-bar-fill" id="b-gen" style="width:15%;background:#1B79C5"></div></div></div>
+          <div class="cost-item-amount" id="v-gen">$150</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-item-name">Signage &amp; banners</div>
+          <div class="cost-bar-wrap"><div class="cost-bar"><div class="cost-bar-fill" id="b-sign" style="width:18%;background:#1B79C5"></div></div></div>
+          <div class="cost-item-amount" id="v-sign">$200</div>
+        </div>
+
+        <div class="cost-section-title" style="margin-top:20px">People</div>
+        <div class="cost-item">
+          <div class="cost-item-name">Staff (2 × 8 hrs @ $19–25/hr)</div>
+          <div class="cost-bar-wrap"><div class="cost-bar"><div class="cost-bar-fill" id="b-staff" style="width:22%;background:#FF470A"></div></div></div>
+          <div class="cost-item-amount" id="v-staff">$300</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-item-name">Event liability insurance</div>
+          <div class="cost-bar-wrap"><div class="cost-bar"><div class="cost-bar-fill" id="b-ins" style="width:40%;background:#FF470A"></div></div></div>
+          <div class="cost-item-amount" id="v-ins">$500</div>
+        </div>
+      </div>
+
+      <!-- Right col: totals -->
+      <div>
+        <div style="background:var(--asphalt-black);border-radius:14px;padding:24px;color:white;margin-bottom:16px;">
+          <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#6B7672;margin-bottom:6px;">Scenario</div>
+          <div id="scenario-name" style="font-size:1.1rem;font-weight:700;color:var(--high-vis-yellow);margin-bottom:16px;">No-Frills Pop-Up</div>
+          <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#6B7672;margin-bottom:6px;">Estimated Total</div>
+          <div id="scenario-total" style="font-size:3rem;font-weight:800;color:var(--high-vis-yellow);letter-spacing:-0.04em;line-height:1;">$1,680</div>
+          <div id="scenario-range" style="font-size:0.8rem;color:#6B7672;margin-top:4px;">Range: $1,500–$2,500</div>
+          <div style="height:1px;background:rgba(255,255,255,0.08);margin:16px 0;"></div>
+          <div id="scenario-desc" style="font-size:0.82rem;color:#8A9490;line-height:1.6;">2 tents, food permit, liability insurance, 2 staff, minimal signage. No alcohol, no live music.</div>
+        </div>
+
+        <div style="background:var(--white);border-radius:14px;padding:20px;border:1px solid rgba(13,13,12,0.07);">
+          <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);margin-bottom:12px;">All Three Scenarios</div>
+          <div class="cost-item" style="border-bottom:1px solid rgba(13,13,12,0.06)">
+            <div class="cost-item-name" style="font-size:0.82rem;">No-Frills (2 tents, food, staff)</div>
+            <div class="cost-item-amount" style="color:#2E7D32;font-size:0.85rem;">$1,500–$2,500</div>
+          </div>
+          <div class="cost-item" style="border-bottom:1px solid rgba(13,13,12,0.06)">
+            <div class="cost-item-name" style="font-size:0.82rem;">Small Brand (full setup + alcohol)</div>
+            <div class="cost-item-amount" style="color:#B8860B;font-size:0.85rem;">$4,000–$8,000</div>
+          </div>
+          <div class="cost-item">
+            <div class="cost-item-name" style="font-size:0.82rem;">Brand Activation (Nike/Adidas-style)</div>
+            <div class="cost-item-amount" style="color:#C62828;font-size:0.85rem;">$15K–$50K+</div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;padding:14px 16px;background:#FFF8E1;border-radius:10px;border:1px solid #FDE68A;">
+          <div style="font-size:0.75rem;font-weight:700;color:#B8860B;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Open Newbury Hack</div>
+          <div style="font-size:0.82rem;color:#92400E;line-height:1.5;">On Open Newbury Sundays, the city closes all 8 blocks to cars. Public sidewalk space is effectively free — the only cost is your special event permit ($50–$200), not the monthly outdoor dining fee ($199–$399/mo).</div>
+        </div>
+      </div>
+    </div>
+    <p class="data-source-note">Vendor quotes: Party Time Events, Flying Cow, Baystate Tent (Boston area) · ISD fee schedule · Boston Licensing Board fee schedule · April 2026</p>
+  </div>
+</section>
+
+<!-- ── Setup Checklist ─────────────────────────────────────────────────── -->
+<section class="section" id="checklist" style="background:#F8F8F7;">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Operational Planning</div>
+      <h2>Complete Setup Checklist</h2>
+      <p>Organized by timeline. File all permits simultaneously in the 6–8 week window.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div class="left-checks">
+
+        <div class="checklist-phase">
+          <div class="checklist-phase-header">
+            <div class="phase-dot" style="background:var(--signal-red)"></div>
+            <div class="phase-title">8 Weeks Before</div>
+            <div class="phase-subtitle">Foundation</div>
+          </div>
+          <div class="checklist-items">
+            <div class="checklist-item critical">
+              <div class="checklist-box"></div>
+              <span>Identify target date — Open Newbury Sunday for 50K+ foot traffic (10am–8pm)</span>
+              <span class="priority-pip pip-critical">CRITICAL</span>
+            </div>
+            <div class="checklist-item critical">
+              <div class="checklist-box"></div>
+              <span>Choose block — 100–200 blocks for max visibility; 300s for indie character</span>
+              <span class="priority-pip pip-critical">CRITICAL</span>
+            </div>
+            <div class="checklist-item critical">
+              <div class="checklist-box"></div>
+              <span>Secure property owner permission for private sidewalk / storefront use</span>
+              <span class="priority-pip pip-critical">CRITICAL</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="checklist-phase">
+          <div class="checklist-phase-header">
+            <div class="phase-dot" style="background:#E65100"></div>
+            <div class="phase-title">6–8 Weeks Before</div>
+            <div class="phase-subtitle">File Everything Now</div>
+          </div>
+          <div class="checklist-items">
+            <div class="checklist-item critical">
+              <div class="checklist-box"></div>
+              <span>File Special Event License with MOCAL (must be signed by D-4 Police Captain first)</span>
+              <span class="priority-pip pip-critical">CRITICAL</span>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>File ISD Temporary Food Service Permit (if selling/serving food)</span>
+              <span class="priority-pip pip-high">HIGH</span>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>File One-Day Alcohol License with Licensing Board (email fastest)</span>
+              <span class="priority-pip pip-high">HIGH</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="checklist-phase">
+          <div class="checklist-phase-header">
+            <div class="phase-dot" style="background:#F9A825"></div>
+            <div class="phase-title">4–6 Weeks Before</div>
+            <div class="phase-subtitle">Logistics Lock-In</div>
+          </div>
+          <div class="checklist-items">
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>File tent/temporary structure permit with Fire Prevention (if &gt; 4× 10×10)</span>
+              <span class="priority-pip pip-high">HIGH</span>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>File generator permit with Fire Prevention Division</span>
+              <span class="priority-pip pip-high">HIGH</span>
+            </div>
+            <div class="checklist-item critical">
+              <div class="checklist-box"></div>
+              <span>Obtain event liability insurance — $1M+ GL, name City of Boston as additional insured</span>
+              <span class="priority-pip pip-critical">CRITICAL</span>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>Contact Newbury Street League for co-promotion opportunities</span>
+              <span class="priority-pip pip-optional">OPT</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="right-checks">
+
+        <div class="checklist-phase">
+          <div class="checklist-phase-header">
+            <div class="phase-dot" style="background:#2E7D32"></div>
+            <div class="phase-title">3–4 Weeks Before</div>
+            <div class="phase-subtitle">Vendor &amp; Staffing</div>
+          </div>
+          <div class="checklist-items">
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>File One-Time Entertainment License if live music or amplified sound</span>
+              <span class="priority-pip pip-medium">MEDIUM</span>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>Obtain Massachusetts Transient Vendor License if selling physical retail goods</span>
+              <span class="priority-pip pip-medium">MEDIUM</span>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>Hire staff — minimum 2–3 for Open Newbury Sunday crowd volume</span>
+              <span class="priority-pip pip-medium">MEDIUM</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="checklist-phase">
+          <div class="checklist-phase-header">
+            <div class="phase-dot" style="background:#1B79C5"></div>
+            <div class="phase-title">2 Weeks Before</div>
+            <div class="phase-subtitle">Production</div>
+          </div>
+          <div class="checklist-items">
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>Rent tents — up to 4× 10×10 open-sided requires no fire permit</span>
+              <span class="priority-pip pip-medium">MEDIUM</span>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>Order signage, banners, branded display fixtures</span>
+              <span class="priority-pip pip-medium">MEDIUM</span>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>Arrange generator rental + fuel (Party Time Events, Baystate Tent)</span>
+              <span class="priority-pip pip-medium">MEDIUM</span>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>Confirm food sourcing / catering partnerships (if food pop-up)</span>
+              <span class="priority-pip pip-medium">MEDIUM</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="checklist-phase">
+          <div class="checklist-phase-header">
+            <div class="phase-dot" style="background:var(--asphalt-black)"></div>
+            <div class="phase-title">1 Week Before + Day Of</div>
+            <div class="phase-subtitle">Final Steps</div>
+          </div>
+          <div class="checklist-items">
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>Set up POS / Square / contactless payments and test connectivity</span>
+              <span class="priority-pip pip-medium">MEDIUM</span>
+            </div>
+            <div class="checklist-item critical">
+              <div class="checklist-box"></div>
+              <span>Load-in day-of: use weighted tent anchors — NO staking into brick sidewalk</span>
+              <span class="priority-pip pip-critical">CRITICAL</span>
+            </div>
+            <div class="checklist-item critical">
+              <div class="checklist-box"></div>
+              <span>Maintain 5-foot ADA pedestrian clearance on sidewalk at all times during event</span>
+              <span class="priority-pip pip-critical">CRITICAL</span>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-box"></div>
+              <span>Fire extinguisher on-site (required for any generator / powered setup)</span>
+              <span class="priority-pip pip-high">HIGH</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Business Map ─────────────────────────────────────────────────────── -->
+<section class="section section-alt" id="map-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Open Data · CKAN</div>
+      <h2>69 Licensed Businesses on Newbury Street</h2>
+      <p>56 food establishments and 13 other licensed businesses — showing the density of the commercial corridor from CKAN licensing board data.</p>
+    </div>
+
+    <div id="map"></div>
+    <div class="business-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#DAFF00;border:2px solid #0D0D0C;"></div> Best block (100s)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1B79C5;"></div> Mid Newbury (200s)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FF470A;"></div> Upper Newbury (300–400)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#505A56;"></div> Other businesses</div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="cost-section-title">Sample Licensed Businesses — Newbury Street Active Roster</div>
+      <div class="biz-table-wrap">
+        <table class="biz-table">
+          <thead>
+            <tr>
+              <th>Business</th>
+              <th>Address</th>
+              <th>License Type</th>
+              <th>Category</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Caffe Nero</td><td>103 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>—</td></tr>
+            <tr><td>Venchi</td><td>123 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>New — Jan 2026</td></tr>
+            <tr><td>Thai Basil Restaurant</td><td>132 Newbury St</td><td>CV7 Malt Wine</td><td>Eating &amp; Drinking</td><td>—</td></tr>
+            <tr><td>The Capital Burger</td><td>157–159 Newbury St</td><td>CV7 All Alc.</td><td>Eating &amp; Drinking</td><td>Full bar</td></tr>
+            <tr><td>Blue Bottle Coffee</td><td>163 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>—</td></tr>
+            <tr><td>J.P. Licks</td><td>173 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>—</td></tr>
+            <tr><td>Ben &amp; Jerry's</td><td>174 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>—</td></tr>
+            <tr><td>Stephanie's on Newbury</td><td>188–190 Newbury St</td><td>CV7 All Alc.</td><td>Eating &amp; Drinking</td><td>Iconic sidewalk cafe</td></tr>
+            <tr><td>Central Perk (Friends Cafe)</td><td>205–207 Newbury St</td><td>CV7 Malt Wine Liq.</td><td>Eating &amp; Drinking</td><td>—</td></tr>
+            <tr><td>Baguette Cafe</td><td>224 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>—</td></tr>
+            <tr><td>HEYTEA Newbury</td><td>223 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>New — May 2025</td></tr>
+            <tr><td>Amorino</td><td>249 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>—</td></tr>
+            <tr><td>7th Street Burger</td><td>267–269 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>—</td></tr>
+            <tr><td>Chip City</td><td>316 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>New — Sep 2024</td></tr>
+            <tr><td>George Howell Coffee</td><td>400 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>New — Sep 2025</td></tr>
+            <tr><td>Pink Carrot</td><td>400 Newbury St</td><td>CV No Alcohol</td><td>Eating &amp; Drinking w/ Take Out</td><td>New — Aug 2025</td></tr>
+            <tr><td>Tao's</td><td>336 Newbury St</td><td>Retail All Alc.</td><td>Retail w/ Alcohol</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="data-source-note">Boston CKAN — Licensing Board active licenses · Food Establishment active permits · April 2026 · 69 total licensed businesses · 56 food establishments</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Event History ─────────────────────────────────────────────────────── -->
+<section class="section" id="history" style="background:#F8F8F7;">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">MOCAL Data · 68 Records</div>
+      <h2>Event History — What's Been Approved</h2>
+      <p>Past events show a consistent pattern: brand activations, city-run Open Newbury Sundays, cultural performances, and block parties. All precedents for your application.</p>
+    </div>
+    <div class="event-table-wrap">
+      <table class="event-table">
+        <thead>
+          <tr>
+            <th>Event Name</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Application #</th>
+            <th>Significance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Nike Boston Marathon Activation</strong></td>
+            <td>Apr 20, 2026</td>
+            <td>200 Newbury St</td>
+            <td><span class="status-open">Pending</span></td>
+            <td>PUB1828489</td>
+            <td>Major brand sidewalk pop-up — key precedent</td>
+          </tr>
+          <tr>
+            <td>Run Club &amp; Steak Marathon Celebration</td>
+            <td>Apr 18, 2026</td>
+            <td>346 Newbury St</td>
+            <td><span class="status-open">Pending</span></td>
+            <td>PUB1832938</td>
+            <td>Marathon week food + fitness tie-in</td>
+          </tr>
+          <tr>
+            <td><strong>Boston Pride Block Party</strong></td>
+            <td>Jun 6, 2026</td>
+            <td>7–9 Newbury St</td>
+            <td><span class="status-open">Pending</span></td>
+            <td>PUB1819768</td>
+            <td>Pride Month — World Cup warm-up window</td>
+          </tr>
+          <tr>
+            <td>Boston P6</td>
+            <td>Mar 26, 2026</td>
+            <td>200 Newbury St</td>
+            <td><span class="status-closed">Issued</span></td>
+            <td>PUB1825293</td>
+            <td>Issued Mar 19, 2026</td>
+          </tr>
+          <tr>
+            <td>Open Newbury Street: Holiday Stroll</td>
+            <td>Dec 7, 2025</td>
+            <td>67 Newbury St</td>
+            <td><span class="status-closed">Issued</span></td>
+            <td>PUB1795337</td>
+            <td>City-run umbrella program event</td>
+          </tr>
+          <tr>
+            <td><strong>CNCPTS × adidas Block Party</strong></td>
+            <td>Nov 22, 2025</td>
+            <td>18 Newbury St</td>
+            <td><span class="status-closed">Issued</span></td>
+            <td>PUB1788887</td>
+            <td>Sneaker brand collab — pop-up style activation</td>
+          </tr>
+          <tr>
+            <td><strong>Live Music at Google Store Newbury</strong></td>
+            <td>Sep 21, 2025</td>
+            <td>153 Newbury St</td>
+            <td><span class="status-closed">Issued</span></td>
+            <td>PUB1767620</td>
+            <td>Open Newbury Sunday activation with entertainment</td>
+          </tr>
+          <tr>
+            <td>Honoring Ellen Swallow Richards</td>
+            <td>Sep 9, 2025</td>
+            <td>276–278 Newbury St</td>
+            <td><span class="status-closed">Issued</span></td>
+            <td>PUB1723937</td>
+            <td>Cultural community event</td>
+          </tr>
+          <tr>
+            <td>Open Newbury Street (main season)</td>
+            <td>Jul 13 – Sep 21, 2025</td>
+            <td>67 Newbury St (organizer)</td>
+            <td><span class="status-closed">Issued Jun 24</span></td>
+            <td>PUB1722590</td>
+            <td>10-Sunday umbrella city permit · 50K+ per Sunday</td>
+          </tr>
+          <tr>
+            <td>What to the Slave is the Fourth of July?</td>
+            <td>Jul 1, 2025</td>
+            <td>276–278 Newbury St</td>
+            <td><span class="status-closed">Issued</span></td>
+            <td>PUB1727725</td>
+            <td>Community performance art event</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:20px;display:flex;flex-wrap:wrap;gap:12px;">
+      <div style="flex:1;min-width:200px;background:var(--white);border-radius:10px;padding:16px 18px;border:1px solid rgba(13,13,12,0.07);">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);margin-bottom:4px;">Application → Approval</div>
+        <div style="font-size:1.4rem;font-weight:800;color:var(--asphalt-black);">4–6 weeks</div>
+        <div style="font-size:0.78rem;color:var(--concrete-gray);">Typical for successful permits</div>
+      </div>
+      <div style="flex:1;min-width:200px;background:var(--white);border-radius:10px;padding:16px 18px;border:1px solid rgba(13,13,12,0.07);">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);margin-bottom:4px;">Brand Activations</div>
+        <div style="font-size:1.4rem;font-weight:800;color:var(--asphalt-black);">Faster</div>
+        <div style="font-size:0.78rem;color:var(--concrete-gray);">Nike, Google, Adidas approved quickly</div>
+      </div>
+      <div style="flex:1;min-width:200px;background:var(--white);border-radius:10px;padding:16px 18px;border:1px solid rgba(13,13,12,0.07);">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);margin-bottom:4px;">Total MOCAL Records</div>
+        <div style="font-size:1.4rem;font-weight:800;color:var(--asphalt-black);">68 events</div>
+        <div style="font-size:0.78rem;color:var(--concrete-gray);">On Newbury Street — strong precedent</div>
+      </div>
+    </div>
+    <p class="data-source-note">City of Boston MOCAL — Special Event License Applications dataset · CKAN resource fb05bfda-a57e-4d97-948b-4f1949ba3c8a</p>
+  </div>
+</section>
+
+<!-- ── World Cup Opportunity ──────────────────────────────────────────────── -->
+<section class="section section-alt" id="world-cup">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Peak Opportunity · June–July 2026</div>
+      <h2>FIFA World Cup Window</h2>
+      <p>Boston hosts 7 matches including a Quarterfinal. Back Bay is the premium spillover zone for international fans.</p>
+    </div>
+
+    <div class="wc-hero">
+      <h3>Boston: 7 Matches · June 13 – July 9, 2026</h3>
+      <p style="color:#8A9490;font-size:0.9rem;margin-bottom:0;">Including a Quarterfinal. Official Fan Festival at City Hall Plaza — but Back Bay hotels and retail capture the premium overflow.</p>
+
+      <div class="wc-matches-grid">
+        <div class="wc-match-card">
+          <div class="wc-match-date">June 13, 2026</div>
+          <div class="wc-match-label">First Boston Match</div>
+          <div class="wc-match-venue">Gillette Stadium</div>
+        </div>
+        <div class="wc-match-card">
+          <div class="wc-match-date">June–July</div>
+          <div class="wc-match-label">7 total matches</div>
+          <div class="wc-match-venue">Group stage + Knockout rounds</div>
+        </div>
+        <div class="wc-match-card" style="border-color:rgba(218,255,0,0.3);">
+          <div class="wc-match-date">~July 5, 2026</div>
+          <div class="wc-match-label">Quarterfinal</div>
+          <div class="wc-match-venue">Largest single-game crowd</div>
+        </div>
+        <div class="wc-match-card">
+          <div class="wc-match-date">July 9, 2026</div>
+          <div class="wc-match-label">Last Boston Match</div>
+          <div class="wc-match-venue">Peak international visitor density</div>
+        </div>
+        <div class="wc-match-card">
+          <div class="wc-match-date">All Tournament</div>
+          <div class="wc-match-label">City Hall Fan Festival</div>
+          <div class="wc-match-venue">Free · Giant screens · Food</div>
+        </div>
+        <div class="wc-match-card" style="border-color:rgba(218,255,0,0.3);">
+          <div class="wc-match-date">Jun 13 – Jul 9</div>
+          <div class="wc-match-label">Your Pop-Up Window</div>
+          <div class="wc-match-venue">File permits now in April</div>
+        </div>
+      </div>
+
+      <div class="multiplier-row">
+        <div class="multiplier-badge">2–3×</div>
+        <div class="multiplier-text">estimated foot traffic multiplier on match days in Back Bay — international fans moving between hotels, T stations, and City Hall Fan Zone all pass through Newbury Street</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:8px;">
+        <div>
+          <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6B7672;margin-bottom:10px;">Pop-Up Tie-In Ideas</div>
+          <ul class="wc-ideas-list">
+            <li>FIFA-themed merchandise pop-up (officially licensed or country-flag gear)</li>
+            <li>International food pop-up — cuisine from participating nations</li>
+            <li>Live match viewing with outdoor screen (entertainment permit required)</li>
+            <li>Sports photography / fan portrait station</li>
+            <li>Cultural exchange pop-up celebrating fan cultures</li>
+            <li>National team supporter merch and gear</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6B7672;margin-bottom:10px;">Permit Planning for World Cup</div>
+          <ul class="wc-ideas-list">
+            <li>File permits in April 2026 for June–July events</li>
+            <li>World Cup period may see heightened city scrutiny — file early</li>
+            <li>Consider multi-day permit (up to 14 consecutive days on temp food permit)</li>
+            <li>Open Newbury Sundays start July 13 — overlap with tournament's final stretch</li>
+            <li>Boston faces $8M federal funding shortfall for World Cup prep — private-sector pop-ups fill the gap for fan experience</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p class="data-source-note" style="margin-top:16px;">FIFA.com Boston match schedule · bostonfwc26.com · Boston Globe World Cup funding coverage · April 2026</p>
+  </div>
+</section>
+
+<!-- ── Infrastructure Insights (Cyvl) ─────────────────────────────────── -->
+<section class="section infra-section" id="infrastructure">
+  <div class="container">
+    <div class="cyvl-logo-row">
+      <img src="../assets/cyvl_logo_white.png" alt="Cyvl" style="height:24px;" />
+      <span style="color:#3E4742;font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">Infrastructure Intelligence</span>
+    </div>
+
+    <div class="section-header">
+      <div class="section-eyebrow" style="color:#6B7672;">Cyvl Platform Demo</div>
+      <h2 style="color:white;">What Cyvl Sees on the Street</h2>
+      <p style="color:#6B7672;">Cyvl's AI detects sidewalk infrastructure, outdoor dining elements, pavement conditions, and crowd-flow constraints at street level — exactly the intelligence city planners need to manage 100K+ World Cup visitors.</p>
+    </div>
+
+    <div class="cyvl-demo-note">
+      <strong>Demo note:</strong> Cyvl's current project covers Somerville, MA — representative of Boston-area street intelligence capability. For Newbury Street specifically, Cyvl would show: sidewalk widths (15–20 ft available), pavement scores for crowd safety, sign inventory for World Cup wayfinding, and outdoor dining footprint detection.
+    </div>
+
+    <div class="infra-grid">
+
+      <div class="infra-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+          <div style="font-size:0.8rem;font-weight:700;color:white;">Scene 1: Sidewalk Cafe</div>
+          <div class="pci-badge">PCI 66.6</div>
+        </div>
+        <div style="font-size:0.78rem;color:#6B7672;margin-bottom:10px;line-height:1.5;">Active sidewalk dining scene. Cyvl AI detects outdoor furniture, umbrella coverage, and pavement condition simultaneously.</div>
+        <div class="infra-detection-chips">
+          <span class="detect-chip">chair</span>
+          <span class="detect-chip">umbrella</span>
+          <span class="detect-chip">car</span>
+        </div>
+        <div style="margin-top:12px;font-size:0.72rem;color:#3E4742;">Most representative for pop-up demo · Somerville reference imagery</div>
+      </div>
+
+      <div class="infra-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+          <div style="font-size:0.8rem;font-weight:700;color:white;">Scene 2: Active Street + Dining</div>
+          <div class="pci-badge">PCI 83.1</div>
+        </div>
+        <div style="font-size:0.78rem;color:#6B7672;margin-bottom:10px;line-height:1.5;">High-traffic street scene. Multiple object classes detected simultaneously. Fire hydrant and traffic light locations captured — critical for event safety planning.</div>
+        <div class="infra-detection-chips">
+          <span class="detect-chip">person</span>
+          <span class="detect-chip">umbrella</span>
+          <span class="detect-chip">truck</span>
+          <span class="detect-chip">traffic light</span>
+          <span class="detect-chip">potted plant</span>
+          <span class="detect-chip">fire hydrant</span>
+        </div>
+        <div style="margin-top:12px;font-size:0.72rem;color:#3E4742;">Somerville reference imagery</div>
+      </div>
+
+      <div class="infra-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+          <div style="font-size:0.8rem;font-weight:700;color:white;">Scene 3: Outdoor Dining Tables</div>
+          <div class="pci-badge" style="background:rgba(102,187,106,0.2);color:#81C784;">PCI 89.2</div>
+        </div>
+        <div style="font-size:0.78rem;color:#6B7672;margin-bottom:10px;line-height:1.5;">Outdoor dining with umbrellas and tables explicitly detected. Pavement score 89/100 — excellent surface condition for pop-up setup.</div>
+        <div class="infra-detection-chips">
+          <span class="detect-chip">person</span>
+          <span class="detect-chip">umbrella</span>
+          <span class="detect-chip">dining table</span>
+          <span class="detect-chip">bus</span>
+          <span class="detect-chip">car</span>
+        </div>
+        <div style="margin-top:12px;font-size:0.72rem;color:#3E4742;">Somerville reference imagery</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px;">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#3E4742;margin-bottom:6px;">Sidewalk Width — Newbury St</div>
+        <div style="font-size:1.6rem;font-weight:800;color:var(--high-vis-yellow);letter-spacing:-0.03em;">15–20 ft</div>
+        <div style="font-size:0.78rem;color:#6B7672;margin-top:4px;">Sufficient for pop-up plus 5-ft ADA clearance</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px;">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#3E4742;margin-bottom:6px;">Pavement Type</div>
+        <div style="font-size:1.6rem;font-weight:800;color:var(--high-vis-yellow);letter-spacing:-0.03em;">Brick/Asphalt</div>
+        <div style="font-size:0.78rem;color:#6B7672;margin-top:4px;">Historic — use weighted bases, no staking</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px;">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#3E4742;margin-bottom:6px;">Power Availability</div>
+        <div style="font-size:1.6rem;font-weight:800;color:var(--high-vis-yellow);letter-spacing:-0.03em;">None</div>
+        <div style="font-size:0.78rem;color:#6B7672;margin-top:4px;">No public outlets — generator required</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding:20px 24px;background:rgba(27,121,197,0.08);border:1px solid rgba(27,121,197,0.15);border-radius:12px;">
+      <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#64B5F6;margin-bottom:8px;">The Cyvl Story for Boston CIO</div>
+      <p style="color:#8A9490;font-size:0.9rem;margin-bottom:0;max-width:none;">Cyvl's infrastructure intelligence platform tells city planners exactly where sidewalk capacity exists, pavement conditions for safe crowd flow, sign inventory for wayfinding, and outdoor dining footprint — all critical for managing 100K+ international FIFA World Cup visitors moving through Back Bay. This is the story: <strong style="color:white;">infrastructure visibility for event-ready cities.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────────────────────── -->
+<footer class="footer section">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" style="height:26px;margin-bottom:12px;display:block;" />
+        <div style="font-size:0.82rem;color:#3E4742;max-width:360px;line-height:1.6;">Infrastructure intelligence for cities. Pavement scoring, asset detection, sidewalk analysis — helping cities plan smarter events, safer streets, and better public spaces.</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#3E4742;margin-bottom:8px;">Data Sources</div>
+        <div style="font-size:0.78rem;color:#3E4742;line-height:1.8;">
+          City of Boston MOCAL (68 event records)<br/>
+          Boston Licensing Board (CKAN)<br/>
+          ISD Food Establishments (CKAN)<br/>
+          Cyvl Infrastructure Platform<br/>
+          FIFA World Cup 2026 — bostonfwc26.com
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-note">Prepared for Boston CIO · April 2026 · All data from public Boston CKAN datasets and City of Boston permit records.</div>
+      <div class="footer-powered">
+        Powered by <img src="../assets/cyvl_logo_white.png" alt="Cyvl" /> Cyvl
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── Scripts ───────────────────────────────────────────────────────────── -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+// ── Accordion toggles ────────────────────────────────────────────────────
+function togglePermit(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.permit-chevron');
+  const isOpen = body.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.permit-step-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.permit-chevron').forEach(c => c.classList.remove('open'));
+  // Toggle clicked
+  if (!isOpen) {
+    body.classList.add('open');
+    chevron.classList.add('open');
+  }
+}
+
+// ── Cost calculator scenarios ─────────────────────────────────────────────
+const scenarios = {
+  low: {
+    name: 'No-Frills Pop-Up',
+    total: '$1,680',
+    range: 'Range: $1,500–$2,500',
+    desc: '2 tents, food permit, liability insurance, 2 staff, minimal signage. No alcohol, no live music.',
+    values: {
+      sel: ['$50', 15], food: ['$30', 10], alc: ['—', 0], 'gen-p': ['$50', 12], ent: ['—', 0],
+      tent: ['$200', 20], furn: ['$200', 18], gen: ['$150', 15], sign: ['$200', 18],
+      staff: ['$300', 22], ins: ['$500', 40]
+    }
+  },
+  mid: {
+    name: 'Small Brand Pop-Up',
+    total: '$5,750',
+    range: 'Range: $4,000–$8,000',
+    desc: 'Professional setup, branded signage, generator, food, alcohol, 3 staff, entertainment. Full brand presence.',
+    values: {
+      sel: ['$150', 40], food: ['$70', 25], alc: ['$150', 38], 'gen-p': ['$75', 20], ent: ['$100', 28],
+      tent: ['$600', 65], furn: ['$350', 38], gen: ['$300', 35], sign: ['$600', 62],
+      staff: ['$500', 45], ins: ['$900', 72]
+    }
+  },
+  high: {
+    name: 'Brand Activation',
+    total: '$30,000+',
+    range: 'Range: $15,000–$50,000+',
+    desc: 'Nike / Adidas-style full activation. Multiple tents, custom build-out, full bar, A/V system, large staff team, PR.',
+    values: {
+      sel: ['$200', 55], food: ['$100', 35], alc: ['$150', 38], 'gen-p': ['$100', 28], ent: ['$150', 40],
+      tent: ['$2,000', 100], furn: ['$1,500', 100], gen: ['$400', 55], sign: ['$8,000', 100],
+      staff: ['$3,000', 100], ins: ['$1,500', 100]
+    }
+  }
+};
+
+function setScenario(key, btn) {
+  const s = scenarios[key];
+  document.getElementById('scenario-name').textContent = s.name;
+  document.getElementById('scenario-total').textContent = s.total;
+  document.getElementById('scenario-range').textContent = s.range;
+  document.getElementById('scenario-desc').textContent = s.desc;
+  for (const [id, [val, pct]] of Object.entries(s.values)) {
+    const vEl = document.getElementById('v-' + id);
+    const bEl = document.getElementById('b-' + id);
+    if (vEl) vEl.textContent = val;
+    if (bEl) bEl.style.width = pct + '%';
+  }
+  document.querySelectorAll('.scenario-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Leaflet map ──────────────────────────────────────────────────────────
+const map = L.map('map', { zoomControl: true, scrollWheelZoom: false })
+  .setView([42.3498, -71.0800], 15);
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  maxZoom: 19
+}).addTo(map);
+
+function makeIcon(color) {
+  return L.divIcon({
+    className: '',
+    html: `<div style="width:12px;height:12px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>`,
+    iconSize: [12, 12],
+    iconAnchor: [6, 6],
+  });
+}
+
+const businesses = [
+  { name: 'H&M', addr: '100 Newbury St', lat: 42.3510, lon: -71.0750, color: '#DAFF00' },
+  { name: 'Caffe Nero', addr: '103 Newbury St', lat: 42.3512, lon: -71.0752, color: '#DAFF00' },
+  { name: 'Venchi', addr: '123 Newbury St', lat: 42.3511, lon: -71.0760, color: '#DAFF00' },
+  { name: 'Thai Basil', addr: '132 Newbury St', lat: 42.3510, lon: -71.0764, color: '#DAFF00' },
+  { name: 'Blue Bottle Coffee', addr: '163 Newbury St', lat: 42.3509, lon: -71.0773, color: '#DAFF00' },
+  { name: 'Google Store', addr: '153 Newbury St', lat: 42.3509, lon: -71.0769, color: '#DAFF00' },
+  { name: 'J.P. Licks', addr: '173 Newbury St', lat: 42.3508, lon: -71.0777, color: '#DAFF00' },
+  { name: "Ben & Jerry's", addr: '174 Newbury St', lat: 42.3508, lon: -71.0778, color: '#DAFF00' },
+  { name: "Stephanie's on Newbury", addr: '188 Newbury St', lat: 42.3507, lon: -71.0783, color: '#DAFF00' },
+  { name: 'Nike', addr: '200 Newbury St', lat: 42.3501, lon: -71.0802, color: '#1B79C5' },
+  { name: 'Central Perk', addr: '205 Newbury St', lat: 42.3501, lon: -71.0804, color: '#1B79C5' },
+  { name: 'HEYTEA', addr: '223 Newbury St', lat: 42.3500, lon: -71.0810, color: '#1B79C5' },
+  { name: 'Baguette Cafe', addr: '224 Newbury St', lat: 42.3500, lon: -71.0811, color: '#1B79C5' },
+  { name: 'Amorino', addr: '249 Newbury St', lat: 42.3498, lon: -71.0820, color: '#1B79C5' },
+  { name: '7th Street Burger', addr: '267 Newbury St', lat: 42.3497, lon: -71.0826, color: '#1B79C5' },
+  { name: 'Bangkok Bento', addr: '272 Newbury St', lat: 42.3497, lon: -71.0828, color: '#1B79C5' },
+  { name: 'Chip City', addr: '316 Newbury St', lat: 42.3492, lon: -71.0842, color: '#FF470A' },
+  { name: "Tao's", addr: '336 Newbury St', lat: 42.3490, lon: -71.0848, color: '#FF470A' },
+  { name: 'George Howell Coffee', addr: '400 Newbury St', lat: 42.3487, lon: -71.0858, color: '#FF470A' },
+  { name: 'Pink Carrot', addr: '400 Newbury St', lat: 42.3487, lon: -71.0860, color: '#FF470A' },
+];
+
+businesses.forEach(b => {
+  const icon = makeIcon(b.color);
+  L.marker([b.lat, b.lon], { icon })
+    .addTo(map)
+    .bindPopup(`<strong>${b.name}</strong><br/>${b.addr}`);
+});
+
+// Draw Newbury Street line
+const newburyLine = [
+  [42.3513, -71.0739], // Arlington end
+  [42.3508, -71.0756],
+  [42.3505, -71.0773],
+  [42.3502, -71.0790],
+  [42.3499, -71.0808],
+  [42.3496, -71.0825],
+  [42.3492, -71.0842],
+  [42.3488, -71.0860], // Mass Ave end
+];
+L.polyline(newburyLine, { color: '#DAFF00', weight: 4, opacity: 0.7 }).addTo(map);
+
+// T stop markers
+const tStops = [
+  { name: 'Arlington (Green B/C/D/E)', lat: 42.3515, lon: -71.0706 },
+  { name: 'Copley (Green B/C/D/E)', lat: 42.3497, lon: -71.0781 },
+  { name: 'Hynes/ICA (Green B/C/D)', lat: 42.3479, lon: -71.0864 },
+];
+tStops.forEach(t => {
+  L.marker([t.lat, t.lon], {
+    icon: L.divIcon({
+      className: '',
+      html: `<div style="width:18px;height:18px;border-radius:4px;background:#0D0D0C;border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:800;box-shadow:0 1px 4px rgba(0,0,0,0.5);">T</div>`,
+      iconSize: [18, 18],
+      iconAnchor: [9, 9],
+    })
+  }).addTo(map).bindPopup(`<strong>${t.name}</strong>`);
+});
+</script>
+</body>
+</html>

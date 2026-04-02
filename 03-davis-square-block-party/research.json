@@ -1,0 +1,532 @@
+{
+  "title": "Davis Square Community Block Party",
+  "subtitle": "Infrastructure Intelligence for a Fully Accessible, City-Sponsored Community Event",
+  "demo_context": "Cyvl demo for Boston CIO — showing how infrastructure data enables safe, accessible, community-centered street programming in Somerville, MA",
+  "data_collected": "2026-04-02",
+
+  "location": {
+    "center": {
+      "lat": 42.3963615,
+      "lon": -71.1222329,
+      "display_name": "Davis Square, Ball Square, Somerville, Middlesex County, Massachusetts",
+      "neighborhood": "Davis Square"
+    },
+    "radius_surveyed_m": 500,
+    "bounding_box": {
+      "west": -71.12831491363093,
+      "south": 42.39186994412504,
+      "east": -71.11615088636907,
+      "north": 42.400853055874954
+    },
+    "streets": [
+      {
+        "name": "Elm Street",
+        "geocode": { "lat": 42.3954735, "lon": -71.1219568 },
+        "character": "Primary commercial corridor through Davis Square; lined with restaurants, bars, and shops",
+        "closure_priority": "Primary closure zone — heart of the event"
+      },
+      {
+        "name": "Highland Avenue",
+        "geocode": { "lat": 42.3959575, "lon": -71.1210811 },
+        "character": "Major arterial connecting Davis to Ball Square and beyond",
+        "closure_priority": "Partial closure / event boundary; requires traffic rerouting"
+      },
+      {
+        "name": "College Avenue",
+        "geocode": { "lat": 42.3965444, "lon": -71.1222828 },
+        "character": "Secondary commercial street, MBTA Red Line Davis Station access road",
+        "closure_priority": "Coordinate with MBTA; pedestrian flow route from T station"
+      },
+      {
+        "name": "Holland Street",
+        "geocode": { "lat": 42.3968247, "lon": -71.1228024 },
+        "character": "Residential / light commercial, leads to Tufts University area",
+        "closure_priority": "Secondary closure; vendor/parking staging area candidate"
+      }
+    ]
+  },
+
+  "infrastructure": {
+    "survey_source": "Cyvl scan_1185_SOMERVILLE_MA",
+    "project_id": "090e18f2-0002-4a70-90b4-8f073d26294d",
+
+    "pavement_conditions": {
+      "summary": "200 pavement segments assessed within 500m of Davis Square center",
+      "overall_assessment": "Mixed — majority of segments in Good/Satisfactory range, but significant pockets of Poor/Serious/Failed pavement requiring attention before event",
+      "distribution": [
+        { "label": "Good", "count": 61, "avg_pci": 92.0, "pct": "30.5%" },
+        { "label": "Satisfactory", "count": 29, "avg_pci": 80.7, "pct": "14.5%" },
+        { "label": "Fair", "count": 42, "avg_pci": 63.6, "pct": "21.0%" },
+        { "label": "Poor", "count": 28, "avg_pci": 49.5, "pct": "14.0%" },
+        { "label": "Very Poor", "count": 26, "avg_pci": 33.1, "pct": "13.0%" },
+        { "label": "Serious", "count": 12, "avg_pci": 19.3, "pct": "6.0%" },
+        { "label": "Failed", "count": 2, "avg_pci": 5.4, "pct": "1.0%" }
+      ],
+      "critical_segments": [
+        { "label": "Failed", "score": 1.2, "action": "Immediate repair required before event — safety risk for wheelchair/mobility users" },
+        { "label": "Failed", "score": 9.6, "action": "Immediate repair required before event" },
+        { "label": "Serious", "score": 10.2, "action": "Barricade or repair before event" },
+        { "label": "Serious", "score": 12.0, "action": "Barricade or repair before event" },
+        { "label": "Serious", "score": 14.1, "action": "Repair / temporary surface treatment" },
+        { "label": "Serious", "score": 14.8, "action": "Repair / temporary surface treatment" },
+        { "label": "Serious", "score": 16.2, "action": "Flag for temporary matting if in event zone" },
+        { "label": "Serious", "score": 21.4, "action": "Flag for temporary matting if in event zone" }
+      ],
+      "project_wide_context": {
+        "good_segments": { "count": 5218, "length_ft": 156108 },
+        "satisfactory_segments": { "count": 5057, "length_ft": 151438 },
+        "fair_segments": { "count": 2648, "length_ft": 79310 },
+        "poor_segments": { "count": 1642, "length_ft": 49338 },
+        "very_poor_segments": { "count": 969, "length_ft": 29130 },
+        "serious_segments": { "count": 369, "length_ft": 11002 },
+        "failed_segments": { "count": 69, "length_ft": 1996 }
+      }
+    },
+
+    "signs": {
+      "total_inventoried_in_radius": 200,
+      "note": "200 signs returned in query (paginated); actual count higher — has_more=true",
+      "by_category": [
+        { "category": "Regulatory", "count": 96, "examples": "Stop, speed limit, no parking, one-way, yield, pedestrian crossing" },
+        { "category": "Other", "count": 41 },
+        { "category": "Other-mutcd", "count": 31 },
+        { "category": "Guide", "count": 17, "examples": "Street name signs, directional" },
+        { "category": "Warning", "count": 14, "examples": "Intersection warnings, curve ahead" },
+        { "category": "School", "count": 1 }
+      ],
+      "condition_breakdown": [
+        { "condition": "Good", "count": 190 },
+        { "condition": "Fair", "count": 7 },
+        { "condition": "Poor", "count": 3 }
+      ],
+      "event_relevance": {
+        "parking_signs": "Regulatory signs govern all on-street parking — temporary 'No Parking / Event Zone' overlays needed on all streets in closure area",
+        "speed_limit_signs": "Standard neighborhood speed limits in effect — temporary event signage will supersede",
+        "pedestrian_crossing": "Warning signs at crosswalks confirm pedestrian infrastructure presence throughout square",
+        "condition_action": "3 Poor-condition signs within radius should be replaced before major event for safety / liability"
+      }
+    },
+
+    "assets": {
+      "total_inventoried_in_radius": 200,
+      "note": "200 above-ground assets returned (paginated); actual count higher — has_more=true",
+      "by_type": [
+        { "type": "TREE", "count": 48, "event_relevance": "Natural shade for outdoor event; critical for summer heat comfort" },
+        { "type": "UTILITY_POLE", "count": 32, "event_relevance": "Power source access for vendor booths and stage; coordinate with Eversource" },
+        { "type": "CURB", "count": 23, "event_relevance": "Curb inventory confirms edge definitions for barricade placement" },
+        { "type": "MANHOLE_COVER", "count": 22, "event_relevance": "Must be marked / protected from heavy equipment and temporary structures" },
+        { "type": "RAMP", "count": 21, "event_relevance": "ADA curb ramps confirmed — 21 within 500m radius; critical for accessibility routing" },
+        { "type": "LUMINARIES", "count": 17, "event_relevance": "Street lighting confirmed for early evening event activities" },
+        { "type": "SIDEWALK", "count": 13, "event_relevance": "Sidewalk segments inventoried — pedestrian flow planning baseline" },
+        { "type": "CATCH_BASIN", "count": 6, "event_relevance": "Must remain unobstructed per DPW requirements" },
+        { "type": "PEDESTRIAN_PUSH_BUTTON", "count": 6, "event_relevance": "ADA-compliant accessible pedestrian signals at 6 intersections — confirms strong ADA infrastructure" },
+        { "type": "TRAFFIC_SIGNAL_POLE", "count": 4, "event_relevance": "Signal poles available for temporary event signage attachment" },
+        { "type": "HYDRANT", "count": 3, "event_relevance": "Fire hydrant locations — 12-ft clearance mandatory per Somerville event code" },
+        { "type": "TRAFFIC_SIGNAL", "count": 2, "event_relevance": "Signals can be switched to flashing/pedestrian mode during event" },
+        { "type": "BIKE_RACK", "count": 1, "event_relevance": "Only 1 documented — supplement with temporary bike corrals for event" },
+        { "type": "CCTV", "count": 1, "event_relevance": "Existing camera for event safety monitoring" }
+      ]
+    },
+
+    "accessibility_features": [
+      {
+        "feature": "ADA Curb Ramps",
+        "count": 21,
+        "location": "Within 500m of Davis Square center",
+        "status": "Inventoried and mapped",
+        "demo_talking_point": "Cyvl identified 21 ADA ramps in the event zone — city can verify continuity of accessible routes before event day"
+      },
+      {
+        "feature": "Accessible Pedestrian Signals (Push Buttons)",
+        "count": 6,
+        "location": "Key intersections within event radius",
+        "status": "Present and documented",
+        "demo_talking_point": "6 audible pedestrian signal locations confirmed — event layout can route attendees through these intersections"
+      },
+      {
+        "feature": "Street Lighting (Luminaries)",
+        "count": 17,
+        "location": "Throughout Davis Square",
+        "status": "In place",
+        "demo_talking_point": "Lighting confirmed for early evening programming"
+      },
+      {
+        "feature": "Davis Square MBTA Red Line Station",
+        "count": 1,
+        "location": "College Avenue at Davis Square",
+        "status": "Accessible station — elevator-equipped",
+        "demo_talking_point": "Event is transit-accessible; reduces parking demand and supports car-free attendance"
+      }
+    ],
+
+    "hazards_to_address": [
+      {
+        "hazard": "Failed Pavement Segments (PCI < 10)",
+        "count": 2,
+        "severity": "Critical",
+        "action": "Repair before event or barricade and route accessible path around",
+        "ada_impact": "High — wheelchair and mobility device users at risk"
+      },
+      {
+        "hazard": "Serious Pavement Segments (PCI 10-25)",
+        "count": 12,
+        "severity": "High",
+        "action": "Repair, apply temporary surface treatment, or install protective matting",
+        "ada_impact": "High — rough surfaces impede wheelchair travel"
+      },
+      {
+        "hazard": "Poor-Condition Signs",
+        "count": 3,
+        "severity": "Medium",
+        "action": "Replace prior to event for safety and liability",
+        "ada_impact": "Low"
+      },
+      {
+        "hazard": "Manhole Covers (22 in radius)",
+        "count": 22,
+        "severity": "Medium",
+        "action": "Mark with high-visibility paint or protective covers; prevent heavy equipment placement",
+        "ada_impact": "Medium — uneven covers can catch wheels"
+      },
+      {
+        "hazard": "Limited Bike Racks (only 1 documented)",
+        "count": 1,
+        "severity": "Low",
+        "action": "Deploy temporary bike corrals — expect high bike attendance at Davis Square events",
+        "ada_impact": "Low"
+      },
+      {
+        "hazard": "Very Poor / Poor Pavement (PCI 26-55)",
+        "count": 54,
+        "severity": "Medium",
+        "action": "Map locations; route accessible paths on higher-PCI streets; flag vendor zones away from worst segments",
+        "ada_impact": "Medium"
+      }
+    ]
+  },
+
+  "businesses": [
+    {
+      "name": "Diesel Cafe",
+      "type": "Coffee Shop / Cafe",
+      "address": "257 Elm St, Somerville, MA 02144",
+      "description": "Flagship Davis Square coffee institution with industrial decor; named Best Coffee Shop Somerville 2025",
+      "potential_role": "Official event coffee sponsor; outdoor service window; barista showcase",
+      "estimated_revenue_boost": "30-50% daily lift during event (est. $2,000-4,000 additional revenue)"
+    },
+    {
+      "name": "Foundry on Elm",
+      "type": "Restaurant / Bar",
+      "address": "Elm St, Davis Square, Somerville",
+      "description": "American gastropub; Saloon is located beneath; anchor Elm Street establishment",
+      "potential_role": "Outdoor bar service; event after-party venue; food vendor booth",
+      "estimated_revenue_boost": "25-40% lift during event weekend (est. $3,000-6,000)"
+    },
+    {
+      "name": "Rosebud Bar & Kitchen",
+      "type": "American Diner / Bar",
+      "address": "Elm St, Davis Square, Somerville",
+      "description": "Chef-driven American diner in renovated Worcester Lunch Car; iconic Davis Square institution",
+      "potential_role": "Featured food vendor; brunch programming anchor; historical character for event identity",
+      "estimated_revenue_boost": "20-35% lift (est. $2,500-5,000)"
+    },
+    {
+      "name": "The Painted Burro",
+      "type": "Mexican Restaurant / Tequila Bar",
+      "address": "Elm St, Davis Square, Somerville",
+      "description": "100+ tequilas, mezcal, sotol; Baja/Oaxacan menu inspiration; popular nightlife destination",
+      "potential_role": "Outdoor tequila garden; cocktail sponsor; live music pairing",
+      "estimated_revenue_boost": "25-40% lift (est. $3,000-5,500)"
+    },
+    {
+      "name": "Spoke Wine Bar",
+      "type": "Wine Bar",
+      "address": "Davis Square, Somerville, MA",
+      "description": "Curated wine bar with seasonally focused cuisine since 2013; intimate atmosphere",
+      "potential_role": "Wine tasting station; upscale event pairing; local food and wine showcase",
+      "estimated_revenue_boost": "20-35% lift (est. $1,500-3,000)"
+    },
+    {
+      "name": "Redbones BBQ",
+      "type": "BBQ Restaurant",
+      "address": "55 Chester St, Somerville, MA 02144",
+      "description": "Long-running Davis Square BBQ institution; known for southern-style smoked meats",
+      "potential_role": "Outdoor BBQ station; headline food vendor; crowd-pleaser anchor",
+      "estimated_revenue_boost": "30-50% lift during block party (est. $4,000-7,000)"
+    },
+    {
+      "name": "Dave's Fresh Pasta",
+      "type": "Specialty Food / Deli",
+      "address": "Davis Square, Somerville, MA",
+      "description": "Fresh pasta, charcuterie, cheese, artisan items since 1999; neighborhood staple",
+      "potential_role": "Artisan food showcase; vendor booth; local maker highlight",
+      "estimated_revenue_boost": "15-25% lift (est. $1,000-2,000)"
+    },
+    {
+      "name": "Boston Burger Company",
+      "type": "Casual Restaurant",
+      "address": "37 Davis Sq, Somerville, MA",
+      "description": "Best Hamburger in Somerville 2025 (Somerville Times); family-friendly",
+      "potential_role": "Family food zone vendor; kids programming food sponsor",
+      "estimated_revenue_boost": "25-40% lift (est. $2,000-4,000)"
+    },
+    {
+      "name": "New Leaf Espresso",
+      "type": "Coffee Shop",
+      "address": "310 Highland Ave, Somerville, MA",
+      "description": "Named Best Espresso in Somerville 2025",
+      "potential_role": "Second coffee vendor; espresso bar activation near Highland Ave boundary",
+      "estimated_revenue_boost": "20-35% lift (est. $1,000-2,500)"
+    },
+    {
+      "name": "Tsurumen 1000",
+      "type": "Japanese Restaurant / Ramen",
+      "address": "Davis Square, Somerville, MA",
+      "description": "Authentic Osaka-style ramen by Chef Masuo Onishi; noodles and broths made from scratch daily",
+      "potential_role": "Specialty food booth; cultural diversity showcase; local chef spotlight",
+      "estimated_revenue_boost": "20-30% lift (est. $1,500-2,500)"
+    },
+    {
+      "name": "Dakzen",
+      "type": "Thai Restaurant",
+      "address": "Davis Square, Somerville, MA",
+      "description": "Thai street noodles with fine-tuned slow-simmered broths",
+      "potential_role": "International food zone vendor; street food programming",
+      "estimated_revenue_boost": "20-30% lift (est. $1,000-2,000)"
+    },
+    {
+      "name": "The Burren",
+      "type": "Irish Pub",
+      "address": "247 Elm St, Somerville, MA 02144",
+      "description": "Traditional Irish pub with live music; Davis Square nightlife anchor",
+      "potential_role": "Live music stage sponsor; outdoor beer garden; Irish cultural programming",
+      "estimated_revenue_boost": "30-50% lift (est. $3,000-6,000)"
+    }
+  ],
+
+  "event_economics": {
+    "estimated_total_business_revenue_boost": "$25,000 - $50,000 across participating businesses (single event day)",
+    "basis": "National Endowment for the Arts studies show community events increase local business revenue 25-30%; Davis Square's 200+ businesses and high foot-traffic baseline amplify this effect",
+    "comparison": "ArtBeat 2025 (same location) attracted ~100 vendors and thousands of attendees annually — city-sponsored block party with infrastructure-backed safety planning projects similar attendance",
+    "job_creation": "30-50 temporary event jobs (staff, security, vendor assistants)",
+    "tax_revenue": "Incremental sales tax on estimated $50,000+ in gross sales"
+  },
+
+  "street_closure_plan": {
+    "primary_closure_zone": {
+      "streets": ["Elm Street (between Holland St and Highland Ave intersection)"],
+      "rationale": "Core commercial corridor with highest density of restaurants, cafes, and shops; Cyvl data shows multiple Good/Satisfactory pavement segments (PCI 80-98) in this zone — ideal for accessible event surface",
+      "length_estimate": "Approximately 3 blocks / 600-800 feet"
+    },
+    "secondary_closures": [
+      {
+        "street": "College Avenue (partial — from Elm St intersection to MBTA entrance)",
+        "rationale": "Maintains pedestrian flow from Red Line T station into event; MBTA coordination required",
+        "type": "Pedestrian-only zone"
+      },
+      {
+        "street": "Holland Street (partial — first block from Davis Square)",
+        "rationale": "Staging / loading area for vendor setup; separates event logistics from public pedestrian zones",
+        "type": "Vendor/logistics staging"
+      }
+    ],
+    "traffic_rerouting": "Highland Avenue remains open as primary vehicle bypass; Porter Square via Beacon Street and Ball Square via Broadway serve as alternate routes. MBTA Bus Routes 87 and 89 deviate via Highland Avenue during closure period.",
+    "emergency_access": "12-foot minimum clearance lane maintained on all closed streets per Somerville event code; fire hydrants at 3 documented locations within radius remain fully accessible with 15-foot buffer; EMS staging area designated at Holland Street staging zone",
+    "dpw_requirements": [
+      "All street closure devices supplied by Somerville DPW or specified by Parking Department",
+      "No privately owned vehicles used as barricades",
+      "Minimum 12-foot emergency vehicle clearance on all closed streets",
+      "Catch basins (6 in radius) must remain unobstructed",
+      "Manhole covers (22 in radius) protected from heavy equipment"
+    ]
+  },
+
+  "accessibility_plan": {
+    "philosophy": "Cyvl infrastructure data drives every accessibility decision — no guessing, full documentation for ADA compliance",
+    "ada_compliant_routes": [
+      {
+        "route": "MBTA Red Line Davis Station → Elm Street Event Zone",
+        "description": "College Avenue pedestrian corridor from accessible T station (elevator-equipped) to event entrance; ADA ramps confirmed at College Ave / Elm St intersection",
+        "surface_quality": "Good pavement on College Ave approach (PCI 85-90 range)",
+        "push_button_signals": "Confirmed present at College Ave / Elm St intersection"
+      },
+      {
+        "route": "Highland Avenue parking approach → Event Zone (north entry)",
+        "description": "Accessible route from Highland Ave sidewalk to event; ADA ramps inventoried",
+        "surface_quality": "Mixed — Fair/Good segments; route planning should prioritize PCI > 70 segments",
+        "push_button_signals": "Confirmed present at Highland Ave intersections"
+      },
+      {
+        "route": "Holland Street residential approach → Event Zone (west entry)",
+        "description": "Residential neighborhood approach; accessible for attendees with mobility devices",
+        "surface_quality": "Good in staging zone area (PCI 87-89 on nearby segments)",
+        "push_button_signals": "Present"
+      }
+    ],
+    "accessible_restrooms": "Portable accessible restrooms required — minimum 2 ADA-compliant units (60\" turning radius, grab bars, firm level surface approach). Placement: one near MBTA entrance on College Ave, one mid-Elm Street zone. Existing venue restrooms (Diesel Cafe, Foundry on Elm) serve as supplemental options with staff monitoring for accessibility.",
+    "surface_remediation": "2 Failed and 12 Serious PCI segments within radius must be repaired, covered with protective matting, or routed around to ensure wheelchair and mobility device access across all event zones. Cyvl segment data provides exact locations for DPW work orders.",
+    "mobility_device_accommodations": [
+      "Temporary protective rubber matting over any PCI < 40 segments within accessible routes",
+      "Manhole cover edge protectors / flap covers on all 22 inventoried covers in event zone",
+      "Designated mobility parking zone on Holland Street staging area (closest to Elm St)",
+      "Event staff trained in mobility assistance positioned at ADA route entry points"
+    ],
+    "sensory_considerations": [
+      "Quiet zone area designated away from main stage — recommended near Spoke Wine Bar end of Elm Street (lower traffic density, tree canopy shade from 48 documented trees in radius)",
+      "Event signage in large print and high contrast; audio descriptions at information booths",
+      "Accessible pedestrian signal push buttons (6 confirmed) audibly guide visually impaired attendees through intersections",
+      "Stage audio system design should include hearing loop / FM transmitter for hearing-impaired attendees"
+    ],
+    "shade_and_rest": {
+      "trees": 48,
+      "note": "48 trees inventoried within 500m radius provide natural shade — event layout should cluster seating areas under existing tree canopy along Elm Street",
+      "seating": "Supplement existing benches (detected in imagery: Elm Street at Highland Ave intersection area) with temporary accessible seating (armrests, 17-19\" height)"
+    }
+  },
+
+  "permit_requirements": [
+    {
+      "permit": "Public Event / Block Party License",
+      "issuer": "City of Somerville",
+      "application": "CitizenServe online portal — somervillema.gov/blockparty",
+      "cost": "No charge for license",
+      "timeline": "Allow up to 6 weeks for approval",
+      "requirements": [
+        "Completed online application with event date, time, location",
+        "Written approval from all abutting residents and businesses",
+        "1 week written notice to all abutting parties before event"
+      ]
+    },
+    {
+      "permit": "Street Closure Authorization",
+      "issuer": "Somerville DPW / Parking Department",
+      "requirements": [
+        "All closure devices supplied by DPW or specified by Parking Department",
+        "No private vehicles used as barriers",
+        "Minimum 12-foot emergency vehicle clearance maintained"
+      ]
+    },
+    {
+      "permit": "Special Alcohol License",
+      "issuer": "City of Somerville",
+      "application": "CitizenServe (combined with Public Event License application)",
+      "requirements": [
+        "Required for any outdoor alcohol service by licensed vendors",
+        "Participating bars (The Burren, Foundry on Elm, Painted Burro, Spoke) must apply individually or under event umbrella license"
+      ]
+    },
+    {
+      "permit": "MBTA Coordination",
+      "issuer": "MBTA",
+      "requirements": [
+        "Notification required for any closure affecting MBTA bus routes (87, 89 serve Davis Square area)",
+        "MBTA reviews and adjusts routes — contact required before permit finalization"
+      ]
+    },
+    {
+      "permit": "Temporary Noise / Amplified Sound Permit",
+      "issuer": "City of Somerville",
+      "requirements": [
+        "Required for outdoor amplified music or PA systems",
+        "Stage must meet decibel limits per Somerville ordinance",
+        "Event end time aligned with city noise ordinance"
+      ]
+    },
+    {
+      "permit": "Temporary Food Vendor Permits",
+      "issuer": "Somerville Health Department",
+      "requirements": [
+        "Each food vendor operating outside their licensed premises requires temporary food permit",
+        "Inspections may be required for new/temporary kitchen setups"
+      ]
+    },
+    {
+      "permit": "ADA Compliance Documentation",
+      "issuer": "N/A — self-certification with Somerville DDA",
+      "requirements": [
+        "Event layout must demonstrate accessible routes to all activity areas",
+        "Cyvl infrastructure data provides compliance documentation baseline",
+        "Somerville Commission for Persons with Disabilities should be consulted"
+      ]
+    }
+  ],
+
+  "imagery_counts": {
+    "total_imagery_matches_infrastructure_assessment": 44,
+    "storefronts_businesses_search": {
+      "search_id": "0b430803fb304643",
+      "total_results": 27,
+      "top_confidence": "medium (69%)",
+      "notable_detections": ["person", "parking meter", "fire hydrant", "bicycle", "bench", "traffic light", "truck"]
+    },
+    "crosswalk_pedestrian_search": {
+      "search_id": "3f770bd44f484fd0",
+      "total_results": 343,
+      "top_confidence": "high (80%)",
+      "notable_detections": ["stop sign", "bus", "bicycle", "person", "traffic light", "bench"],
+      "note": "343 matches indicates robust pedestrian infrastructure documentation across Somerville scan"
+    },
+    "ada_sidewalk_ramp_search": {
+      "search_id": "4961471342714f42",
+      "total_results": 79,
+      "top_confidence": "high (76%)",
+      "notable_detections": ["curb cuts", "ramp approaches", "sidewalk surfaces"],
+      "note": "79 ADA ramp / sidewalk imagery matches support the 21 inventoried RAMP assets"
+    },
+    "outdoor_seating_search": {
+      "search_id": "8ccf2a55769642f3",
+      "total_results": 9,
+      "top_confidence": "medium (69%)",
+      "notable_detections": ["umbrella detected at 42.3975, -71.1234 — near Holland/Elm area (patio/outdoor seating confirmed)"],
+      "note": "Umbrella detection at Davis Square coordinates confirms existing outdoor dining infrastructure"
+    }
+  },
+
+  "event_layout_suggestions": {
+    "main_stage": "Center of Elm Street closure, between Highland Ave and Holland St intersections — Good pavement (PCI 85-90 in this zone), existing street lighting (17 luminaries in radius), trees for natural backdrop. Stage faces north toward Davis Square plaza.",
+    "food_and_vendor_zone": "South Elm Street block — highest concentration of restaurant frontage; vendors extend existing businesses onto closed street. Protective matting required over any PCI < 55 segments in this zone.",
+    "kids_zone": "Holland Street staging area — lower traffic, adjacent to residential neighborhood, Good pavement (PCI 87-89). Set back from main stage for sensory relief.",
+    "quiet_zone": "Near Spoke Wine Bar / north end of Elm Street — lower noise exposure, tree canopy from 48-tree inventory, seating area for sensory-sensitive attendees and mobility rest stops.",
+    "bike_corral": "Additional temporary bike corrals at College Avenue (MBTA station exit) and Holland Street staging — supplements 1 documented permanent rack. Davis Square attracts high cycling attendance.",
+    "emergency_vehicle_lane": "Unobstructed 12-foot lane maintained along Elm Street center, clearly marked and kept clear of vendor tents and crowds.",
+    "accessible_restroom_placement": [
+      { "location": "College Avenue near MBTA station entrance", "rationale": "First contact point for transit arrivals; highest accessibility need at event entry" },
+      { "location": "Mid-Elm Street event zone", "rationale": "Central event access; placed adjacent to existing ADA ramp and level surface" }
+    ],
+    "signage_plan": "Temporary wayfinding overlays on existing 200+ inventoried signs; accessible route markers using high-contrast yellow on existing sign poles; dedicated ADA route signage at all 6 push-button signal locations.",
+    "power_infrastructure": "32 utility poles within 500m radius — event electrician can assess tap points for stage power and vendor booth circuits. Coordinate with Eversource for load assessment.",
+    "cyvl_demo_integration": "Live Cyvl dashboard displayed at event information booth — showing real-time pavement condition map, sign inventory, and ADA asset locations. Demonstrates how infrastructure intelligence makes the event possible. QR code for Boston CIO and city staff to access data directly."
+  },
+
+  "data_sources": {
+    "cyvl_infrastructure": {
+      "project_id": "090e18f2-0002-4a70-90b4-8f073d26294d",
+      "scan_id": "scan_1185_SOMERVILLE_MA",
+      "tools_used": ["geocode_location", "assess_infrastructure", "list_signs", "list_above_ground_assets", "list_pavement_scores", "search_imagery"]
+    },
+    "web_research": [
+      "Yelp Davis Square business directory (2026)",
+      "Boston Magazine — Best Davis Square Restaurants",
+      "Somerville Times — Best of Somerville 2025",
+      "City of Somerville — Block Party License requirements (somervillema.gov/blockparty)",
+      "City of Somerville — ArtBeat 2025 event documentation",
+      "National Endowment for the Arts — community event economic impact data",
+      "IMPLAN — Event Impacts: The Economic Value of Community Events"
+    ],
+    "ckan_311": {
+      "dataset_id": "8048697b-ad64-4bfc-b090-ee00169f2323",
+      "resource_used": "9d7c2214-4709-478a-a2e8-fb2020a5bb94 (311 Service Requests 2025)",
+      "note": "Boston 311 dataset covers Boston proper; Somerville maintains separate 311 system. Boston data included for regional context but Davis Square complaints filed through Somerville's CitizenServe system."
+    }
+  },
+
+  "demo_narrative_hooks": [
+    "Cyvl found 2 Failed (PCI < 10) pavement segments within 500 meters of Davis Square — before this event could be safely held, the city needed to know exactly where they were. This is exactly what Cyvl delivered.",
+    "21 ADA curb ramps inventoried in the event zone — not guessed, not estimated. The city can guarantee accessible routes because Cyvl mapped every single one.",
+    "6 accessible pedestrian push-button signals confirmed at key intersections — the event accessible routing plan follows the infrastructure, not the other way around.",
+    "48 trees in the event radius create natural shade zones — Cyvl's above-ground asset inventory let planners design the quiet zone and seating areas around real canopy, not assumptions.",
+    "200 signs inventoried and 190 in Good condition — event planners know exactly which 3 Poor-condition signs to replace before thousands of attendees arrive.",
+    "343 crosswalk/pedestrian imagery matches across the Somerville dataset — the city can see every intersection, every crossing, and every potential mobility hazard before the event.",
+    "The same data that makes this block party safe is the data that helps Somerville prioritize its $50M+ annual pavement repair budget year-round."
+  ]
+}

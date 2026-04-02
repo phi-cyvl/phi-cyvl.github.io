@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyvl Event Planning Demos — Boston CIO Briefing</title>
+    <link rel="icon" href="assets/cyvl_favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --asphalt-black: #0D0D0C;
+            --concrete-gray: #505A56;
+            --high-vis-yellow: #DAFF00;
+            --utility-blue: #1B79C5;
+            --signal-red: #FF470A;
+            --white: #FFFFFF;
+            --off-white: #F5F5F5;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--asphalt-black);
+            color: var(--white);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        /* Nav */
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13,13,12,0.95);
+            backdrop-filter: blur(16px);
+        }
+        .nav-logo { height: 28px; }
+        .nav-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--concrete-gray);
+        }
+        .nav-badge .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--high-vis-yellow);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Hero */
+        .hero {
+            padding: 80px 32px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -200px; left: 50%;
+            transform: translateX(-50%);
+            width: 800px; height: 800px;
+            background: var(--high-vis-yellow);
+            opacity: 0.04;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+        }
+        .hero-eyebrow {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--high-vis-yellow);
+            margin-bottom: 16px;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero h1 span { color: var(--high-vis-yellow); }
+        .hero-subtitle {
+            font-size: 1.125rem;
+            color: var(--concrete-gray);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+        .stat { text-align: center; }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--high-vis-yellow);
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--concrete-gray);
+            margin-top: 4px;
+        }
+
+        /* Demo grid */
+        .demos-section {
+            padding: 0 32px 80px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .demos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 24px;
+        }
+        @media (max-width: 480px) {
+            .demos-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Demo card */
+        .demo-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .demo-card:hover {
+            border-color: rgba(218,255,0,0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(218,255,0,0.08);
+            text-decoration: none;
+        }
+        .demo-card:hover .card-arrow {
+            transform: translateX(4px);
+            color: var(--high-vis-yellow);
+        }
+
+        .card-header {
+            padding: 28px 28px 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .card-number {
+            width: 40px; height: 40px;
+            min-width: 40px;
+            border-radius: 12px;
+            background: var(--high-vis-yellow);
+            color: var(--asphalt-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.125rem;
+        }
+        .card-badge {
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .badge-somerville { background: rgba(27,121,197,0.15); color: var(--utility-blue); }
+        .badge-boston { background: rgba(218,255,0,0.15); color: var(--high-vis-yellow); }
+        .badge-safety { background: rgba(255,71,10,0.15); color: var(--signal-red); }
+
+        .card-body { padding: 20px 28px 28px; flex: 1; display: flex; flex-direction: column; }
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+            margin-bottom: 10px;
+        }
+        .card-desc {
+            font-size: 0.875rem;
+            color: var(--concrete-gray);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        /* Card data chips */
+        .card-data {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .data-chip {
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .data-chip .chip-value { color: var(--high-vis-yellow); }
+
+        .card-footer {
+            padding: 16px 28px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card-cta {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--high-vis-yellow);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-arrow { transition: transform 0.2s; }
+        .card-tools {
+            display: flex;
+            gap: 6px;
+        }
+        .tool-chip {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.04);
+            color: var(--concrete-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* Context section */
+        .context-section {
+            padding: 60px 32px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .context-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .context-card {
+            padding: 24px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .context-card h4 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--concrete-gray);
+            margin-bottom: 8px;
+        }
+        .context-card .value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--high-vis-yellow);
+            margin-bottom: 6px;
+        }
+        .context-card p {
+            font-size: 0.8rem;
+            color: var(--concrete-gray);
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 40px 32px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            text-align: center;
+        }
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .footer-logo { height: 24px; margin-bottom: 12px; opacity: 0.6; }
+        .footer-text {
+            font-size: 0.75rem;
+            color: var(--concrete-gray);
+            line-height: 1.6;
+        }
+        .footer-text a { color: var(--utility-blue); text-decoration: none; }
+        .footer-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.06);
+            margin: 20px auto;
+            max-width: 200px;
+        }
+        .footer-powered {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .footer-powered img { height: 32px; opacity: 0.5; }
+
+        /* Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <img src="assets/cyvl_logo_white.png" alt="Cyvl" class="nav-logo">
+        <div class="nav-badge">
+            <span class="dot"></span>
+            Boston CIO Briefing — Event Planning Demos
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-eyebrow">FIFA World Cup 2026 &middot; Boston &middot; Somerville</div>
+        <h1>Infrastructure Intelligence for <span>Event Planning</span></h1>
+        <p class="hero-subtitle">
+            Six data-driven demos showing how cities use infrastructure intelligence to plan safer, more accessible community events — from World Cup watch parties to neighborhood block parties.
+        </p>
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value">6</div>
+                <div class="stat-label">Demos</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">34K</div>
+                <div class="stat-label">Images Analyzed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">51K+</div>
+                <div class="stat-label">Assets Catalogued</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">120</div>
+                <div class="stat-label">Miles Scanned</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">$10M</div>
+                <div class="stat-label">State Grants Available</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="demos-section">
+        <div class="demos-grid">
+
+            <!-- Demo 1: Bar Crawl -->
+            <a href="01-bar-crawl-walkability/index.html" class="demo-card fade-up">
+                <div class="card-header">
+                    <div class="card-number">1</div>
+                    <span class="card-badge badge-somerville">Somerville</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">World Cup Bar Crawl Walkability</h3>
+                    <p class="card-desc">A 7-stop walking route from Davis Square to Union Square, assessing pavement safety, ADA compliance, and pedestrian infrastructure at every bar and route segment.</p>
+                    <div class="card-data">
+                        <span class="data-chip"><span class="chip-value">7</span> stops</span>
+                        <span class="data-chip"><span class="chip-value">1.69</span> miles</span>
+                        <span class="data-chip"><span class="chip-value">B+</span> walkability</span>
+                        <span class="data-chip"><span class="chip-value">82</span>/100 score</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta">View Demo <span class="card-arrow">&rarr;</span></span>
+                    <div class="card-tools">
+                        <span class="tool-chip">Cyvl MCP</span>
+                        <span class="tool-chip">Leaflet</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Demo 2: Newbury Popup -->
+            <a href="02-newbury-popup-playbook/index.html" class="demo-card fade-up">
+                <div class="card-header">
+                    <div class="card-number">2</div>
+                    <span class="card-badge badge-boston">Boston</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Newbury Street Pop-Up Playbook</h3>
+                    <p class="card-desc">The complete guide to hosting a summer pop-up on Boston's iconic shopping street — 8-step permit process, cost calculator, business density map, and World Cup timing strategy.</p>
+                    <div class="card-data">
+                        <span class="data-chip"><span class="chip-value">8</span> blocks</span>
+                        <span class="data-chip"><span class="chip-value">68</span> events on record</span>
+                        <span class="data-chip"><span class="chip-value">50K+</span> foot traffic</span>
+                        <span class="data-chip"><span class="chip-value">$230–950</span> permits</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta">View Demo <span class="card-arrow">&rarr;</span></span>
+                    <div class="card-tools">
+                        <span class="tool-chip">Boston CKAN</span>
+                        <span class="tool-chip">Leaflet</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Demo 3: Davis Square Block Party -->
+            <a href="03-davis-square-block-party/index.html" class="demo-card fade-up">
+                <div class="card-header">
+                    <div class="card-number">3</div>
+                    <span class="card-badge badge-somerville">Somerville</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Davis Square Community Block Party</h3>
+                    <p class="card-desc">A 100% accessible community event plan — infrastructure report card, 12 local businesses with revenue projections, street closure map, and ADA compliance audit.</p>
+                    <div class="card-data">
+                        <span class="data-chip"><span class="chip-value">12</span> businesses</span>
+                        <span class="data-chip"><span class="chip-value">200</span> segments scored</span>
+                        <span class="data-chip"><span class="chip-value">2</span> failed segments</span>
+                        <span class="data-chip"><span class="chip-value">$50K</span> revenue lift</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta">View Demo <span class="card-arrow">&rarr;</span></span>
+                    <div class="card-tools">
+                        <span class="tool-chip">Cyvl MCP</span>
+                        <span class="tool-chip">Leaflet</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Demo 4: School St Parking Lot -->
+            <a href="04-school-st-parking-lot/index.html" class="demo-card fade-up">
+                <div class="card-header">
+                    <div class="card-number">4</div>
+                    <span class="card-badge badge-somerville">Somerville</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">From Parking Lot to Party</h3>
+                    <p class="card-desc">Full action plan to host a 200-person event at an empty lot near Cyvl HQ — 8 regulatory steps, week-by-week timeline, safety plan, and complete budget built from 9 infrastructure data points.</p>
+                    <div class="card-data">
+                        <span class="data-chip"><span class="chip-value">200</span> guests</span>
+                        <span class="data-chip"><span class="chip-value">$23.7K</span> total cost</span>
+                        <span class="data-chip"><span class="chip-value">9</span> data points</span>
+                        <span class="data-chip"><span class="chip-value">0</span> site visits</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta">View Demo <span class="card-arrow">&rarr;</span></span>
+                    <div class="card-tools">
+                        <span class="tool-chip">Cyvl MCP</span>
+                        <span class="tool-chip">Leaflet</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Demo 5: Fan Zone Selector -->
+            <a href="05-fan-zone-selector/index.html" class="demo-card fade-up">
+                <div class="card-header">
+                    <div class="card-number">5</div>
+                    <span class="card-badge badge-somerville">Somerville</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Fan Zone Site Selector</h3>
+                    <p class="card-desc">Compare 7 potential World Cup watch party locations scored across pavement quality, ADA accessibility, safety, amenities, capacity, and transit — with a disqualifier discovery at Teele Square.</p>
+                    <div class="card-data">
+                        <span class="data-chip"><span class="chip-value">7</span> sites ranked</span>
+                        <span class="data-chip"><span class="chip-value">87</span> top score</span>
+                        <span class="data-chip"><span class="chip-value">6</span> criteria</span>
+                        <span class="data-chip"><span class="chip-value">9</span> failed segments found</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta">View Demo <span class="card-arrow">&rarr;</span></span>
+                    <div class="card-tools">
+                        <span class="tool-chip">Cyvl MCP</span>
+                        <span class="tool-chip">Leaflet</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Demo 6: Evacuation Readiness -->
+            <a href="06-evacuation-readiness/index.html" class="demo-card fade-up">
+                <div class="card-header">
+                    <div class="card-number">6</div>
+                    <span class="card-badge badge-safety">Safety Critical</span>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Emergency Evacuation Readiness</h3>
+                    <p class="card-desc">Assessing pedestrian evacuation corridors from World Cup event sites — identifying a PCI 23.55 structural failure on McGrath Highway that planners missed, co-located with a construction zone.</p>
+                    <div class="card-data">
+                        <span class="data-chip"><span class="chip-value">4</span> corridors</span>
+                        <span class="data-chip"><span class="chip-value">$76M</span> security funding</span>
+                        <span class="data-chip"><span class="chip-value">23.55</span> PCI critical</span>
+                        <span class="data-chip"><span class="chip-value">50K</span> crowd size</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta">View Demo <span class="card-arrow">&rarr;</span></span>
+                    <div class="card-tools">
+                        <span class="tool-chip">Cyvl MCP</span>
+                        <span class="tool-chip">Vision Zero</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- Context -->
+    <section class="context-section">
+        <div class="context-grid">
+            <div class="context-card fade-up">
+                <h4>World Cup 2026</h4>
+                <div class="value">7 Matches</div>
+                <p>Gillette Stadium, Foxborough MA. June 13 – July 9, 2026. Including England vs Ghana and a Quarterfinal.</p>
+            </div>
+            <div class="context-card fade-up">
+                <h4>State Grant Program</h4>
+                <div class="value">$10M</div>
+                <p>Governor Healey's Sports &amp; Entertainment Events Fund — 17 recipients across 25 Massachusetts communities for fan celebrations.</p>
+            </div>
+            <div class="context-card fade-up">
+                <h4>Federal Safety Funding</h4>
+                <div class="value">$76M</div>
+                <p>Federal allocation for World Cup security — $46.6M FIFA grant, $21.2M counter-UAS, $8.6M FTA transit safety.</p>
+            </div>
+            <div class="context-card fade-up">
+                <h4>Cyvl Data Coverage</h4>
+                <div class="value">Somerville, MA</div>
+                <p>120 miles scanned. 34,000 street-level images. Full pavement, signs, assets, markings, and distress data.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <img src="assets/cyvl_logo_white.png" alt="Cyvl" class="footer-logo">
+            <p class="footer-text">
+                Infrastructure Intelligence for Safer Communities
+            </p>
+            <div class="footer-divider"></div>
+            <p class="footer-text">
+                Prepared for Santiago Garces, CIO, City of Boston<br>
+                Data sources: Cyvl Infrastructure API &middot; Boston Open Data (CKAN) &middot; Vision Zero<br>
+                Somerville, MA Pilot Project &middot; Delivered December 2025 &middot; 120 miles
+            </p>
+            <div class="footer-powered">
+                <img src="assets/cyvl_sensor.png" alt="Cyvl Sensor">
+                <span class="footer-text">Powered by Cyvl</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => entry.target.classList.add('visible'), i * 80);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

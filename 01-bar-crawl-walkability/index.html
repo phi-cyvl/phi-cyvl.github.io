@@ -1,0 +1,2207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>World Cup Bar Crawl Walkability Assessment — Cyvl</title>
+  <link rel="icon" href="../assets/cyvl_favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    /* ====== PAGE-SPECIFIC OVERRIDES & EXTENSIONS ====== */
+
+    /* Sticky Nav */
+    .page-nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(13,13,12,0.97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(218,255,0,0.15);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .page-nav img { height: 24px; }
+    .page-nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .page-nav-links a {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .page-nav-links a:hover { color: #DAFF00; }
+    @media (max-width: 768px) { .page-nav-links { display: none; } }
+
+    /* ====== HERO ====== */
+    .hero-section {
+      background: #0D0D0C;
+      color: #fff;
+      padding: 80px 0 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -120px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(218,255,0,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-section::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -80px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(27,121,197,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(218,255,0,0.12);
+      border: 1px solid rgba(218,255,0,0.3);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #DAFF00;
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow .dot {
+      width: 6px; height: 6px;
+      background: #DAFF00;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+    .hero-section h1 {
+      font-size: clamp(2rem, 5vw, 3.75rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 20px;
+      max-width: 900px;
+    }
+    .hero-section h1 .accent { color: #DAFF00; }
+    .hero-subtitle {
+      font-size: 1.125rem;
+      color: rgba(255,255,255,0.55);
+      max-width: 580px;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+      margin-top: 48px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.03);
+    }
+    .hero-stat {
+      flex: 1;
+      min-width: 140px;
+      padding: 24px 28px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat-value {
+      font-size: 2.25rem;
+      font-weight: 900;
+      color: #DAFF00;
+      line-height: 1;
+      margin-bottom: 6px;
+      letter-spacing: -0.03em;
+    }
+    .hero-stat-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: rgba(255,255,255,0.45);
+      font-weight: 600;
+    }
+
+    /* ====== SECTION HEADERS ====== */
+    .section-header {
+      margin-bottom: 48px;
+    }
+    .section-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #505A56;
+      margin-bottom: 12px;
+    }
+    .section-dark .section-label { color: rgba(218,255,0,0.7); }
+    .section-header h2 {
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 12px;
+    }
+    .section-header p {
+      color: #505A56;
+      max-width: 600px;
+      font-size: 1rem;
+      margin: 0;
+    }
+    .section-dark .section-header p { color: rgba(255,255,255,0.5); }
+
+    /* ====== MAP SECTION ====== */
+    .map-section {
+      background: #f8f8f7;
+      padding: 64px 0;
+    }
+    #route-map {
+      width: 100%;
+      height: 460px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(13,13,12,0.08);
+      box-shadow: 0 8px 32px rgba(13,13,12,0.1);
+    }
+
+    /* ====== ROUTE OVERVIEW ====== */
+    .route-overview-section {
+      padding: 72px 0;
+      background: #fff;
+    }
+    .route-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .route-stop-row {
+      display: flex;
+      align-items: stretch;
+      gap: 20px;
+    }
+    .route-stop-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 56px;
+    }
+    .route-stop-number {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #DAFF00;
+      color: #0D0D0C;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 4px 12px rgba(218,255,0,0.4);
+    }
+    .route-stop-line {
+      width: 3px;
+      flex: 1;
+      min-height: 20px;
+      background: linear-gradient(to bottom, #DAFF00, rgba(218,255,0,0.2));
+      margin: 4px 0;
+    }
+    .route-stop-content {
+      flex: 1;
+      padding: 12px 0 32px;
+    }
+    .route-stop-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0D0D0C;
+      margin-bottom: 2px;
+    }
+    .route-stop-meta {
+      font-size: 0.8rem;
+      color: #505A56;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .route-connector-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 4px 0;
+    }
+    .route-connector-left {
+      width: 56px;
+      display: flex;
+      justify-content: center;
+    }
+    .route-connector-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f5f5f4;
+      border: 1px solid rgba(13,13,12,0.07);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #505A56;
+      flex: 1;
+    }
+    .route-connector-pill.warning {
+      background: #fff9ec;
+      border-color: rgba(249,168,37,0.3);
+      color: #8a6200;
+    }
+    .route-connector-pill.transit {
+      background: #e8f4fd;
+      border-color: rgba(27,121,197,0.2);
+      color: #1B79C5;
+    }
+    .cluster-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(218,255,0,0.1);
+      border: 1px solid rgba(218,255,0,0.35);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #4a5700;
+    }
+
+    /* ====== STOP CARDS ====== */
+    .stops-section {
+      background: #f8f8f7;
+      padding: 72px 0;
+    }
+    .stop-card {
+      background: #fff;
+      border-radius: 20px;
+      border: 1px solid rgba(13,13,12,0.07);
+      box-shadow: 0 4px 16px rgba(13,13,12,0.06);
+      overflow: hidden;
+      margin-bottom: 20px;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .stop-card:hover {
+      box-shadow: 0 12px 40px rgba(13,13,12,0.12);
+      transform: translateY(-2px);
+    }
+    .stop-card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid rgba(13,13,12,0.06);
+    }
+    .stop-num-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #DAFF00;
+      color: #0D0D0C;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .stop-card-header-info { flex: 1; }
+    .stop-bar-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0D0D0C;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .stop-address {
+      font-size: 0.8rem;
+      color: #505A56;
+    }
+    .stop-card-body {
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 768px) {
+      .stop-card-body { grid-template-columns: 1fr; }
+      .stop-card-header { flex-wrap: wrap; }
+    }
+    .stop-section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #505A56;
+      margin-bottom: 14px;
+    }
+    .pci-meter-wrap { margin-bottom: 20px; }
+    .pci-meter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .pci-score-big {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .pci-track {
+      height: 14px;
+      border-radius: 7px;
+      background: #f0f0ee;
+      overflow: hidden;
+    }
+    .pci-fill {
+      height: 100%;
+      border-radius: 7px;
+      transition: width 1s cubic-bezier(0.4,0,0.2,1);
+    }
+    .pci-fill.excellent { background: linear-gradient(90deg, #43A047, #66BB6A); }
+    .pci-fill.good { background: linear-gradient(90deg, #7CB342, #9CCC65); }
+    .pci-fill.satisfactory { background: linear-gradient(90deg, #F9A825, #FFD54F); }
+    .pci-fill.fair { background: linear-gradient(90deg, #EF6C00, #FFA726); }
+    .pci-fill.poor { background: linear-gradient(90deg, #C62828, #EF5350); }
+    .condition-breakdown { display: flex; flex-direction: column; gap: 8px; }
+    .condition-row { display: flex; align-items: center; gap: 10px; }
+    .condition-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      width: 100px;
+      flex-shrink: 0;
+      color: #505A56;
+    }
+    .condition-bar-wrap { flex: 1; height: 8px; background: #f0f0ee; border-radius: 4px; overflow: hidden; }
+    .condition-bar { height: 100%; border-radius: 4px; }
+    .cbar-good { background: #66BB6A; }
+    .cbar-satisfactory { background: #FFD54F; }
+    .cbar-fair { background: #FFA726; }
+    .cbar-poor { background: #EF5350; }
+    .condition-count { font-size: 0.72rem; font-weight: 700; color: #0D0D0C; min-width: 22px; text-align: right; }
+    .infra-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .infra-stat {
+      background: #f8f8f7;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .infra-stat-val { font-size: 1.3rem; font-weight: 800; color: #0D0D0C; line-height: 1; margin-bottom: 3px; }
+    .infra-stat-lbl { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #505A56; }
+    .safety-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+    .safety-green { background: #E8F5E9; color: #2E7D32; }
+    .safety-yellow { background: #FFF8E1; color: #8a6200; }
+    .safety-red { background: #FFEBEE; color: #C62828; }
+    .safety-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .safety-green .safety-dot { background: #2E7D32; }
+    .safety-yellow .safety-dot { background: #F9A825; }
+    .safety-red .safety-dot { background: #C62828; }
+    .cyvl-callout {
+      background: #0D0D0C;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 0 28px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cyvl-callout::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: #DAFF00;
+    }
+    .cyvl-callout-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #DAFF00;
+      margin-bottom: 8px;
+    }
+    .cyvl-callout-text {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.55;
+      margin: 0;
+    }
+    .wc-angle {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: rgba(218,255,0,0.06);
+      border-radius: 8px;
+      border-left: 3px solid #DAFF00;
+      font-size: 0.8rem;
+      color: #505A56;
+      line-height: 1.5;
+    }
+    .stop-card-footer {
+      padding: 16px 28px;
+      border-top: 1px solid rgba(13,13,12,0.05);
+      background: #fafaf9;
+    }
+    .distress-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .distress-tag {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      background: #f0f0ee;
+      border-radius: 4px;
+      color: #505A56;
+      text-transform: capitalize;
+    }
+
+    /* ====== SEGMENT CONNECTORS ====== */
+    .segment-connector {
+      background: #0D0D0C;
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin: 8px 0 20px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(218,255,0,0.1);
+    }
+    .segment-connector::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #DAFF00, rgba(218,255,0,0.1));
+    }
+    .segment-connector-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .segment-route-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .segment-route-label span { color: #DAFF00; }
+    .segment-metrics {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .seg-metric { display: flex; flex-direction: column; align-items: center; }
+    .seg-metric-val {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #DAFF00;
+      line-height: 1;
+    }
+    .seg-metric-lbl {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.4);
+      margin-top: 3px;
+    }
+    .segment-details { display: flex; flex-direction: column; gap: 10px; }
+    .seg-row { display: flex; align-items: flex-start; gap: 10px; }
+    .seg-row-icon { font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+    .seg-row-text { font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.5; }
+    .seg-hazard { color: #FF470A; }
+    .seg-transit { color: #1B79C5; }
+    .seg-safe { color: #66BB6A; }
+    .seg-pci-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .seg-pci-chip {
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.6);
+    }
+    .seg-pci-chip.chip-good { background: rgba(102,187,106,0.15); color: #66BB6A; }
+    .seg-pci-chip.chip-poor { background: rgba(239,83,80,0.15); color: #EF5350; }
+
+    /* ====== OVERALL ASSESSMENT ====== */
+    .assessment-section {
+      background: #0D0D0C;
+      color: #fff;
+      padding: 80px 0;
+    }
+    .score-dial-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .score-dial {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: conic-gradient(#DAFF00 0% 82%, rgba(255,255,255,0.08) 82% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 60px rgba(218,255,0,0.2);
+    }
+    .score-dial-inner {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: #0D0D0C;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .score-dial-num {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #DAFF00;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+    .score-dial-denom { font-size: 0.8rem; color: rgba(255,255,255,0.4); font-weight: 600; }
+    .score-dial-grade {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+      text-align: center;
+    }
+    .score-dial-sub { font-size: 0.8rem; color: rgba(255,255,255,0.45); text-align: center; }
+    .pci-dist-chart { display: flex; flex-direction: column; gap: 10px; }
+    .pci-dist-row { display: flex; align-items: center; gap: 12px; }
+    .pci-dist-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      width: 90px;
+      flex-shrink: 0;
+      color: rgba(255,255,255,0.6);
+    }
+    .pci-dist-bar-wrap { flex: 1; height: 10px; background: rgba(255,255,255,0.07); border-radius: 5px; overflow: hidden; }
+    .pci-dist-bar { height: 100%; border-radius: 5px; }
+    .pci-dist-meta { font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.5); min-width: 130px; text-align: right; }
+    .findings-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .finding-item { display: flex; gap: 14px; align-items: flex-start; }
+    .finding-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .finding-icon.good { background: rgba(102,187,106,0.15); }
+    .finding-icon.warn { background: rgba(249,168,37,0.15); }
+    .finding-icon.bad { background: rgba(255,71,10,0.12); }
+    .finding-text { font-size: 0.875rem; color: rgba(255,255,255,0.7); line-height: 1.55; }
+    .finding-text strong { color: #fff; }
+    .action-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px 18px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .action-priority {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 100px;
+      white-space: nowrap;
+      margin-top: 1px;
+    }
+    .priority-high { background: rgba(255,71,10,0.2); color: #FF6B3D; }
+    .priority-med { background: rgba(249,168,37,0.2); color: #FFD54F; }
+    .priority-low { background: rgba(102,187,106,0.2); color: #81C784; }
+    .action-text { font-size: 0.875rem; color: rgba(255,255,255,0.7); line-height: 1.5; }
+    .action-text strong { color: #fff; }
+
+    /* ====== WORLD CUP SECTION ====== */
+    .worldcup-section {
+      background: #fff;
+      padding: 72px 0;
+    }
+    .worldcup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 768px) { .worldcup-grid { grid-template-columns: 1fr; } }
+    .wc-card {
+      background: #f8f8f7;
+      border-radius: 16px;
+      padding: 28px;
+      border: 1px solid rgba(13,13,12,0.06);
+    }
+    .wc-card.dark {
+      background: #0D0D0C;
+      border-color: rgba(218,255,0,0.12);
+      color: #fff;
+    }
+    .wc-card-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #505A56;
+      margin-bottom: 16px;
+    }
+    .wc-card.dark .wc-card-title { color: #DAFF00; }
+    .wc-stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(13,13,12,0.06);
+      font-size: 0.875rem;
+      gap: 12px;
+    }
+    .wc-card.dark .wc-stat-row { border-color: rgba(255,255,255,0.07); }
+    .wc-stat-row:last-child { border-bottom: none; }
+    .wc-stat-val { font-weight: 700; color: #0D0D0C; text-align: right; }
+    .wc-card.dark .wc-stat-val { color: #DAFF00; }
+    .wc-stat-lbl { color: #505A56; }
+    .wc-card.dark .wc-stat-lbl { color: rgba(255,255,255,0.5); }
+    .grant-amount {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #DAFF00;
+      line-height: 1;
+      margin-bottom: 8px;
+      letter-spacing: -0.03em;
+    }
+    .storylines { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .storylines li {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.65);
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .storylines li::before {
+      content: '\2192';
+      position: absolute;
+      left: 0;
+      color: #DAFF00;
+      font-weight: 700;
+    }
+
+    /* ====== FOOTER ====== */
+    .page-footer {
+      background: #0D0D0C;
+      padding: 56px 0 32px;
+      border-top: 1px solid rgba(218,255,0,0.1);
+    }
+    .footer-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 32px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .footer-brand img { height: 28px; margin-bottom: 12px; display: block; }
+    .footer-tagline { font-size: 0.875rem; color: rgba(255,255,255,0.4); max-width: 300px; line-height: 1.6; }
+    .footer-sensor img { height: 80px; opacity: 0.7; }
+    .footer-divider-line { height: 1px; background: rgba(255,255,255,0.07); margin: 32px 0; }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-powered-by {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.3);
+    }
+    .footer-powered-by img { height: 18px; opacity: 0.5; }
+    .footer-data-note { font-size: 0.72rem; color: rgba(255,255,255,0.2); max-width: 500px; text-align: right; }
+
+    /* ====== SCROLL ANIMATIONS ====== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ====== NEIGHBORHOOD DIVIDER ====== */
+    .neighborhood-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 0 12px;
+    }
+    .neighborhood-divider-line { flex: 1; height: 1px; background: rgba(13,13,12,0.1); }
+    .neighborhood-divider-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #505A56;
+      white-space: nowrap;
+    }
+
+    /* ====== ROUTE TWO-COL ====== */
+    .route-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .route-two-col { grid-template-columns: 1fr; }
+    }
+    .assessment-two-col {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 48px;
+      align-items: start;
+      margin-bottom: 64px;
+    }
+    @media (max-width: 768px) {
+      .assessment-two-col { grid-template-columns: 1fr; }
+    }
+    .assessment-findings-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 768px) {
+      .assessment-findings-col { grid-template-columns: 1fr; }
+    }
+
+    /* ====== CONCERN SEGMENTS BOX ====== */
+    .concern-box {
+      background: #fff5f5;
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid rgba(239,83,80,0.2);
+    }
+    .concern-item { margin-bottom: 10px; }
+    .concern-item:last-child { margin-bottom: 0; }
+    .concern-pci { font-size: 0.8rem; font-weight: 700; color: #C62828; }
+    .concern-desc { font-size: 0.75rem; color: #505A56; }
+  </style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav class="page-nav">
+  <img src="../assets/cyvl_logo_white.png" alt="Cyvl" />
+  <ul class="page-nav-links">
+    <li><a href="#map">Map</a></li>
+    <li><a href="#route">Route</a></li>
+    <li><a href="#stops">Stops</a></li>
+    <li><a href="#assessment">Assessment</a></li>
+    <li><a href="#worldcup">World Cup</a></li>
+  </ul>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero-section" id="hero">
+  <div class="container" style="position:relative;z-index:1;">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      FIFA World Cup 2026 — Live Infrastructure Analysis
+    </div>
+    <h1>
+      World Cup <span class="accent">Bar Crawl</span><br/>
+      Walkability Assessment
+    </h1>
+    <p class="hero-subtitle">
+      Somerville, MA — Davis Square to Union Square fan route.<br/>
+      Powered by Cyvl's real-time pavement intelligence and citywide asset inventory.
+    </p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">7</div>
+        <div class="hero-stat-label">Bar Stops</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">1.69<span style="font-size:1.1rem">mi</span></div>
+        <div class="hero-stat-label">Total Route</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">B+</div>
+        <div class="hero-stat-label">Walkability Grade</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">82</div>
+        <div class="hero-stat-label">Overall Score /100</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">51K+</div>
+        <div class="hero-stat-label">Assets Catalogued</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MAP ===================== -->
+<section class="map-section" id="map">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Interactive Route Map</span>
+      <h2>Somerville Fan Route</h2>
+      <p>Davis Square to Union Square — 7 stops, 2 neighborhoods, 2,715 meters of Cyvl-scanned pavement.</p>
+    </div>
+    <div id="route-map" class="reveal reveal-delay-1"></div>
+  </div>
+</section>
+
+<!-- ===================== ROUTE OVERVIEW ===================== -->
+<section class="route-overview-section" id="route">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Route Overview</span>
+      <h2>Stop-by-Stop Walkthrough</h2>
+      <p>Two walkable clusters connected by the Green Line Extension — the smartest way to bar-crawl Somerville.</p>
+    </div>
+
+    <div class="route-two-col">
+      <div class="reveal">
+        <div class="route-visual">
+
+          <div class="neighborhood-divider">
+            <div class="neighborhood-divider-line"></div>
+            <div class="neighborhood-divider-label">Davis Square Cluster &mdash; 75m total</div>
+            <div class="neighborhood-divider-line"></div>
+          </div>
+
+          <div class="route-stop-row">
+            <div class="route-stop-left">
+              <div class="route-stop-number">1</div>
+              <div class="route-stop-line"></div>
+            </div>
+            <div class="route-stop-content">
+              <div class="route-stop-name">The Burren</div>
+              <div class="route-stop-meta">
+                <span>247 Elm St, Davis Sq</span>
+                <span class="cluster-badge">Red Line · Davis</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="route-connector-row">
+            <div class="route-connector-left"><div style="width:2px;height:32px;background:rgba(218,255,0,0.3);margin:auto;"></div></div>
+            <div class="route-connector-pill">30m &middot; 1 min &middot; Cross Elm St &middot; PCI 85&ndash;98</div>
+          </div>
+
+          <div class="route-stop-row">
+            <div class="route-stop-left">
+              <div class="route-stop-number">2</div>
+              <div class="route-stop-line"></div>
+            </div>
+            <div class="route-stop-content">
+              <div class="route-stop-name">Saloon</div>
+              <div class="route-stop-meta">
+                <span>255 Elm St, Davis Sq</span>
+                <span>Avg PCI 82.4</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="route-connector-row">
+            <div class="route-connector-left"><div style="width:2px;height:32px;background:rgba(218,255,0,0.3);margin:auto;"></div></div>
+            <div class="route-connector-pill">45m &middot; 1 min &middot; Cross Elm St &middot; PCI 91&ndash;98</div>
+          </div>
+
+          <div class="route-stop-row">
+            <div class="route-stop-left">
+              <div class="route-stop-number">3</div>
+              <div class="route-stop-line"></div>
+            </div>
+            <div class="route-stop-content">
+              <div class="route-stop-name">Elm Street Taproom</div>
+              <div class="route-stop-meta">
+                <span>256 Elm St, Davis Sq</span>
+                <span>Avg PCI 83.1</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="route-connector-row">
+            <div class="route-connector-left"><div style="width:2px;height:32px;background:rgba(249,168,37,0.4);margin:auto;"></div></div>
+            <div class="route-connector-pill warning">&#9888; 540m &middot; 7 min &middot; Mixed PCI (44&ndash;98) &middot; Use signal at Highland Ave</div>
+          </div>
+
+          <div class="route-stop-row">
+            <div class="route-stop-left">
+              <div class="route-stop-number">4</div>
+              <div class="route-stop-line"></div>
+            </div>
+            <div class="route-stop-content">
+              <div class="route-stop-name">Five Horses Tavern</div>
+              <div class="route-stop-meta">
+                <span>400 Highland Ave</span>
+                <span>Avg PCI 81.8</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="route-connector-row">
+            <div class="route-connector-left"><div style="width:2px;height:32px;background:rgba(27,121,197,0.4);margin:auto;"></div></div>
+            <div class="route-connector-pill transit">&#128650; 1,850m &middot; 22 min walk OR GLX to Union Sq (8&ndash;12 min) &mdash; Recommended</div>
+          </div>
+
+          <div class="neighborhood-divider">
+            <div class="neighborhood-divider-line"></div>
+            <div class="neighborhood-divider-label">Union Square Cluster &mdash; 240m total</div>
+            <div class="neighborhood-divider-line"></div>
+          </div>
+
+          <div class="route-stop-row">
+            <div class="route-stop-left">
+              <div class="route-stop-number">5</div>
+              <div class="route-stop-line"></div>
+            </div>
+            <div class="route-stop-content">
+              <div class="route-stop-name">backbar</div>
+              <div class="route-stop-meta">
+                <span>5 Sanborn Ct, Union Sq</span>
+                <span>Avg PCI 78.2</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="route-connector-row">
+            <div class="route-connector-left"><div style="width:2px;height:32px;background:rgba(218,255,0,0.3);margin:auto;"></div></div>
+            <div class="route-connector-pill">180m &middot; 2 min &middot; Union Square Plaza &middot; PCI 75&ndash;87</div>
+          </div>
+
+          <div class="route-stop-row">
+            <div class="route-stop-left">
+              <div class="route-stop-number">6</div>
+              <div class="route-stop-line"></div>
+            </div>
+            <div class="route-stop-content">
+              <div class="route-stop-name">The Independent</div>
+              <div class="route-stop-meta">
+                <span>75 Union Square</span>
+                <span>New streetscape 2022&ndash;23</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="route-connector-row">
+            <div class="route-connector-left"><div style="width:2px;height:32px;background:rgba(239,83,80,0.3);margin:auto;"></div></div>
+            <div class="route-connector-pill warning">&#9888; 60m &middot; 1 min &middot; Washington St &middot; PCI 45.29 flagged &mdash; trip hazard at night</div>
+          </div>
+
+          <div class="route-stop-row">
+            <div class="route-stop-left">
+              <div class="route-stop-number">7</div>
+            </div>
+            <div class="route-stop-content">
+              <div class="route-stop-name">Bronwyn</div>
+              <div class="route-stop-meta">
+                <span>255 Washington St, Union Sq</span>
+                <span>Avg PCI 77.8</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right column: cluster stats -->
+      <div class="reveal reveal-delay-1">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+
+          <div class="card" style="border-left:4px solid #DAFF00;">
+            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#505A56;margin-bottom:12px;">Davis Square Cluster</div>
+            <div style="font-size:1.8rem;font-weight:900;color:#0D0D0C;line-height:1;margin-bottom:6px;">75 m</div>
+            <div style="font-size:0.82rem;color:#505A56;">3 bars walkable in under 2 minutes. Red Line Davis T stop directly adjacent.</div>
+          </div>
+
+          <div class="card" style="border-left:4px solid #1B79C5;">
+            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#505A56;margin-bottom:12px;">GLX Connector</div>
+            <div style="font-size:1.8rem;font-weight:900;color:#0D0D0C;line-height:1;margin-bottom:6px;">8&ndash;12 min</div>
+            <div style="font-size:0.82rem;color:#505A56;">Green Line Extension now operational. Davis &rarr; Union Sq saves 10+ minutes vs the 1.85km walk.</div>
+          </div>
+
+          <div class="card" style="border-left:4px solid #66BB6A;">
+            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#505A56;margin-bottom:12px;">Union Square Cluster</div>
+            <div style="font-size:1.8rem;font-weight:900;color:#0D0D0C;line-height:1;margin-bottom:6px;">240 m</div>
+            <div style="font-size:0.82rem;color:#505A56;">3 bars in the $50M reconstructed Union Square streetscape (2022&ndash;23). New pavement, protected lanes, GLX.</div>
+          </div>
+
+          <div class="card" style="border-left:4px solid #FF470A;">
+            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#505A56;margin-bottom:12px;">Top Flagged Segment</div>
+            <div style="font-size:1.8rem;font-weight:900;color:#FF470A;line-height:1;margin-bottom:6px;">PCI 43.91</div>
+            <div style="font-size:0.82rem;color:#505A56;">Worst on route &mdash; near Davis Square cluster. Alligator cracking. Pre-World Cup repair priority #1.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STOP CARDS ===================== -->
+<section class="stops-section" id="stops">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Infrastructure Assessment by Stop</span>
+      <h2>7-Stop Deep Dive</h2>
+      <p>Every number from Cyvl's Somerville scan &mdash; 21,141 road segments, 51,000+ catalogued assets, 78 street-level imagery data points along the route.</p>
+    </div>
+
+    <!-- ===== STOP 1: The Burren ===== -->
+    <div class="stop-card reveal">
+      <div class="stop-card-header">
+        <div class="stop-num-circle">1</div>
+        <div class="stop-card-header-info">
+          <div class="stop-bar-name">The Burren</div>
+          <div class="stop-address">247 Elm Street, Davis Square &mdash; Irish pub &mdash; Live traditional Irish music nightly</div>
+        </div>
+        <span class="safety-badge safety-green"><span class="safety-dot"></span> Excellent Walkability</span>
+      </div>
+      <div class="stop-card-body">
+        <div>
+          <div class="stop-section-title">Pavement Context (200m radius)</div>
+          <div class="pci-meter-wrap">
+            <div class="pci-meter-header">
+              <span style="font-size:0.8rem;color:#505A56;">Surrounding Davis Sq — Elm St corridor</span>
+              <span class="pci-score-big score-good">~92</span>
+            </div>
+            <div class="pci-track"><div class="pci-fill good" style="width:92%;"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:0.7rem;color:#505A56;">0 &mdash; Failed</span>
+              <span style="font-size:0.7rem;color:#505A56;">100 &mdash; Perfect</span>
+            </div>
+          </div>
+          <div class="stop-section-title">Nearby Condition Mix</div>
+          <div class="condition-breakdown">
+            <div class="condition-row">
+              <span class="condition-label">Good (97&ndash;98)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-good" style="width:70%;"></div></div>
+              <span class="condition-count">Most</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Poor (43&ndash;53)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-poor" style="width:15%;"></div></div>
+              <span class="condition-count">Side sts</span>
+            </div>
+          </div>
+          <p style="font-size:0.78rem;color:#505A56;margin-top:10px;margin-bottom:0;line-height:1.5;">Cyvl captured 24 imagery data points here. Elm Street itself is well-maintained; Poor segments are on side streets within the 200m radius, not on the main pedestrian path.</p>
+        </div>
+        <div>
+          <div class="stop-section-title">Citywide Infrastructure Inventory</div>
+          <div class="infra-stats">
+            <div class="infra-stat">
+              <div class="infra-stat-val">17,321</div>
+              <div class="infra-stat-lbl">Signs catalogued</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">3,007</div>
+              <div class="infra-stat-lbl">ADA ramps</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">852</div>
+              <div class="infra-stat-lbl">Ped. push buttons</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">619</div>
+              <div class="infra-stat-lbl">Traffic signals</div>
+            </div>
+          </div>
+          <div class="wc-angle">&#9917; Known World Cup soccer hub. Irish pubs traditionally draw Republic of Ireland fans &mdash; will show all group stage matches.</div>
+        </div>
+      </div>
+      <div class="cyvl-callout">
+        <div class="cyvl-callout-label">What Cyvl Found</div>
+        <p class="cyvl-callout-text">Davis T stop is the strongest pedestrian anchor on the route. Cyvl imagery confirms active pedestrian presence with traffic lights, crosswalks, and bus stops all within 50m of the front door. Ideal crawl start &mdash; infrastructure matches the foot traffic.</p>
+      </div>
+    </div>
+
+    <!-- ===== SEGMENT 1 to 2 ===== -->
+    <div class="segment-connector reveal">
+      <div class="segment-connector-header">
+        <div class="segment-route-label"><span>The Burren</span> &rarr; <span>Saloon</span></div>
+        <div class="segment-metrics">
+          <div class="seg-metric"><div class="seg-metric-val">30m</div><div class="seg-metric-lbl">Distance</div></div>
+          <div class="seg-metric"><div class="seg-metric-val">1</div><div class="seg-metric-lbl">Min walk</div></div>
+          <div class="seg-metric"><div class="seg-metric-val">98.12</div><div class="seg-metric-lbl">Best PCI</div></div>
+        </div>
+      </div>
+      <div class="segment-details">
+        <div class="seg-row"><span class="seg-row-icon seg-safe">&#10003;</span><span class="seg-row-text"><strong>Cross Elm Street &mdash; same block.</strong> Signalized intersection, painted crosswalk, curb cuts, street lighting. Zero flagged hazards.</span></div>
+        <div class="seg-row"><span class="seg-row-icon">&#128202;</span><span class="seg-row-text">Pavement: Good to Satisfactory throughout (PCI 85&ndash;98 on this stretch)</span></div>
+      </div>
+      <div class="seg-pci-chips">
+        <span class="seg-pci-chip chip-good">98.12</span>
+        <span class="seg-pci-chip chip-good">97.35</span>
+        <span class="seg-pci-chip chip-good">90.94</span>
+      </div>
+    </div>
+
+    <!-- ===== STOP 2: Saloon ===== -->
+    <div class="stop-card reveal">
+      <div class="stop-card-header">
+        <div class="stop-num-circle">2</div>
+        <div class="stop-card-header-info">
+          <div class="stop-bar-name">Saloon</div>
+          <div class="stop-address">255 Elm Street, Davis Square &mdash; Upscale American bar &mdash; Extensive whiskey selection, large-screen TVs</div>
+        </div>
+        <span class="safety-badge safety-green"><span class="safety-dot"></span> Good Walkability</span>
+      </div>
+      <div class="stop-card-body">
+        <div>
+          <div class="stop-section-title">Avg PCI &mdash; Scored Segments</div>
+          <div class="pci-meter-wrap">
+            <div class="pci-meter-header">
+              <span style="font-size:0.8rem;color:#505A56;">200m radius &middot; 50 segments &middot; 48 scored</span>
+              <span class="pci-score-big score-good">82.4</span>
+            </div>
+            <div class="pci-track"><div class="pci-fill good" style="width:82.4%;"></div></div>
+          </div>
+          <div class="stop-section-title">Condition Breakdown (50 segments)</div>
+          <div class="condition-breakdown">
+            <div class="condition-row">
+              <span class="condition-label">Good (18)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-good" style="width:36%;"></div></div>
+              <span class="condition-count">18</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Satisfactory (16)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-satisfactory" style="width:32%;"></div></div>
+              <span class="condition-count">16</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Fair (8)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-fair" style="width:16%;"></div></div>
+              <span class="condition-count">8</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Poor (6)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-poor" style="width:12%;"></div></div>
+              <span class="condition-count">6</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="stop-section-title">Imagery &amp; Detection</div>
+          <div class="infra-stats">
+            <div class="infra-stat">
+              <div class="infra-stat-val">50</div>
+              <div class="infra-stat-lbl">Segments scanned</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">37</div>
+              <div class="infra-stat-lbl">Imagery points</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">98.93</div>
+              <div class="infra-stat-lbl">Best PCI nearby</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">43.91</div>
+              <div class="infra-stat-lbl">Worst PCI nearby</div>
+            </div>
+          </div>
+          <div class="wc-angle">&#9917; Upscale watch party venue. Reservations essential for marquee USA matches.</div>
+        </div>
+      </div>
+      <div class="stop-card-footer">
+        <div class="distress-tags">
+          <span style="font-size:0.7rem;font-weight:600;color:#505A56;margin-right:4px;">Distress detected:</span>
+          <span class="distress-tag">patching</span>
+          <span class="distress-tag">lt cracking</span>
+          <span class="distress-tag">raveling</span>
+          <span class="distress-tag">weathering</span>
+          <span class="distress-tag">block cracking</span>
+          <span class="distress-tag">alligator cracking</span>
+        </div>
+      </div>
+      <div class="cyvl-callout">
+        <div class="cyvl-callout-label">What Cyvl Found</div>
+        <p class="cyvl-callout-text">37 street-level imagery captures here detected people, traffic lights, bicycles, buses, and fire hydrants &mdash; a well-monitored pedestrian corridor. The 6 Poor segments are on side streets, not Elm St itself. Main route is Good to Satisfactory.</p>
+      </div>
+    </div>
+
+    <!-- ===== SEGMENT 2 to 3 ===== -->
+    <div class="segment-connector reveal">
+      <div class="segment-connector-header">
+        <div class="segment-route-label"><span>Saloon</span> &rarr; <span>Elm Street Taproom</span></div>
+        <div class="segment-metrics">
+          <div class="seg-metric"><div class="seg-metric-val">45m</div><div class="seg-metric-lbl">Distance</div></div>
+          <div class="seg-metric"><div class="seg-metric-val">1</div><div class="seg-metric-lbl">Min walk</div></div>
+          <div class="seg-metric"><div class="seg-metric-val">98.14</div><div class="seg-metric-lbl">Best PCI</div></div>
+        </div>
+      </div>
+      <div class="segment-details">
+        <div class="seg-row"><span class="seg-row-icon seg-safe">&#10003;</span><span class="seg-row-text"><strong>Cross Elm Street &mdash; facing storefronts.</strong> Pedestrian signals, marked crosswalk, wide sidewalk, bike rack.</span></div>
+        <div class="seg-row"><span class="seg-row-icon">&#9888;</span><span class="seg-row-text">Minor patching noted in imagery. Not a safety concern but consistent with wider Davis Square sidewalk wear.</span></div>
+      </div>
+      <div class="seg-pci-chips">
+        <span class="seg-pci-chip chip-good">98.14</span>
+        <span class="seg-pci-chip chip-good">95.09</span>
+        <span class="seg-pci-chip chip-good">91.27</span>
+      </div>
+    </div>
+
+    <!-- ===== STOP 3: Elm Street Taproom ===== -->
+    <div class="stop-card reveal">
+      <div class="stop-card-header">
+        <div class="stop-num-circle">3</div>
+        <div class="stop-card-header-info">
+          <div class="stop-bar-name">Elm Street Taproom</div>
+          <div class="stop-address">256 Elm Street, Davis Square &mdash; 40 draft lines, 120+ bottles &mdash; Walk Score award winner</div>
+        </div>
+        <span class="safety-badge safety-green"><span class="safety-dot"></span> Good Walkability</span>
+      </div>
+      <div class="stop-card-body">
+        <div>
+          <div class="stop-section-title">Avg PCI &mdash; Scored Segments</div>
+          <div class="pci-meter-wrap">
+            <div class="pci-meter-header">
+              <span style="font-size:0.8rem;color:#505A56;">200m radius &middot; 50 segments &middot; 48 scored</span>
+              <span class="pci-score-big score-good">83.1</span>
+            </div>
+            <div class="pci-track"><div class="pci-fill good" style="width:83.1%;"></div></div>
+          </div>
+          <div class="stop-section-title">Condition Breakdown (50 segments)</div>
+          <div class="condition-breakdown">
+            <div class="condition-row">
+              <span class="condition-label">Good (19)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-good" style="width:38%;"></div></div>
+              <span class="condition-count">19</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Satisfactory (16)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-satisfactory" style="width:32%;"></div></div>
+              <span class="condition-count">16</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Fair (7)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-fair" style="width:14%;"></div></div>
+              <span class="condition-count">7</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Poor (6)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-poor" style="width:12%;"></div></div>
+              <span class="condition-count">6</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="stop-section-title">Imagery &amp; Detection</div>
+          <div class="infra-stats">
+            <div class="infra-stat">
+              <div class="infra-stat-val">14</div>
+              <div class="infra-stat-lbl">Imagery captures</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">98.93</div>
+              <div class="infra-stat-lbl">Best PCI</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">43.91</div>
+              <div class="infra-stat-lbl">Worst PCI</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">5</div>
+              <div class="infra-stat-lbl">Distress types</div>
+            </div>
+          </div>
+          <div class="wc-angle">&#9917; Best beer selection on route &mdash; 40 drafts, 120+ bottles. Craft breweries running World Cup tie-ins across New England.</div>
+        </div>
+      </div>
+      <div class="stop-card-footer">
+        <div class="distress-tags">
+          <span style="font-size:0.7rem;font-weight:600;color:#505A56;margin-right:4px;">Distress detected:</span>
+          <span class="distress-tag">patching</span>
+          <span class="distress-tag">lt cracking</span>
+          <span class="distress-tag">raveling</span>
+          <span class="distress-tag">weathering</span>
+          <span class="distress-tag">alligator cracking</span>
+        </div>
+      </div>
+      <div class="cyvl-callout">
+        <div class="cyvl-callout-label">What Cyvl Found</div>
+        <p class="cyvl-callout-text">The Davis Square three-bar cluster covers just 75 meters total. Cyvl imagery shows classic Davis Square intersection: active pedestrians, traffic light, bus stop, fire hydrant &mdash; all within 50m. The highest-scoring walkable micro-cluster on the entire route.</p>
+      </div>
+    </div>
+
+    <!-- ===== SEGMENT 3 to 4 ===== -->
+    <div class="segment-connector reveal">
+      <div class="segment-connector-header">
+        <div class="segment-route-label"><span>Elm Street Taproom</span> &rarr; <span>Five Horses Tavern</span></div>
+        <div class="segment-metrics">
+          <div class="seg-metric"><div class="seg-metric-val">540m</div><div class="seg-metric-lbl">Distance</div></div>
+          <div class="seg-metric"><div class="seg-metric-val">7</div><div class="seg-metric-lbl">Min walk</div></div>
+          <div class="seg-metric"><div class="seg-metric-val" style="color:#EF5350;">43.91</div><div class="seg-metric-lbl">Worst PCI</div></div>
+        </div>
+      </div>
+      <div class="segment-details">
+        <div class="seg-row"><span class="seg-row-icon">&#128205;</span><span class="seg-row-text">South on Elm St, east on Holland St to Highland Ave &mdash; signalized Highland Ave crossing.</span></div>
+        <div class="seg-row"><span class="seg-row-icon seg-hazard">&#9888;</span><span class="seg-row-text seg-hazard"><strong>Poor PCI segment (43.91) on connecting side street.</strong> Alligator cracking, patching, and light cracking detected on Holland St blocks.</span></div>
+        <div class="seg-row"><span class="seg-row-icon seg-hazard">&#9888;</span><span class="seg-row-text seg-hazard"><strong>Highland Ave is a 4-lane arterial.</strong> Use signal-controlled crossing only.</span></div>
+        <div class="seg-row"><span class="seg-row-icon seg-safe">&#10003;</span><span class="seg-row-text">Elm St section (PCI 91&ndash;98) is Good. Sidewalks and street lighting throughout.</span></div>
+      </div>
+      <div class="seg-pci-chips">
+        <span class="seg-pci-chip chip-good">92.75</span>
+        <span class="seg-pci-chip">68.78</span>
+        <span class="seg-pci-chip">53.28</span>
+        <span class="seg-pci-chip chip-poor">43.91 &#9888;</span>
+      </div>
+    </div>
+
+    <!-- ===== STOP 4: Five Horses ===== -->
+    <div class="stop-card reveal">
+      <div class="stop-card-header">
+        <div class="stop-num-circle">4</div>
+        <div class="stop-card-header-info">
+          <div class="stop-bar-name">Five Horses Tavern</div>
+          <div class="stop-address">400 Highland Avenue &mdash; Gastropub &mdash; 37 drafts, 150+ bourbons, multiple large screens</div>
+        </div>
+        <span class="safety-badge safety-yellow"><span class="safety-dot"></span> Fair &mdash; Caution on Approach</span>
+      </div>
+      <div class="stop-card-body">
+        <div>
+          <div class="stop-section-title">Avg PCI &mdash; Scored Segments</div>
+          <div class="pci-meter-wrap">
+            <div class="pci-meter-header">
+              <span style="font-size:0.8rem;color:#505A56;">200m radius &middot; 50 segments &middot; 48 scored</span>
+              <span class="pci-score-big score-fair">81.8</span>
+            </div>
+            <div class="pci-track"><div class="pci-fill satisfactory" style="width:81.8%;"></div></div>
+          </div>
+          <div class="stop-section-title">Condition Breakdown (50 segments)</div>
+          <div class="condition-breakdown">
+            <div class="condition-row">
+              <span class="condition-label">Good (17)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-good" style="width:34%;"></div></div>
+              <span class="condition-count">17</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Satisfactory (17)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-satisfactory" style="width:34%;"></div></div>
+              <span class="condition-count">17</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Fair (9)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-fair" style="width:18%;"></div></div>
+              <span class="condition-count">9</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Poor (5)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-poor" style="width:10%;"></div></div>
+              <span class="condition-count">5</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="stop-section-title">Location Context</div>
+          <div class="infra-stats">
+            <div class="infra-stat">
+              <div class="infra-stat-val">50</div>
+              <div class="infra-stat-lbl">Segments scanned</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">15</div>
+              <div class="infra-stat-lbl">Imagery captures</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">98.93</div>
+              <div class="infra-stat-lbl">Best PCI</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">43.91</div>
+              <div class="infra-stat-lbl">Worst PCI &#9888;</div>
+            </div>
+          </div>
+          <div class="wc-angle">&#9917; Most screens on route &mdash; ideal for knockout rounds. 150+ bourbon selection. Reservations essential for USA match days.</div>
+        </div>
+      </div>
+      <div class="stop-card-footer">
+        <div class="distress-tags">
+          <span style="font-size:0.7rem;font-weight:600;color:#505A56;margin-right:4px;">Distress detected:</span>
+          <span class="distress-tag">patching</span>
+          <span class="distress-tag">lt cracking</span>
+          <span class="distress-tag">raveling</span>
+          <span class="distress-tag">weathering</span>
+          <span class="distress-tag">edge cracking</span>
+        </div>
+      </div>
+      <div class="cyvl-callout">
+        <div class="cyvl-callout-label">What Cyvl Found</div>
+        <p class="cyvl-callout-text">Highland Ave is a primary arterial &mdash; wider lanes but active crosswalks and pedestrian signals confirmed in imagery. The 540m walk from Elm St Taproom includes one Poor segment (PCI 43.91) that needs repair before World Cup foot traffic peaks in June.</p>
+      </div>
+    </div>
+
+    <!-- ===== SEGMENT 4 to 5 (GLX) ===== -->
+    <div class="segment-connector reveal">
+      <div class="segment-connector-header">
+        <div class="segment-route-label"><span>Five Horses Tavern</span> &rarr; <span>backbar (Union Square)</span></div>
+        <div class="segment-metrics">
+          <div class="seg-metric"><div class="seg-metric-val">1.85km</div><div class="seg-metric-lbl">Distance</div></div>
+          <div class="seg-metric"><div class="seg-metric-val">22</div><div class="seg-metric-lbl">Min walk</div></div>
+          <div class="seg-metric"><div class="seg-metric-val" style="color:#1B79C5;">8&ndash;12</div><div class="seg-metric-lbl">Min via GLX</div></div>
+        </div>
+      </div>
+      <div class="segment-details">
+        <div class="seg-row"><span class="seg-row-icon seg-transit">&#128650;</span><span class="seg-row-text seg-transit"><strong>Recommended: Green Line Extension (Union Square branch)</strong> or MBTA Bus 86/87. Saves 10+ minutes, avoids arterial walking after dark.</span></div>
+        <div class="seg-row"><span class="seg-row-icon">&#128205;</span><span class="seg-row-text">Walk route: Highland Ave east &rarr; Willow Ave south &rarr; Somerville Ave east to Union Square.</span></div>
+        <div class="seg-row"><span class="seg-row-icon seg-hazard">&#9888;</span><span class="seg-row-text seg-hazard"><strong>Poor pavement (PCI 53.96)</strong> detected near route &mdash; block cracking and sealant distress along sections of Somerville Ave.</span></div>
+        <div class="seg-row"><span class="seg-row-icon">&#128202;</span><span class="seg-row-text">Pavement variable: Fair to Satisfactory (PCI 54&ndash;84) along Somerville Ave corridor.</span></div>
+      </div>
+      <div class="seg-pci-chips">
+        <span class="seg-pci-chip chip-good">89.53</span>
+        <span class="seg-pci-chip chip-good">87.89</span>
+        <span class="seg-pci-chip">76.6</span>
+        <span class="seg-pci-chip">75.81</span>
+        <span class="seg-pci-chip chip-poor">53.96 &#9888;</span>
+      </div>
+    </div>
+
+    <!-- ===== STOP 5: backbar ===== -->
+    <div class="stop-card reveal">
+      <div class="stop-card-header">
+        <div class="stop-num-circle">5</div>
+        <div class="stop-card-header-info">
+          <div class="stop-bar-name">backbar</div>
+          <div class="stop-address">5 Sanborn Court (off Bow St), Union Square &mdash; Hidden craft cocktail bar &mdash; Top cocktail bar in greater Boston</div>
+        </div>
+        <span class="safety-badge safety-yellow"><span class="safety-dot"></span> Satisfactory &mdash; Minor Wear</span>
+      </div>
+      <div class="stop-card-body">
+        <div>
+          <div class="stop-section-title">Avg PCI &mdash; Scored Segments</div>
+          <div class="pci-meter-wrap">
+            <div class="pci-meter-header">
+              <span style="font-size:0.8rem;color:#505A56;">200m radius &middot; 50 segments &middot; 48 scored</span>
+              <span class="pci-score-big score-fair">78.2</span>
+            </div>
+            <div class="pci-track"><div class="pci-fill satisfactory" style="width:78.2%;"></div></div>
+          </div>
+          <div class="stop-section-title">Condition Breakdown (50 segments)</div>
+          <div class="condition-breakdown">
+            <div class="condition-row">
+              <span class="condition-label">Good (10)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-good" style="width:20%;"></div></div>
+              <span class="condition-count">10</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Satisfactory (26)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-satisfactory" style="width:52%;"></div></div>
+              <span class="condition-count">26</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Fair (9)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-fair" style="width:18%;"></div></div>
+              <span class="condition-count">9</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Poor (3)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-poor" style="width:6%;"></div></div>
+              <span class="condition-count">3</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="stop-section-title">Infrastructure Assets</div>
+          <div class="infra-stats">
+            <div class="infra-stat">
+              <div class="infra-stat-val">11</div>
+              <div class="infra-stat-lbl">Imagery captures</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">93.72</div>
+              <div class="infra-stat-lbl">Best PCI</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">45.29</div>
+              <div class="infra-stat-lbl">Worst PCI</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">6</div>
+              <div class="infra-stat-lbl">Distress types</div>
+            </div>
+          </div>
+          <div class="wc-angle">&#9917; Sophistication stop &mdash; World Cup-themed cocktail menu highly probable. Intimate venue ideal for quarterfinal celebrations.</div>
+        </div>
+      </div>
+      <div class="stop-card-footer">
+        <div class="distress-tags">
+          <span style="font-size:0.7rem;font-weight:600;color:#505A56;margin-right:4px;">Distress detected:</span>
+          <span class="distress-tag">patching</span>
+          <span class="distress-tag">lt cracking</span>
+          <span class="distress-tag">raveling</span>
+          <span class="distress-tag">weathering</span>
+          <span class="distress-tag">edge cracking</span>
+          <span class="distress-tag">sealant</span>
+        </div>
+      </div>
+      <div class="cyvl-callout">
+        <div class="cyvl-callout-label">What Cyvl Found</div>
+        <p class="cyvl-callout-text">Union Square shows more wear than Davis Square &mdash; Satisfactory is the dominant condition rather than Good. One Poor segment at PCI 45.29 near Washington St is the most urgent repair on this section. Cyvl imagery detected a potted plant outside backbar &mdash; the kind of fine-grained street-level data no other platform captures.</p>
+      </div>
+    </div>
+
+    <!-- ===== SEGMENT 5 to 6 ===== -->
+    <div class="segment-connector reveal">
+      <div class="segment-connector-header">
+        <div class="segment-route-label"><span>backbar</span> &rarr; <span>The Independent</span></div>
+        <div class="segment-metrics">
+          <div class="seg-metric"><div class="seg-metric-val">180m</div><div class="seg-metric-lbl">Distance</div></div>
+          <div class="seg-metric"><div class="seg-metric-val">2</div><div class="seg-metric-lbl">Min walk</div></div>
+          <div class="seg-metric"><div class="seg-metric-val">79</div><div class="seg-metric-lbl">Avg PCI</div></div>
+        </div>
+      </div>
+      <div class="segment-details">
+        <div class="seg-row"><span class="seg-row-icon seg-safe">&#10003;</span><span class="seg-row-text"><strong>Through Union Square plaza &mdash; fully reconstructed 2022&ndash;23.</strong> Pedestrian plaza, new GLX station adjacent, high-visibility crosswalk.</span></div>
+        <div class="seg-row"><span class="seg-row-icon seg-safe">&#10003;</span><span class="seg-row-text">Zero hazards flagged. $50M streetscape upgrade delivers new pavement, protected bike lanes, plaza improvements.</span></div>
+      </div>
+      <div class="seg-pci-chips">
+        <span class="seg-pci-chip chip-good">79.27</span>
+        <span class="seg-pci-chip chip-good">76.6</span>
+        <span class="seg-pci-chip chip-good">75.13</span>
+      </div>
+    </div>
+
+    <!-- ===== STOP 6: The Independent ===== -->
+    <div class="stop-card reveal">
+      <div class="stop-card-header">
+        <div class="stop-num-circle">6</div>
+        <div class="stop-card-header-info">
+          <div class="stop-bar-name">The Independent</div>
+          <div class="stop-address">75 Union Square &mdash; Classic neighborhood bar &mdash; Union Square anchor since 1997</div>
+        </div>
+        <span class="safety-badge safety-green"><span class="safety-dot"></span> Good &mdash; Reconstructed Streetscape</span>
+      </div>
+      <div class="stop-card-body">
+        <div>
+          <div class="stop-section-title">Pavement Context</div>
+          <div class="pci-meter-wrap">
+            <div class="pci-meter-header">
+              <span style="font-size:0.8rem;color:#505A56;">Washington St &amp; Bow St blocks &mdash; Satisfactory range</span>
+              <span class="pci-score-big score-good">~78</span>
+            </div>
+            <div class="pci-track"><div class="pci-fill satisfactory" style="width:78%;"></div></div>
+          </div>
+          <p style="font-size:0.8rem;color:#505A56;margin-top:10px;margin-bottom:0;line-height:1.5;">Union Square plaza area falls in a pavement dataset coverage gap &mdash; the plaza was fully reconstructed in 2022&ndash;23. Surrounding block data shows predominantly Satisfactory (70&ndash;84 PCI) with some Fair segments.</p>
+        </div>
+        <div>
+          <div class="stop-section-title">Location Highlights</div>
+          <div class="infra-stats">
+            <div class="infra-stat">
+              <div class="infra-stat-val">14</div>
+              <div class="infra-stat-lbl">Imagery captures</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">2022</div>
+              <div class="infra-stat-lbl">Streetscape rebuilt</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">$50M</div>
+              <div class="infra-stat-lbl">Reconstruction cost</div>
+            </div>
+            <div class="infra-stat">
+              <div class="infra-stat-val">GLX</div>
+              <div class="infra-stat-lbl">Adjacent T station</div>
+            </div>
+          </div>
+          <div class="wc-angle">&#9917; The neighborhood institution. Full house guaranteed for USA or Portugal matches. Book well ahead.</div>
+        </div>
+      </div>
+      <div class="cyvl-callout">
+        <div class="cyvl-callout-label">What Cyvl Found</div>
+        <p class="cyvl-callout-text">Union Square's $50M streetscape reconstruction represents exactly the kind of investment Cyvl helps cities justify and measure. New sidewalks, protected bike lanes, and the GLX station make this cluster the best pedestrian infrastructure on the route.</p>
+      </div>
+    </div>
+
+    <!-- ===== SEGMENT 6 to 7 ===== -->
+    <div class="segment-connector reveal">
+      <div class="segment-connector-header">
+        <div class="segment-route-label"><span>The Independent</span> &rarr; <span>Bronwyn</span></div>
+        <div class="segment-metrics">
+          <div class="seg-metric"><div class="seg-metric-val">60m</div><div class="seg-metric-lbl">Distance</div></div>
+          <div class="seg-metric"><div class="seg-metric-val">1</div><div class="seg-metric-lbl">Min walk</div></div>
+          <div class="seg-metric"><div class="seg-metric-val" style="color:#EF5350;">45.29</div><div class="seg-metric-lbl">Worst PCI</div></div>
+        </div>
+      </div>
+      <div class="segment-details">
+        <div class="seg-row"><span class="seg-row-icon seg-hazard">&#9888;</span><span class="seg-row-text seg-hazard"><strong>One Poor pavement segment (PCI 45.29) on Washington St.</strong> Depressions and bumps/sags &mdash; potential trip hazard for evening foot traffic after dark.</span></div>
+        <div class="seg-row"><span class="seg-row-icon seg-safe">&#10003;</span><span class="seg-row-text">Marked crosswalk, street lighting, active pedestrian zone. Washington St sidewalks recently improved as part of Union Square redevelopment.</span></div>
+      </div>
+      <div class="seg-pci-chips">
+        <span class="seg-pci-chip chip-good">79.47</span>
+        <span class="seg-pci-chip chip-good">76.97</span>
+        <span class="seg-pci-chip">62.92</span>
+        <span class="seg-pci-chip chip-poor">45.29 &#9888;</span>
+      </div>
+    </div>
+
+    <!-- ===== STOP 7: Bronwyn ===== -->
+    <div class="stop-card reveal">
+      <div class="stop-card-header">
+        <div class="stop-num-circle">7</div>
+        <div class="stop-card-header-info">
+          <div class="stop-bar-name">Bronwyn</div>
+          <div class="stop-address">255 Washington Street, Union Square &mdash; German beer hall &mdash; Sausages, pretzels, German/Czech/Belgian beer</div>
+        </div>
+        <span class="safety-badge safety-yellow"><span class="safety-dot"></span> Fair &mdash; One Poor Segment Flagged</span>
+      </div>
+      <div class="stop-card-body">
+        <div>
+          <div class="stop-section-title">Avg PCI &mdash; Scored Segments</div>
+          <div class="pci-meter-wrap">
+            <div class="pci-meter-header">
+              <span style="font-size:0.8rem;color:#505A56;">200m radius &middot; 50 segments &middot; 48 scored</span>
+              <span class="pci-score-big score-fair">77.8</span>
+            </div>
+            <div class="pci-track"><div class="pci-fill satisfactory" style="width:77.8%;"></div></div>
+          </div>
+          <div class="stop-section-title">Condition Breakdown (50 segments)</div>
+          <div class="condition-breakdown">
+            <div class="condition-row">
+              <span class="condition-label">Good (9)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-good" style="width:18%;"></div></div>
+              <span class="condition-count">9</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Satisfactory (27)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-satisfactory" style="width:54%;"></div></div>
+              <span class="condition-count">27</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Fair (9)</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-fair" style="width:18%;"></div></div>
+              <span class="condition-count">9</span>
+            </div>
+            <div class="condition-row">
+              <span class="condition-label">Poor (3) &#9888;</span>
+              <div class="condition-bar-wrap"><div class="condition-bar cbar-poor" style="width:6%;"></div></div>
+              <span class="condition-count">3</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="stop-section-title">Flagged Concern Segments</div>
+          <div class="concern-box">
+            <div class="concern-item">
+              <div class="concern-pci">PCI 45.29 &mdash; Poor</div>
+              <div class="concern-desc">Washington St corridor &mdash; depressions and bumps/sags. Pre-World Cup repair priority.</div>
+            </div>
+            <div class="concern-item">
+              <div class="concern-pci">PCI 51.94 &mdash; Poor</div>
+              <div class="concern-desc">Secondary segment near Prospect Hill area &mdash; edge cracking and sealant distress.</div>
+            </div>
+          </div>
+          <div class="wc-angle">&#9917; German beer hall = European soccer culture. Expect Bundesliga regulars and World Cup bracket parties. Ideal semifinal venue.</div>
+        </div>
+      </div>
+      <div class="stop-card-footer">
+        <div class="distress-tags">
+          <span style="font-size:0.7rem;font-weight:600;color:#505A56;margin-right:4px;">Distress detected:</span>
+          <span class="distress-tag">patching</span>
+          <span class="distress-tag">lt cracking</span>
+          <span class="distress-tag">raveling</span>
+          <span class="distress-tag">weathering</span>
+          <span class="distress-tag">edge cracking</span>
+          <span class="distress-tag">sealant</span>
+          <span class="distress-tag">depressions</span>
+          <span class="distress-tag">bumps/sags</span>
+        </div>
+      </div>
+      <div class="cyvl-callout">
+        <div class="cyvl-callout-label">What Cyvl Found</div>
+        <p class="cyvl-callout-text">The route ends with the most complex pavement picture: two Poor-condition segments Cyvl flagged on Washington St. The depressions and bumps/sags on PCI 45.29 are the most specific safety concern on the entire route &mdash; exactly the granular risk data a city needs before thousands of fans walk this block after a late-night match.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== OVERALL ASSESSMENT ===================== -->
+<section class="assessment-section" id="assessment">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label" style="color:rgba(218,255,0,0.7);">Cyvl Intelligence Report</span>
+      <h2 style="color:#fff;">Overall Walkability Assessment</h2>
+      <p>Based on Cyvl's full Somerville scan: 21,141 road segments, 51,000+ catalogued infrastructure assets, and 78 street-level imagery data points across the route corridor.</p>
+    </div>
+
+    <div class="assessment-two-col">
+      <div class="reveal">
+        <div class="score-dial-wrap">
+          <div class="score-dial">
+            <div class="score-dial-inner">
+              <div class="score-dial-num">82</div>
+              <div class="score-dial-denom">/ 100</div>
+            </div>
+          </div>
+          <div class="score-dial-grade">Grade: B+</div>
+          <div class="score-dial-sub">Very Walkable<br/>Somerville Walk Score: 89</div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(218,255,0,0.7);margin-bottom:20px;">Citywide PCI Distribution &mdash; Cyvl Somerville Scan</div>
+        <div class="pci-dist-chart">
+          <div class="pci-dist-row">
+            <div class="pci-dist-label">Good</div>
+            <div class="pci-dist-bar-wrap"><div class="pci-dist-bar" style="width:24.8%;background:#66BB6A;"></div></div>
+            <div class="pci-dist-meta">5,218 segs &middot; 24.8%</div>
+          </div>
+          <div class="pci-dist-row">
+            <div class="pci-dist-label">Satisfactory</div>
+            <div class="pci-dist-bar-wrap"><div class="pci-dist-bar" style="width:24.1%;background:#9CCC65;"></div></div>
+            <div class="pci-dist-meta">5,057 segs &middot; 24.1%</div>
+          </div>
+          <div class="pci-dist-row">
+            <div class="pci-dist-label">Not Scored</div>
+            <div class="pci-dist-bar-wrap"><div class="pci-dist-bar" style="width:24.5%;background:rgba(255,255,255,0.15);"></div></div>
+            <div class="pci-dist-meta">5,169 segs</div>
+          </div>
+          <div class="pci-dist-row">
+            <div class="pci-dist-label">Fair</div>
+            <div class="pci-dist-bar-wrap"><div class="pci-dist-bar" style="width:12.6%;background:#FFA726;"></div></div>
+            <div class="pci-dist-meta">2,648 segs &middot; 12.6%</div>
+          </div>
+          <div class="pci-dist-row">
+            <div class="pci-dist-label">Poor</div>
+            <div class="pci-dist-bar-wrap"><div class="pci-dist-bar" style="width:7.8%;background:#EF5350;"></div></div>
+            <div class="pci-dist-meta">1,642 segs &middot; 7.8%</div>
+          </div>
+          <div class="pci-dist-row">
+            <div class="pci-dist-label">Very Poor</div>
+            <div class="pci-dist-bar-wrap"><div class="pci-dist-bar" style="width:4.6%;background:#C62828;"></div></div>
+            <div class="pci-dist-meta">969 segs &middot; 4.6%</div>
+          </div>
+          <div class="pci-dist-row">
+            <div class="pci-dist-label">Serious</div>
+            <div class="pci-dist-bar-wrap"><div class="pci-dist-bar" style="width:1.8%;background:#B71C1C;"></div></div>
+            <div class="pci-dist-meta">369 segs &middot; 1.8%</div>
+          </div>
+          <div class="pci-dist-row">
+            <div class="pci-dist-label">Failed</div>
+            <div class="pci-dist-bar-wrap"><div class="pci-dist-bar" style="width:0.3%;background:#FF470A;"></div></div>
+            <div class="pci-dist-meta">69 segs &middot; 0.3%</div>
+          </div>
+        </div>
+        <p style="font-size:0.72rem;color:rgba(255,255,255,0.25);margin-top:16px;margin-bottom:0;">Source: Cyvl scan_1185_SOMERVILLE_MA &middot; project 090e18f2 &middot; 21,141 segments &middot; 156,108+ linear feet scored.</p>
+      </div>
+    </div>
+
+    <div class="assessment-findings-col">
+      <div class="reveal">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(218,255,0,0.7);margin-bottom:20px;">Key Findings</div>
+        <ul class="findings-list">
+          <li class="finding-item">
+            <div class="finding-icon good">&#10003;</div>
+            <div class="finding-text"><strong>Davis Square cluster is world-class walkable.</strong> 3 bars within 75 meters, Red Line directly adjacent, PCI 82&ndash;83 average. Best pedestrian infrastructure on the route.</div>
+          </li>
+          <li class="finding-item">
+            <div class="finding-icon good">&#10003;</div>
+            <div class="finding-text"><strong>Union Square recently reconstructed.</strong> $50M streetscape upgrade (2022&ndash;23) with new pavement, protected bike lanes, and GLX station. Strongest infrastructure investment on route.</div>
+          </li>
+          <li class="finding-item">
+            <div class="finding-icon good">&#10003;</div>
+            <div class="finding-text"><strong>ADA compliance: 3,007 accessible ramps documented</strong> citywide. 852 pedestrian push buttons, 619 traffic signals. International fan base will find Somerville accessible.</div>
+          </li>
+          <li class="finding-item">
+            <div class="finding-icon warn">&#9888;</div>
+            <div class="finding-text"><strong>1,642 Poor-condition segments citywide</strong> &mdash; 49,338 linear feet (9.3 miles). With World Cup traffic June 13&ndash;July 9, these represent the city's greatest pedestrian liability.</div>
+          </li>
+          <li class="finding-item">
+            <div class="finding-icon bad">&#9888;</div>
+            <div class="finding-text"><strong>PCI 43.91 on route (near Davis cluster)</strong> &mdash; alligator cracking detected. Worst segment on the fan route and a nighttime trip hazard at peak bar-crawl hours.</div>
+          </li>
+          <li class="finding-item">
+            <div class="finding-icon bad">&#9888;</div>
+            <div class="finding-text"><strong>Washington St PCI 45.29 (Bronwyn block)</strong> &mdash; depressions and bumps/sags flagged. Potential injury liability for the final block when fans are heading home after midnight.</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="reveal reveal-delay-1">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(218,255,0,0.7);margin-bottom:20px;">Pre-World Cup Action Items</div>
+        <ul class="action-list">
+          <li class="action-item">
+            <span class="action-priority priority-high">P1</span>
+            <div class="action-text"><strong>Repair PCI 43.91 segment near Davis Square cluster.</strong> Alligator cracking on highest foot-traffic block of the route. Target: before June 1, 2026.</div>
+          </li>
+          <li class="action-item">
+            <span class="action-priority priority-high">P1</span>
+            <div class="action-text"><strong>Repair PCI 45.29 on Washington Street.</strong> Depressions and bumps/sags &mdash; direct injury liability when fans walk home post-match.</div>
+          </li>
+          <li class="action-item">
+            <span class="action-priority priority-high">P1</span>
+            <div class="action-text"><strong>Address 1,642 Poor-or-worse citywide segments</strong> (46.7 miles). Cyvl data gives DPW precise locations &mdash; no field survey needed.</div>
+          </li>
+          <li class="action-item">
+            <span class="action-priority priority-med">P2</span>
+            <div class="action-text"><strong>Increase temporary lighting on the 540m Elm Taproom &rarr; Five Horses segment.</strong> Side streets have mixed PCI &mdash; lighting reduces trip hazard risk after 10pm.</div>
+          </li>
+          <li class="action-item">
+            <span class="action-priority priority-med">P2</span>
+            <div class="action-text"><strong>Apply for Massachusetts $10M World Cup watch party grant</strong> to fund temporary pedestrian safety improvements in Davis and Union Squares on match days.</div>
+          </li>
+          <li class="action-item">
+            <span class="action-priority priority-low">P3</span>
+            <div class="action-text"><strong>Promote GLX inter-cluster connector</strong> to bar crawlers. Green Line Extension cuts the 1.85km Davis-to-Union walk from 22 min to 8&ndash;12 min via transit.</div>
+          </li>
+          <li class="action-item">
+            <span class="action-priority priority-low">P3</span>
+            <div class="action-text"><strong>Validate CCTV coverage of bar corridors</strong> (104 cameras citywide). Confirm Elm St and Washington St are covered for match-night crowd monitoring.</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WORLD CUP SECTION ===================== -->
+<section class="worldcup-section" id="worldcup">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">2026 FIFA World Cup Context</span>
+      <h2>Why Somerville Matters This Summer</h2>
+      <p>7 matches at Gillette Stadium, 30 miles south. Somerville is the natural fan accommodation zone &mdash; and Cyvl has mapped every sidewalk crack before they arrive.</p>
+    </div>
+
+    <div class="worldcup-grid">
+      <div class="wc-card reveal">
+        <div class="wc-card-title">Tournament Facts &mdash; Boston Area</div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Tournament dates</span>
+          <span class="wc-stat-val">June 13 &ndash; July 9, 2026</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Venue</span>
+          <span class="wc-stat-val">Gillette Stadium, Foxborough</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Boston-area matches</span>
+          <span class="wc-stat-val">7 matches</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Distance from Somerville</span>
+          <span class="wc-stat-val">30 miles south</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Somerville Walk Score</span>
+          <span class="wc-stat-val">89 / 100</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Somerville population</span>
+          <span class="wc-stat-val">81,360 in 4.1 sq mi</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Licensed bars in Davis+Union</span>
+          <span class="wc-stat-val">30+ venues</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Kickoff times (ET, group stage)</span>
+          <span class="wc-stat-val">12pm, 3pm, 6pm</span>
+        </div>
+      </div>
+
+      <div class="wc-card dark reveal reveal-delay-1">
+        <div class="wc-card-title">Massachusetts Grant Program</div>
+        <div class="grant-amount">$10M</div>
+        <p style="font-size:0.875rem;color:rgba(255,255,255,0.55);margin-bottom:20px;line-height:1.5;">Massachusetts is funding $10M in World Cup watch parties statewide. Somerville's Cyvl infrastructure data makes the strongest possible case for grant eligibility.</p>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Cambridge watch parties</span>
+          <span class="wc-stat-val">7 free outdoor events</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">FIFA Fan Festival</span>
+          <span class="wc-stat-val">Boston City Hall Plaza</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Grant info</span>
+          <span class="wc-stat-val">mass.gov/fifa-world-cup-grant</span>
+        </div>
+      </div>
+
+      <div class="wc-card dark reveal reveal-delay-2">
+        <div class="wc-card-title">Somerville Fan Communities</div>
+        <ul class="storylines">
+          <li>USA home crowd &mdash; massive domestic interest across all 7 stops</li>
+          <li>Irish-American community in Davis Square &mdash; Republic of Ireland fans at The Burren</li>
+          <li>German/Central European regulars at Bronwyn &mdash; natural Bundesliga base</li>
+          <li>Brazilian and Latin American communities in East Somerville near Union Square</li>
+          <li>European expats (Netherlands, Portugal, England) drawn to upscale venues</li>
+        </ul>
+      </div>
+
+      <div class="wc-card reveal reveal-delay-3">
+        <div class="wc-card-title">Licensing &amp; Permit Considerations</div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Massachusetts last call</span>
+          <span class="wc-stat-val">2:00 AM (state law)</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Extended hours legislation</span>
+          <span class="wc-stat-val" style="color:#FF470A;">Not enacted (Apr 2026)</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">Special event variance</span>
+          <span class="wc-stat-val">Somerville License Commission</span>
+        </div>
+        <div class="wc-stat-row">
+          <span class="wc-stat-lbl">USA match day capacity</span>
+          <span class="wc-stat-val">200%+ normal expected</span>
+        </div>
+        <p style="font-size:0.78rem;color:#505A56;margin-top:12px;margin-bottom:0;line-height:1.5;">Compare: Missouri enacted automatic last-call extension through July 20. MA bars must apply individually for World Cup-day variances through the ABCC and local licensing boards.</p>
+      </div>
+    </div>
+
+    <!-- Cyvl headline stat -->
+    <div style="margin-top:48px;padding:40px;background:#0D0D0C;border-radius:20px;border:1px solid rgba(218,255,0,0.12);position:relative;overflow:hidden;" class="reveal">
+      <div style="position:absolute;top:0;right:0;width:300px;height:300px;background:radial-gradient(circle,rgba(218,255,0,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+      <div style="position:relative;z-index:1;">
+        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(218,255,0,0.7);margin-bottom:16px;">Cyvl Demo Headline</div>
+        <p style="font-size:1.35rem;font-weight:700;color:#fff;line-height:1.4;max-width:800px;margin-bottom:24px;">"Cyvl has catalogued <span style="color:#DAFF00;">21,141 road segments</span> and <span style="color:#DAFF00;">51,000+ infrastructure assets</span> in Somerville &mdash; giving the city unprecedented visibility into pedestrian safety before the World Cup arrives."</p>
+        <div style="display:flex;gap:32px;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:2rem;font-weight:900;color:#DAFF00;line-height:1;">1,642</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">Poor segments to address</div>
+          </div>
+          <div>
+            <div style="font-size:2rem;font-weight:900;color:#DAFF00;line-height:1;">46.7 mi</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">Poor-or-worse pavement</div>
+          </div>
+          <div>
+            <div style="font-size:2rem;font-weight:900;color:#DAFF00;line-height:1;">June 13</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">First match deadline</div>
+          </div>
+          <div>
+            <div style="font-size:2rem;font-weight:900;color:#DAFF00;line-height:1;">34</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.45);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">Davis Sq imagery points</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="page-footer" id="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" />
+        <p class="footer-tagline">Infrastructure Intelligence for Safer Communities. Cyvl gives cities the data they need to protect every pedestrian &mdash; before the fans arrive.</p>
+      </div>
+      <div class="footer-sensor">
+        <img src="../assets/cyvl_sensor.png" alt="Cyvl sensor" />
+      </div>
+    </div>
+    <div class="footer-divider-line"></div>
+    <div class="footer-bottom">
+      <div class="footer-powered-by">
+        <span>Powered by</span>
+        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" />
+        <span>&mdash; Somerville, MA &middot; Project 090e18f2</span>
+      </div>
+      <div class="footer-data-note">
+        All pavement data from Cyvl scan_1185_SOMERVILLE_MA &middot; 21,141 road segments &middot; 51,000+ assets &middot; 78 imagery data points along route &middot; Generated April 2026
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===================== LEAFLET MAP =====================
+(function() {
+  var stops = [
+    { num: 1, name: "The Burren", lat: 42.3953896, lon: -71.1217372, pci: "~92 (Good)", type: "Irish pub" },
+    { num: 2, name: "Saloon", lat: 42.3955324, lon: -71.1218406, pci: "82.4 (Good)", type: "Upscale American bar" },
+    { num: 3, name: "Elm Street Taproom", lat: 42.3955064, lon: -71.1221467, pci: "83.1 (Good)", type: "Craft beer bar" },
+    { num: 4, name: "Five Horses Tavern", lat: 42.3956695, lon: -71.1208627, pci: "81.8 (Good)", type: "Gastropub" },
+    { num: 5, name: "backbar", lat: 42.3799325, lon: -71.0945397, pci: "78.2 (Satisfactory)", type: "Craft cocktail bar" },
+    { num: 6, name: "The Independent", lat: 42.3797497, lon: -71.0948221, pci: "~78 (Satisfactory)", type: "Neighborhood bar" },
+    { num: 7, name: "Bronwyn", lat: 42.379744, lon: -71.0946019, pci: "77.8 (Satisfactory)", type: "German beer hall" }
+  ];
+
+  var map = L.map('route-map', {
+    center: [42.388, -71.108],
+    zoom: 13,
+    zoomControl: true,
+    scrollWheelZoom: false
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '\u00a9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors \u00a9 <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+
+  // Route line
+  var routeCoords = stops.map(function(s) { return [s.lat, s.lon]; });
+  L.polyline(routeCoords, {
+    color: '#DAFF00',
+    weight: 3,
+    opacity: 0.65,
+    dashArray: '8, 6'
+  }).addTo(map);
+
+  // Markers
+  stops.forEach(function(stop) {
+    var icon = L.divIcon({
+      className: '',
+      html: '<div style="width:36px;height:36px;border-radius:50%;background:#DAFF00;color:#0D0D0C;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;border:2px solid #0D0D0C;box-shadow:0 4px 12px rgba(218,255,0,0.5);font-family:Inter,sans-serif;">' + stop.num + '</div>',
+      iconSize: [36, 36],
+      iconAnchor: [18, 18],
+      popupAnchor: [0, -20]
+    });
+
+    var marker = L.marker([stop.lat, stop.lon], { icon: icon }).addTo(map);
+    marker.bindPopup(
+      '<div style="font-family:Inter,sans-serif;padding:4px 0;">' +
+      '<div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#505A56;margin-bottom:4px;">Stop ' + stop.num + '</div>' +
+      '<div style="font-size:1rem;font-weight:800;color:#0D0D0C;margin-bottom:2px;">' + stop.name + '</div>' +
+      '<div style="font-size:0.8rem;color:#505A56;margin-bottom:10px;">' + stop.type + '</div>' +
+      '<div style="display:inline-flex;align-items:center;background:#0D0D0C;border-radius:100px;padding:4px 10px;">' +
+      '<span style="font-size:0.75rem;font-weight:700;color:#DAFF00;">PCI ' + stop.pci + '</span>' +
+      '</div>' +
+      '</div>',
+      { maxWidth: 220 }
+    );
+  });
+
+  // Cluster overlays
+  var davisCluster = L.circle([42.3955, -71.1216], {
+    color: '#DAFF00', fillColor: '#DAFF00', fillOpacity: 0.05,
+    weight: 1.5, dashArray: '4,4', radius: 130
+  }).addTo(map);
+
+  var unionCluster = L.circle([42.3798, -71.0946], {
+    color: '#1B79C5', fillColor: '#1B79C5', fillOpacity: 0.05,
+    weight: 1.5, dashArray: '4,4', radius: 130
+  }).addTo(map);
+
+  // Warn segment markers
+  var warnIcon = L.divIcon({
+    className: '',
+    html: '<div style="width:24px;height:24px;border-radius:50%;background:#FF470A;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:11px;box-shadow:0 2px 8px rgba(255,71,10,0.5);">!</div>',
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -14]
+  });
+
+  L.marker([42.3953, -71.1200], { icon: warnIcon }).addTo(map)
+    .bindPopup('<div style="font-family:Inter,sans-serif;"><strong style="color:#C62828;">PCI 43.91 \u2014 Poor</strong><br/><span style="font-size:0.8rem;color:#505A56;">Alligator cracking near Davis Sq cluster.<br/>Pre-World Cup repair priority #1.</span></div>');
+
+  L.marker([42.3797, -71.0946], { icon: warnIcon }).addTo(map)
+    .bindPopup('<div style="font-family:Inter,sans-serif;"><strong style="color:#C62828;">PCI 45.29 \u2014 Poor</strong><br/><span style="font-size:0.8rem;color:#505A56;">Depressions &amp; bumps on Washington St.<br/>Trip hazard at night \u2014 repair needed.</span></div>');
+})();
+
+// ===================== INTERSECTION OBSERVER (reveal) =====================
+(function() {
+  var els = document.querySelectorAll('.reveal');
+  if (!window.IntersectionObserver) {
+    els.forEach(function(el) { el.classList.add('visible'); });
+    return;
+  }
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+  els.forEach(function(el) { obs.observe(el); });
+})();
+
+// ===================== NAV ACTIVE STATE =====================
+(function() {
+  var sections = document.querySelectorAll('section[id]');
+  var links = document.querySelectorAll('.page-nav-links a');
+  if (!window.IntersectionObserver) return;
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        links.forEach(function(link) {
+          link.style.color = link.getAttribute('href') === '#' + entry.target.id
+            ? '#DAFF00' : 'rgba(255,255,255,0.6)';
+        });
+      }
+    });
+  }, { threshold: 0.35 });
+  sections.forEach(function(s) { obs.observe(s); });
+})();
+</script>
+
+<style>
+/* Leaflet popup override */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+  border: 1px solid rgba(13,13,12,0.08) !important;
+}
+.leaflet-popup-tip { background: #fff !important; }
+</style>
+
+</body>
+</html>

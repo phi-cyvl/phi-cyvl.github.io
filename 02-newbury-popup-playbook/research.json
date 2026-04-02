@@ -1,0 +1,527 @@
+{
+  "title": "Newbury Street Pop-Up Playbook",
+  "generated": "2026-04-02",
+  "purpose": "Complete guide for a small business to host a summer pop-up on Newbury Street, Boston — supporting Cyvl demo for Boston CIO Monday news interview",
+
+  "location_data": {
+    "geocode": {
+      "display_name": "Newbury Street, Back Bay, Boston, Suffolk County, Massachusetts, 02115",
+      "lat": 42.3485038,
+      "lon": -71.0866141,
+      "bbox": {
+        "west": -71.09269148106107,
+        "south": 42.34401224412505,
+        "east": -71.08053671893894,
+        "north": 42.35299535587496
+      },
+      "radius_m": 500,
+      "neighborhood": "Back Bay",
+      "zip_codes": ["02115", "02116"]
+    },
+    "blocks": [
+      {
+        "address": "100 Newbury Street, Boston MA",
+        "display_name": "H&M, 100 Newbury Street, Block B, Back Bay",
+        "lat": 42.3510172,
+        "lon": -71.0750103,
+        "block": "B (Berkeley to Clarendon)",
+        "anchor_tenant": "H&M",
+        "zip": "02116",
+        "notes": "Lower numbers — closest to Public Garden, highest foot traffic, most upscale retail character"
+      },
+      {
+        "address": "200 Newbury Street, Boston MA",
+        "display_name": "Nike, 200 Newbury Street, Block E, Back Bay",
+        "lat": 42.3500539,
+        "lon": -71.0801529,
+        "block": "E (Exeter to Fairfield)",
+        "anchor_tenant": "Nike",
+        "zip": "02116",
+        "notes": "Mid-street block with major brand activations — Nike Marathon Activation filed here April 2026"
+      },
+      {
+        "address": "300 Newbury Street, Boston MA",
+        "display_name": "USPS, 300 Newbury Street, Back Bay",
+        "lat": 42.3488967,
+        "lon": -71.0849277,
+        "block": "Upper Newbury (Hereford to Massachusetts Ave)",
+        "anchor_tenant": "USPS",
+        "zip": "02115",
+        "notes": "Upper Newbury — more accessible rents, local independent businesses, direct T access at Hynes"
+      }
+    ],
+    "street_overview": {
+      "total_length": "8 blocks from Arlington St to Massachusetts Ave",
+      "direction": "East-West, Back Bay neighborhood",
+      "character": "Boston's premier retail and dining street — brownstone storefronts, sidewalk cafes, designer boutiques, global brands",
+      "t_access": ["Arlington (Green B/C/D/E)", "Copley (Green B/C/D/E)", "Hynes/ICA (Green B/C/D)"],
+      "parking": "Metered street parking, garages at Prudential and Copley Place nearby"
+    }
+  },
+
+  "existing_businesses": {
+    "source": "Boston Licensing Board + Inspectional Services Dept — Active as of April 2026",
+    "total_active_licensed": 69,
+    "food_establishments_active": 56,
+    "sample_businesses": [
+      { "name": "Caffe Nero", "address": "103 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out" },
+      { "name": "Venchi", "address": "123 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out", "notes": "New — issued Jan 2026" },
+      { "name": "Thai Basil Restaurant", "address": "132 Newbury ST", "type": "Common Victualler", "license": "CV7 Malt Wine", "category": "Eating & Drinking" },
+      { "name": "The Capital Burger", "address": "157-159 Newbury ST", "type": "Common Victualler", "license": "CV7 All Alc.", "category": "Eating & Drinking" },
+      { "name": "Blue Bottle Coffee", "address": "163 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out" },
+      { "name": "Sushi by Bosso Ramen Tavern", "address": "163 Newbury ST", "type": "Common Victualler", "license": "CV7 Malt Wine Liq.", "category": "Eating & Drinking" },
+      { "name": "J.P. Licks", "address": "173 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out" },
+      { "name": "Ben & Jerry's", "address": "174 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out" },
+      { "name": "Stephanie's on Newbury", "address": "188-190 Newbury ST", "type": "Common Victualler", "license": "CV7 All Alc.", "category": "Eating & Drinking", "notes": "Iconic Newbury St sidewalk cafe — benchmark for outdoor dining" },
+      { "name": "Central Perk (Friends Cafe)", "address": "205-207 Newbury ST", "type": "Common Victualler", "license": "CV7 Malt Wine Liq.", "category": "Eating & Drinking" },
+      { "name": "Baguette Cafe", "address": "224 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out" },
+      { "name": "Amorino", "address": "249 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out" },
+      { "name": "7th Street Burger", "address": "267-269 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out" },
+      { "name": "Bangkok Bento Thai Kitchen", "address": "272 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking" },
+      { "name": "304 Newbury by Thatch", "address": "304 Newbury ST", "type": "Inn", "license": "Innholder No Liquor", "category": "Hotel/Inn" },
+      { "name": "Chip City", "address": "316 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out", "notes": "New — issued Sep 2024" },
+      { "name": "Tao's", "address": "336 Newbury ST", "type": "Misc", "license": "Retail All Alc.", "category": "Retail w/ Alcohol" },
+      { "name": "George Howell Coffee (Lyrik)", "address": "400 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out", "notes": "New — issued Sep 2025" },
+      { "name": "Pink Carrot", "address": "400 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out", "notes": "New — issued Aug 2025" },
+      { "name": "HEYTEA Newbury", "address": "223 Newbury ST", "type": "Common Victualler", "license": "CV No Alcohol", "category": "Eating & Drinking w/ Take Out", "notes": "New — issued May 2025" }
+    ],
+    "business_density_notes": "At least 56 active food establishments on Newbury St as of April 2026. High concentration of no-alcohol eateries (40+) and ~15 with beer/wine/full liquor. Recent wave of openings 2024-2026: Venchi, George Howell Coffee, Pink Carrot, Chip City, HEYTEA — signals strong street health. Mix of global brands (Nike, H&M, Google, Adidas) and local independents.",
+    "notable_brands_on_street": ["Nike (200)", "H&M (100)", "Google (153)", "Adidas (18)", "J.Crew", "Lululemon", "Free People", "Patagonia", "CandleLux", "The Pink Swan Shop", "Pratesi"]
+  },
+
+  "event_licenses_history": {
+    "source": "City of Boston MOCAL — Special Event License Applications dataset",
+    "total_newbury_events_on_record": 68,
+    "events": [
+      {
+        "app_number": "PUB1832938",
+        "name": "Run Club and Steak Boston Marathon Celebration",
+        "status": "Open (pending)",
+        "date": "2026-04-18",
+        "location": "346 Newbury ST",
+        "notes": "Marathon week activation — food + fitness brand tie-in"
+      },
+      {
+        "app_number": "PUB1828489",
+        "name": "Nike Boston Marathon Activation",
+        "status": "Open (pending)",
+        "date": "2026-04-20",
+        "location": "200 Newbury ST",
+        "location_description": "In-store + Nike owned sidewalk in front of store",
+        "notes": "Brand sidewalk pop-up — key precedent for Cyvl demo: major brands run sidewalk activations here routinely"
+      },
+      {
+        "app_number": "PUB1825293",
+        "name": "Boston P6",
+        "status": "Closed (issued 2026-03-19)",
+        "date": "2026-03-26",
+        "location": "200 Newbury ST"
+      },
+      {
+        "app_number": "PUB1819768",
+        "name": "Boston Pride for the People Block Party",
+        "status": "Open (pending)",
+        "date": "2026-06-06",
+        "location": "7-9 Newbury ST",
+        "notes": "Pride Month — high foot traffic event, World Cup warm-up window"
+      },
+      {
+        "app_number": "PUB1795337",
+        "name": "Open Newbury Street: Holiday Stroll",
+        "status": "Closed (issued)",
+        "date": "2025-12-07",
+        "location": "67 Newbury ST"
+      },
+      {
+        "app_number": "PUB1788887",
+        "name": "CNCPTS x adidas Block Party",
+        "status": "Closed (issued)",
+        "date": "2025-11-22",
+        "location": "18 Newbury ST",
+        "notes": "Sneaker brand collaboration — pop-up style activation with block party permit"
+      },
+      {
+        "app_number": "PUB1767620",
+        "name": "Live Music Performance at Google Store Newbury",
+        "status": "Closed (issued)",
+        "date": "2025-09-21",
+        "location": "153 Newbury ST",
+        "notes": "Open Newbury Sunday activation — permits frequently coincide with car-free Sundays"
+      },
+      {
+        "app_number": "PUB1723937",
+        "name": "Honoring Ellen Swallow Richards",
+        "status": "Closed",
+        "date": "2025-09-09",
+        "location": "276-278 Newbury ST"
+      },
+      {
+        "app_number": "PUB1722590",
+        "name": "Open Newbury Street (main season)",
+        "status": "Closed (issued 2025-06-24)",
+        "date": "2025-07-13 to 2025-09-21",
+        "location": "67 Newbury ST (organizer address)",
+        "notes": "This is the city's own permit for the 10-Sunday Open Newbury program — the umbrella event"
+      },
+      {
+        "app_number": "PUB1727725",
+        "name": "What to the Slave is the Fourth of July? (performance)",
+        "status": "Closed (issued)",
+        "date": "2025-07-01",
+        "location": "276-278 Newbury ST"
+      }
+    ],
+    "pattern_analysis": "Newbury St sees a mix of: (1) City-run Open Newbury Sundays (umbrella permit), (2) brand activations tied to major Boston events (Marathon, Pride), (3) cultural/community performances, (4) brand collaboration block parties (CNCPTS x Adidas). Application-to-issue time for successful permits: ~4-6 weeks. Brand activations typically approved faster."
+  },
+
+  "permit_process": {
+    "overview": "A Newbury Street summer pop-up requires 3-5 permits depending on food/alcohol service. Total lead time is 6-8 weeks for a smooth process. File everything simultaneously.",
+    "steps": [
+      {
+        "step": 1,
+        "name": "Special Event License (Outdoor Public Event)",
+        "agency": "Mayor's Office of Consumer Affairs and Licensing (MOCAL)",
+        "contact": "MOCAL@boston.gov | City Hall Room 809",
+        "timeline": "Apply 30+ days before event (large); 20+ days (small). License issued the week before event.",
+        "cost": "Varies by event tier — typically $50-$200 for small commercial events",
+        "requirements": [
+          "Completed application signed by Boston Police District Captain",
+          "Site plan / event layout",
+          "Security plan",
+          "Certificate of insurance",
+          "Letter from property owner / landlord if on private property"
+        ],
+        "tiers": {
+          "tier_1": "Small events, minimal city resources",
+          "tier_2": "Medium events with road closure or amplified sound",
+          "tier_3": "Large events — road races, festivals — most city department involvement"
+        },
+        "url": "https://www.boston.gov/departments/consumer-affairs-and-licensing/how-apply-host-public-event-boston"
+      },
+      {
+        "step": 2,
+        "name": "ISD Temporary Food Service Permit",
+        "agency": "Inspectional Services Department (ISD) — Health Division",
+        "contact": "1010 Massachusetts Ave, 4th Floor | (617) 635-5326",
+        "timeline": "Apply at least 30 days before event",
+        "cost": "$30 for first day, $5 each additional day (max 14 consecutive days)",
+        "requirements": [
+          "Completed temporary food establishment application",
+          "Proof of certified food manager (or current enrollment)",
+          "Food handling procedures",
+          "Equipment and setup plan"
+        ],
+        "notes": "Required for any event selling or serving food. Not required if no food.",
+        "url": "https://www.boston.gov/departments/inspectional-services/how-get-food-service-permit"
+      },
+      {
+        "step": 3,
+        "name": "One-Day Alcohol License (if serving alcohol)",
+        "agency": "Boston Licensing Board",
+        "contact": "Alyssa.Tobin@boston.gov (CC: LicensingBoard@boston.gov)",
+        "timeline": "Apply 3-4 weeks in advance (email preferred for fastest turnaround)",
+        "cost": "$75/day for malt/wine; $150/day for all-alcohol (nonprofit: reduced rates)",
+        "requirements": [
+          "Application signed by Police Captain in event district",
+          "ABCC (Alcoholic Beverages Control Commission) application",
+          "Certificate of Inspection from ISD",
+          "Fire Assembly Permit (for 49+ capacity events)",
+          "Property owner/landlord permission",
+          "Site plan showing alcohol service area, egresses",
+          "Security plan",
+          "Must purchase alcohol from ABCC-approved wholesaler (not package stores)"
+        ],
+        "url": "https://www.boston.gov/departments/licensing-board/how-get-special-one-day-alcohol-license"
+      },
+      {
+        "step": 4,
+        "name": "Outdoor Dining / Sidewalk Cafe Permit (if using public sidewalk space)",
+        "agency": "City of Boston — Public Works + Licensing Board",
+        "contact": "outdoordining@boston.gov",
+        "timeline": "Seasonal program runs May 1 - October 31 annually. Apply before season start.",
+        "cost": "$399/month with liquor license; $199/month without (public property only; private property = free)",
+        "requirements": [
+          "Business must have existing food license",
+          "ADA-compliant layout — must maintain 5-foot clear pedestrian passage",
+          "Application via boston.gov portal",
+          "Bollards or delineators may be required",
+          "Liquor license required to serve alcohol outdoors"
+        ],
+        "notes": "For a pure pop-up (not attached to an existing licensed business), this permit chain differs — use Special Event path instead.",
+        "url": "https://www.boston.gov/departments/small-business/outdoor-dining-program"
+      },
+      {
+        "step": 5,
+        "name": "Tent / Temporary Structure Permit",
+        "agency": "Boston Fire Prevention Division",
+        "contact": "Boston Fire Prevention | boston.gov/fire-prevention",
+        "timeline": "File with other permits — typically 2-3 weeks",
+        "cost": "Varies — check fire department fee schedule",
+        "requirements": [
+          "Required for any tent over a threshold size",
+          "Key exception: 4 or fewer 10x10 tents touching without sides = NO permit needed",
+          "Larger aggregations need permit",
+          "Stamped engineer/architect approval if capacity over 199"
+        ],
+        "url": "https://www.boston.gov/departments/fire-prevention/fire-forms-permits-applications-and-fees"
+      },
+      {
+        "step": 6,
+        "name": "Generator Permit",
+        "agency": "Boston Fire Prevention Division (and/or ISD)",
+        "timeline": "File with other permits",
+        "cost": "Standard permit fee",
+        "requirements": [
+          "Generator permit application",
+          "Fuel storage documentation",
+          "Location plan showing generator placement relative to tents/structures"
+        ],
+        "notes": "Required for most outdoor events using portable power."
+      },
+      {
+        "step": 7,
+        "name": "One-Time Entertainment License (if live music or amplified sound)",
+        "agency": "Entertainment Licensing / MOCAL",
+        "contact": "MOCAL@boston.gov",
+        "timeline": "2+ weeks",
+        "cost": "Varies — see boston.gov/entertainment-licensing/all-entertainment-license-fees",
+        "requirements": [
+          "Application with signed police captain approval",
+          "Event details, times, security plan",
+          "May require noise management plan"
+        ],
+        "url": "https://www.boston.gov/departments/entertainment-licensing/how-get-one-time-entertainment-license"
+      },
+      {
+        "step": 8,
+        "name": "Transient Vendor License (Massachusetts State — if selling goods)",
+        "agency": "Massachusetts Secretary of State / City Clerk",
+        "timeline": "2-3 weeks",
+        "cost": "State fee varies",
+        "requirements": [
+          "Required if selling retail goods from a temporary location",
+          "Does not apply to established brick-and-mortar doing an outdoor extension"
+        ],
+        "url": "https://www.mass.gov/how-to/transient-vendor"
+      }
+    ],
+    "total_timeline": "6-8 weeks from first application to event day (file all permits simultaneously, not sequentially)",
+    "total_cost_permits": "$300-$700 for a 1-day non-alcohol food pop-up; $600-$1,200 for alcohol-serving event",
+    "insurance_requirements": {
+      "minimum_general_liability": "$1,000,000 per occurrence (typical city requirement)",
+      "additional_insured": "City of Boston must be named as additional insured",
+      "estimated_cost": "$500-$1,500 for a one-day event policy",
+      "notes": "Certificate of insurance required with special event application. Contact local event insurance broker or use providers like Protector Plans or SBC Insurance."
+    },
+    "boston_police_district": "District D-4 covers Back Bay / Newbury Street. Application must be signed by District D-4 Captain before submission to MOCAL."
+  },
+
+  "infrastructure_notes": {
+    "cyvl_data_availability": "Cyvl project 090e18f2-0002-4a70-90b4-8f073d26294d covers Somerville, MA — NOT Boston/Newbury Street. No direct Cyvl infrastructure data is available for Newbury St in this project.",
+    "imagery_status": "Imagery search returned 94 results for 'storefront sidewalk' and 19 for 'sidewalk cafe outdoor dining' but ALL located in Somerville, MA (scan_1185_SOMERVILLE_MA). Coordinates confirm ~42.37-42.40N / 71.07-71.13W = Somerville, not Back Bay (42.348-42.351N / 71.075-71.093W). No Newbury St imagery in this project.",
+    "representative_imagery": {
+      "available": true,
+      "note": "Somerville imagery can serve as representative example of Boston-area street-level infrastructure data. Shows sidewalk cafes with chairs, umbrellas, dining tables detected by Cyvl AI.",
+      "best_demo_images": [
+        { "point_id": "119da404-09e2-53b7-80ef-3f008d91ce3e", "detected": ["chair", "umbrella", "car"], "pci": 66.62, "note": "Sidewalk cafe scene — most relevant for demo" },
+        { "point_id": "a0c8dbc9-6f5a-52fd-8a71-3650f09af530", "detected": ["person", "umbrella", "truck", "traffic light", "potted plant", "car", "fire hydrant"], "pci": 83.11, "note": "Active street scene with outdoor dining elements" },
+        { "point_id": "62624c12-3ba5-5806-85be-9b668618d391", "detected": ["person", "umbrella", "dining table", "truck", "bus", "car", "train"], "pci": 89.22, "note": "Outdoor dining with umbrellas and tables detected" }
+      ]
+    },
+    "sidewalk_width": "Newbury Street sidewalks are approximately 15-20 feet wide — sufficient for pop-up setup plus 5-foot ADA pedestrian clearance requirement",
+    "street_surface": "Brick and asphalt — historic brownstone character. Tent staking not recommended; use weighted bases.",
+    "utilities": "Power outlets not available on public sidewalk — generator or battery required for any powered equipment",
+    "open_newbury_sundays": "10 Sundays July 13 - Sept 21 (2025 schedule; 2026 TBD). Cars banned Berkeley to Mass Ave 10am-8pm. Best pop-up days — 50,000+ pedestrians."
+  },
+
+  "imagery_available": false,
+  "imagery_notes": "Cyvl project 090e18f2-0002-4a70-90b4-8f073d26294d is Somerville-only. Newbury St / Back Bay Boston not in this Cyvl dataset. Somerville imagery available as representative demo material for Boston CIO presentation — shows Cyvl's ability to detect sidewalk cafes, outdoor dining infrastructure, and pavement scores at street level.",
+
+  "setup_checklist": [
+    { "item": "Identify target date — Open Newbury Sunday for maximum foot traffic (50K+ pedestrians)", "priority": "critical", "timing": "8+ weeks before" },
+    { "item": "Choose block — Mid (100-200 blocks) for brand visibility; Upper (300s) for lower competition", "priority": "critical", "timing": "8 weeks before" },
+    { "item": "Secure property owner permission for any private sidewalk/storefront use", "priority": "critical", "timing": "8 weeks before" },
+    { "item": "File Special Event License with MOCAL (signed by D-4 Police Captain)", "priority": "critical", "timing": "6-8 weeks before" },
+    { "item": "File ISD Temporary Food Service Permit (if selling/serving food)", "priority": "high", "timing": "6 weeks before" },
+    { "item": "File One-Day Alcohol License with Licensing Board (if serving alcohol)", "priority": "high", "timing": "4-6 weeks before" },
+    { "item": "File tent/temporary structure permit with Fire Prevention (if tent > 4x 10x10)", "priority": "high", "timing": "4-6 weeks before" },
+    { "item": "File generator permit with Fire Prevention", "priority": "high", "timing": "4-6 weeks before" },
+    { "item": "Obtain event liability insurance ($1M+ general liability; name City of Boston as additional insured)", "priority": "critical", "timing": "4+ weeks before" },
+    { "item": "File One-Time Entertainment License if live music or amplified sound", "priority": "medium", "timing": "3-4 weeks before" },
+    { "item": "Obtain Massachusetts Transient Vendor License if selling physical retail goods", "priority": "medium", "timing": "3-4 weeks before" },
+    { "item": "Rent tent(s) — up to 4x 10x10 no-sides tents require no permit", "priority": "medium", "timing": "2-4 weeks before" },
+    { "item": "Order signage, banners, branded display fixtures", "priority": "medium", "timing": "2-4 weeks before" },
+    { "item": "Arrange power (generator rental + fuel)", "priority": "medium", "timing": "2 weeks before" },
+    { "item": "Hire staff (2-3 minimum for busy Open Newbury Sunday)", "priority": "medium", "timing": "2-4 weeks before" },
+    { "item": "Set up POS system / Square / contactless payments", "priority": "medium", "timing": "1 week before" },
+    { "item": "Confirm food sourcing / catering partnerships (if pop-up restaurant)", "priority": "medium", "timing": "2 weeks before" },
+    { "item": "Contact Newbury Street League for co-promotion opportunities", "priority": "optional", "timing": "4+ weeks before" },
+    { "item": "Load-in day-of: weighted tent anchors (NO staking into brick), fire extinguisher on site", "priority": "critical", "timing": "Day of event" },
+    { "item": "Maintain 5-foot ADA pedestrian clearance on sidewalk at all times", "priority": "critical", "timing": "During event" }
+  ],
+
+  "cost_breakdown": {
+    "permits_and_licenses": {
+      "special_event_license": "$50-$200",
+      "temporary_food_permit": "$30-$100 (1-14 days at $30 day 1, $5/day after)",
+      "one_day_alcohol_license": "$75-$150 (optional)",
+      "tent_permit": "$50-$150 (waived for 4x 10x10 cluster with no sides)",
+      "generator_permit": "$50-$100",
+      "entertainment_license": "$50-$150 (if live music)",
+      "transient_vendor_license": "$50-$100",
+      "total_permits_low": "$230",
+      "total_permits_high": "$950"
+    },
+    "insurance": {
+      "one_day_event_liability": "$500-$1,500",
+      "notes": "Required for special event application"
+    },
+    "equipment_rental": {
+      "tent_10x10_per_unit": "$100-$200/day (Boston-area vendors: Party Time Events, Flying Cow, Baystate Tent)",
+      "tent_20x20": "$300-$600/day",
+      "generator_rental": "$150-$400/day",
+      "tables_chairs": "$200-$400/day (full setup)",
+      "signage_banners": "$200-$800 (custom printed)",
+      "lighting_string_lights": "$100-$300/day",
+      "total_equipment_low": "$750",
+      "total_equipment_high": "$2,500"
+    },
+    "staffing": {
+      "per_staff_per_day": "$150-$200 (hourly at $19-$25/hr x 8hr)",
+      "recommended_minimum": "2-3 staff for Open Newbury Sunday",
+      "total_staffing_low": "$300",
+      "total_staffing_high": "$600"
+    },
+    "space_rental": {
+      "sidewalk_on_public_property_seasonal": "$199-$399/month (outdoor dining program)",
+      "private_storefront_pop_up_weekly": "$2,000-$5,000/week",
+      "open_newbury_public_space": "Free during Open Newbury Sundays (city closes street — public space)"
+    },
+    "food_and_product": {
+      "notes": "Variable — product cost/COGS not included. For food pop-up, typical food cost ratio is 28-35% of revenue."
+    },
+    "total_estimated_1_day_pop_up": {
+      "minimum_no_frills": "$1,500-$2,500 (2 tents, food permit, liability insurance, 2 staff, minimal signage)",
+      "typical_small_brand": "$4,000-$8,000 (professional setup, branded signage, generator, food, alcohol, 3 staff)",
+      "brand_activation_budget": "$15,000-$50,000+ (Nike/Adidas-style full activation)"
+    }
+  },
+
+  "best_blocks": [
+    {
+      "block": "100-199 Newbury (Block B-D: Berkeley to Dartmouth)",
+      "why": "Highest foot traffic (closest to Public Garden and Arlington T stop), premium brand neighbors (H&M, J.Crew vicinity), most photogenic brownstone facades. Best for fashion, lifestyle, or high-end food brands.",
+      "trade_offs": "Highest competition for permits, most scrutiny, property owners more selective",
+      "anchor_tenants": ["H&M (100)", "Thai Basil (132)", "Capital Burger (157)", "Blue Bottle Coffee (163)", "J.P. Licks (173)", "Ben & Jerry's (174)", "Stephanie's on Newbury (188)"]
+    },
+    {
+      "block": "200-299 Newbury (Block E-G: Exeter to Gloucester)",
+      "why": "Sweet spot — still extremely high foot traffic, major brand presence (Nike at 200, Google at 153, Adidas activations at 18 area), proven brand activation territory. Nike Marathon Activation filed here. Mid-day sun exposure excellent.",
+      "trade_offs": "Competitive — Nike/Google/Adidas own their sidewalk space, need to find free frontage",
+      "anchor_tenants": ["Nike (200)", "Stephanie's (188)", "Central Perk (205)", "Baguette Cafe (224)", "Beard Papa (232)", "Amorino (249)"]
+    },
+    {
+      "block": "300-400 Newbury (Hereford to Massachusetts Ave)",
+      "why": "Direct Hynes/ICA T stop access, lower rent for private space rental, more independent business character, less corporate competition, good for authentic/indie brand pop-ups. George Howell and Pink Carrot just opened at 400.",
+      "trade_offs": "Slightly lower foot traffic vs. lower Newbury, but still 15,000-20,000/day",
+      "anchor_tenants": ["Chip City (316)", "Tao's (336)", "George Howell Coffee (400)", "Pink Carrot (400)"]
+    }
+  ],
+
+  "foot_traffic_data": {
+    "typical_weekday": "20,000-25,000 pedestrians on Newbury Street",
+    "open_newbury_sunday": "50,000+ pedestrians (street closed to cars, 10am-8pm)",
+    "open_newbury_2025_dates": [
+      "2025-07-13", "2025-07-20", "2025-07-27",
+      "2025-08-03", "2025-08-10", "2025-08-17", "2025-08-24",
+      "2025-09-07", "2025-09-14", "2025-09-21",
+      "2025-12-07 (Holiday Stroll)"
+    ],
+    "open_newbury_hours": "10:00 AM - 8:00 PM",
+    "open_newbury_coverage": "All 8 blocks from Berkeley St to Massachusetts Ave",
+    "sources": [
+      "City of Boston traffic advisory (Open Newbury August 2022 cited 50K)",
+      "Boston MPO Bicycle-Pedestrian Count Database (ctps.org/bike-ped-counts-app)",
+      "Unacast Boston foot traffic data",
+      "Accio.com Newbury Street 2025 Retail Insights"
+    ],
+    "peak_times": "Weekends noon-6pm, Sundays especially strong due to Open Newbury program",
+    "visitor_mix": "Local residents, students (BU, Northeastern, Berklee nearby), professionals, international tourists, FIFA World Cup 2026 international visitors (June-July 2026)"
+  },
+
+  "world_cup_angle": {
+    "summary": "FIFA World Cup 2026 is a massive multiplier for any Newbury Street pop-up running June-July 2026. Boston hosts 7 matches (including a Quarterfinal) from June 13 to July 9 at Gillette Stadium. The City's official Fan Festival is at City Hall Plaza — but Back Bay is a prime overflow zone.",
+    "boston_matches": "7 matches total including Quarterfinal — June 13 to July 9, 2026",
+    "official_fan_zone": "City Hall Plaza (free, tournament-long, giant screens, food/entertainment)",
+    "back_bay_opportunity": "Back Bay recommended for international fans — close to hotels, T access, premium retail/dining. Expect significant spillover foot traffic on match days.",
+    "pop_up_tie_in_ideas": [
+      "FIFA-themed merchandise pop-up (officially licensed or country-flag gear)",
+      "International food pop-up featuring cuisine from participating nations",
+      "Live match viewing setup with outdoor screen (entertainment permit required)",
+      "Sports photography / fan portrait station",
+      "National team supporter merchandise and gear",
+      "Cultural exchange pop-up celebrating fan cultures (no merchandise license needed)"
+    ],
+    "key_dates_for_planning": {
+      "first_match": "June 13, 2026",
+      "quarterfinal": "~July 5, 2026 (estimated)",
+      "last_match": "July 9, 2026",
+      "peak_pop_up_window": "June 13 - July 9, 2026 — Open Newbury Sundays overlap (July 13 starts, but pre-Open Newbury weekends in June are strong too)"
+    },
+    "permit_implications": "Apply for permits in April 2026 for June-July events. World Cup period may see heightened city scrutiny — file early. Consider multi-day or multi-Sunday permit (up to 14 consecutive days under temp food permit).",
+    "cyvl_demo_angle": "Cyvl infrastructure intelligence shows city planners exactly where sidewalk capacity exists, pavement conditions for safe crowd flow, and sign inventory for wayfinding — all critical for managing the 100K+ international visitors flowing through Back Bay during the tournament. This is the story: infrastructure visibility for event-ready cities.",
+    "funding_note": "As of April 2026, Boston faces $8M federal funding shortfall for World Cup preparations — local business activations and private-sector pop-ups become more important, not less, for fan experience."
+  },
+
+  "business_associations": {
+    "newbury_street_league": {
+      "name": "Newbury Street League",
+      "founded": 1972,
+      "members": "~350 member businesses",
+      "role": "Non-profit business association representing Newbury Street commercial district",
+      "description": "Community of shop owners, restaurateurs, and creatives. Co-organizes events, advocates for street improvements, promotes Open Newbury.",
+      "url": "https://newburystreetleague.org/"
+    },
+    "back_bay_association": {
+      "name": "Back Bay Association",
+      "executive_director": "Meg Mainzer-Cohen (since 2000)",
+      "role": "Broader Back Bay neighborhood business advocacy",
+      "url": "https://www.bostonbackbay.com/"
+    },
+    "notes": "Both organizations are key relationships for any pop-up operator — they have institutional knowledge of permit process, relationships with city officials, and can co-promote events."
+  },
+
+  "data_sources": {
+    "cyvl_geocode": "Nominatim via Cyvl MCP — 4 locations geocoded",
+    "cyvl_imagery": "Project 090e18f2-0002-4a70-90b4-8f073d26294d (Somerville, MA) — no Boston/Newbury imagery in this project",
+    "boston_ckan_special_events": {
+      "dataset_id": "e91768f7-d1d8-411b-b5dd-b38ab2632c93",
+      "resource_id": "fb05bfda-a57e-4d97-948b-4f1949ba3c8a",
+      "records_found": 68,
+      "url": "https://data.boston.gov/dataset/e91768f7-d1d8-411b-b5dd-b38ab2632c93"
+    },
+    "boston_ckan_licensing_board": {
+      "dataset_id": "1b020058-038a-43fd-888b-529e76dec04a",
+      "resource_id": "04dc653b-1789-4374-9669-b07df7233344",
+      "records_found": 69,
+      "url": "https://data.boston.gov/dataset/1b020058-038a-43fd-888b-529e76dec04a"
+    },
+    "boston_ckan_food_establishments": {
+      "dataset_id": "5e4182e3-ba1e-4511-88f8-08a70383e1b6",
+      "resource_id": "f1e13724-284d-478c-b8bc-ef042aa5b70b",
+      "records_found": 56,
+      "url": "https://data.boston.gov/dataset/5e4182e3-ba1e-4511-88f8-08a70383e1b6"
+    },
+    "web_research": [
+      "https://www.boston.gov/departments/consumer-affairs-and-licensing/how-apply-host-public-event-boston",
+      "https://www.boston.gov/departments/small-business/outdoor-dining-program",
+      "https://www.boston.gov/departments/licensing-board/how-get-special-one-day-alcohol-license",
+      "https://www.boston.gov/departments/entertainment-licensing/common-permits-special-events-boston",
+      "https://www.boston.gov/departments/fire-prevention/fire-forms-permits-applications-and-guides",
+      "https://www.boston.gov/news/mayor-wu-announces-2025-open-streets-and-open-newbury-events",
+      "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/usa/boston",
+      "https://bostonfwc26.com/",
+      "https://newburystreetleague.org/"
+    ]
+  }
+}

@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fan Zone Site Selector — Somerville 2026 FIFA World Cup</title>
+  <link rel="icon" href="../assets/cyvl_favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="../assets/styles.css" />
+  <style>
+    :root {
+      --green-strong: #2E7D32;
+      --green-bg: #E8F5E9;
+      --yellow-strong: #F9A825;
+      --yellow-bg: #FFF9C4;
+      --red-strong: #C62828;
+      --red-bg: #FFEBEE;
+    }
+
+    /* NAV */
+    .nav-logo-wrap { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-wrap span { font-weight: 700; font-size: 0.9rem; color: var(--text-secondary); border-left: 2px solid #e0e0e0; padding-left: 10px; }
+
+    /* HERO */
+    .hero { padding: 72px 0 56px; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(218,255,0,0.12); border: 1px solid rgba(218,255,0,0.25);
+      color: var(--high-vis-yellow); font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 100px; margin-bottom: 20px;
+    }
+    .hero h1 { font-size: 3.25rem; line-height: 1.08; margin-bottom: 16px; }
+    .hero h1 span { color: var(--high-vis-yellow); }
+    .hero-subtitle { font-size: 1.15rem; color: #8a9490; max-width: 560px; line-height: 1.6; margin-bottom: 0; }
+    .hero-stats { display: flex; gap: 32px; margin-top: 40px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; }
+    .hero-stat-val { font-size: 2.75rem; font-weight: 900; line-height: 1; color: var(--high-vis-yellow); }
+    .hero-stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: #8a9490; margin-top: 4px; }
+
+    /* SECTION HEADERS */
+    .section-header { margin-bottom: 40px; }
+    .section-header h2 { margin-bottom: 8px; }
+    .section-header p { color: var(--text-secondary); margin-bottom: 0; }
+    .section-label {
+      display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--utility-blue); margin-bottom: 8px;
+    }
+
+    /* TIER BADGES */
+    .tier-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 100px;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
+      text-transform: uppercase; white-space: nowrap;
+    }
+    .tier-primary { background: var(--green-bg); color: var(--green-strong); }
+    .tier-secondary { background: #E3F2FD; color: #1565C0; }
+    .tier-neighborhood { background: var(--yellow-bg); color: #795B00; }
+    .tier-not-recommended { background: var(--red-bg); color: var(--red-strong); }
+
+    /* RANKING DASHBOARD */
+    .rankings-card {
+      border: 1px solid rgba(13,13,12,0.08); border-radius: var(--radius-xl);
+      overflow: hidden; box-shadow: var(--shadow-md);
+    }
+    .rankings-card-header {
+      background: var(--asphalt-black); color: white;
+      padding: 20px 24px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .rankings-card-header h3 { margin-bottom: 0; font-size: 1rem; color: white; }
+    .rankings-card-header .subtitle { font-size: 0.8rem; color: var(--concrete-gray); }
+    .leaderboard { display: flex; flex-direction: column; }
+    .lb-row {
+      display: grid;
+      grid-template-columns: 48px 1fr 90px 160px;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(13,13,12,0.06);
+      transition: background 0.15s;
+      text-decoration: none; color: inherit;
+    }
+    .lb-row:hover { background: rgba(218,255,0,0.04); text-decoration: none; }
+    .lb-row:last-child { border-bottom: none; }
+    @media (max-width: 640px) { .lb-row { grid-template-columns: 40px 1fr 70px; } .lb-row .tier-badge { display: none; } }
+    .lb-rank { font-size: 1.5rem; font-weight: 900; color: var(--concrete-gray); text-align: center; line-height: 1; }
+    .lb-rank.gold { color: #B8860B; }
+    .lb-rank.silver { color: #708090; }
+    .lb-rank.bronze { color: #8B4513; }
+    .lb-name { font-weight: 700; font-size: 1rem; }
+    .lb-sub { font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px; }
+    .lb-score-wrap { text-align: right; }
+    .lb-score { font-size: 1.9rem; font-weight: 900; line-height: 1; }
+    .lb-score.score-green { color: var(--green-strong); }
+    .lb-score.score-yellow { color: var(--yellow-strong); }
+    .lb-score.score-red { color: var(--red-strong); }
+    .lb-score-label { font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* MAP */
+    #map { width: 100%; height: 480px; border-radius: var(--radius-lg); z-index: 1; }
+    .map-wrapper { position: relative; }
+    .map-legend {
+      position: absolute; bottom: 16px; right: 16px; z-index: 400;
+      background: white; border-radius: var(--radius-md); padding: 12px 16px;
+      box-shadow: var(--shadow-lg); font-size: 0.78rem;
+    }
+    .map-legend-item { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+    .map-legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+    /* COMPARISON TABLE */
+    .comparison-table { overflow-x: auto; }
+    .comparison-table table { min-width: 900px; }
+    .comparison-table thead th {
+      background: var(--asphalt-black); color: white;
+      font-size: 0.72rem; padding: 10px 12px; border-bottom: none;
+    }
+    .comparison-table td { padding: 10px 12px; font-size: 0.82rem; vertical-align: middle; }
+    .comparison-table td:first-child { font-weight: 700; }
+    .heat-cell {
+      text-align: center; font-weight: 700; border-radius: 4px;
+      padding: 6px 8px !important;
+    }
+    .heat-strong { background: #C8E6C9; color: #1B5E20; }
+    .heat-good { background: #DCEDC8; color: #33691E; }
+    .heat-fair { background: #FFF9C4; color: #795B00; }
+    .heat-weak { background: #FFCCBC; color: #BF360C; }
+    .heat-poor { background: #FFCDD2; color: #B71C1C; }
+
+    /* SITE CARDS */
+    .site-card {
+      border: 1px solid rgba(13,13,12,0.08);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: white;
+      box-shadow: var(--shadow-sm);
+    }
+    .site-card-header {
+      display: grid; grid-template-columns: 1fr auto;
+      align-items: start; gap: 16px;
+      padding: 20px 24px; cursor: pointer; user-select: none;
+    }
+    .site-card-header:hover { background: rgba(218,255,0,0.03); }
+    .site-card-rank { font-size: 0.72rem; font-weight: 700; color: var(--concrete-gray); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .site-card-name { font-size: 1.25rem; font-weight: 800; margin-bottom: 4px; }
+    .site-card-meta { font-size: 0.82rem; color: var(--text-secondary); }
+    .site-card-score-area { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    .site-card-score { font-size: 2.25rem; font-weight: 900; line-height: 1; }
+    .score-green { color: var(--green-strong); }
+    .score-yellow { color: var(--yellow-strong); }
+    .score-red { color: var(--red-strong); }
+    .site-card-chevron {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--bg-secondary); transition: transform 0.2s;
+    }
+    .site-card.open .site-card-chevron { transform: rotate(180deg); }
+    .site-card-body { display: none; padding: 0 24px 24px; border-top: 1px solid rgba(13,13,12,0.06); }
+    .site-card.open .site-card-body { display: block; }
+
+    .photo-placeholder {
+      width: 100%; height: 160px;
+      background: linear-gradient(135deg, var(--asphalt-black) 0%, #1a2a25 100%);
+      border-radius: var(--radius-md);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: rgba(218,255,0,0.5); gap: 8px; margin: 20px 0;
+    }
+    .photo-count { font-size: 0.75rem; color: rgba(218,255,0,0.6); font-weight: 600; }
+
+    .score-criteria { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; }
+    @media (max-width: 600px) { .score-criteria { grid-template-columns: 1fr 1fr; } }
+    .score-criterion { padding: 12px; background: var(--bg-secondary); border-radius: var(--radius-md); }
+    .score-criterion-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-bottom: 6px; }
+    .score-criterion-value { font-size: 1.2rem; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+    .score-criterion-bar { height: 5px; border-radius: 3px; background: rgba(13,13,12,0.1); overflow: hidden; }
+    .score-criterion-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+
+    .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    @media (max-width: 600px) { .pros-cons { grid-template-columns: 1fr; } }
+    .pros-cons-list { list-style: none; }
+    .pros-cons-list h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+    .pros-cons-list h4.pros { color: var(--green-strong); }
+    .pros-cons-list h4.cons { color: var(--red-strong); }
+    .pros-cons-list li {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 0.82rem; padding: 5px 0;
+      border-bottom: 1px solid rgba(13,13,12,0.05); line-height: 1.4;
+    }
+    .pros-cons-list li:last-child { border-bottom: none; }
+    .pros-cons-list li .icon { flex-shrink: 0; font-style: normal; margin-top: 1px; }
+
+    .cyvl-finding {
+      background: var(--asphalt-black); color: white;
+      border-radius: var(--radius-md); padding: 14px 18px;
+      display: flex; align-items: flex-start; gap: 12px;
+      margin: 16px 0; font-size: 0.875rem; line-height: 1.5;
+    }
+    .cyvl-finding .finding-icon { flex-shrink: 0; margin-top: 2px; }
+    .cyvl-finding strong { color: var(--high-vis-yellow); }
+
+    .asset-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 16px 0; }
+    @media (max-width: 500px) { .asset-grid { grid-template-columns: repeat(2, 1fr); } }
+    .asset-item { background: var(--bg-secondary); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
+    .asset-count { font-size: 1.4rem; font-weight: 900; color: var(--asphalt-black); line-height: 1; }
+    .asset-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-top: 3px; }
+
+    /* METHODOLOGY */
+    .weight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 768px) { .weight-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .weight-grid { grid-template-columns: 1fr; } }
+    .weight-card { border: 1px solid rgba(218,255,0,0.12); border-radius: var(--radius-md); padding: 20px; background: rgba(255,255,255,0.04); }
+    .weight-pct { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 4px; color: var(--high-vis-yellow); }
+    .weight-name { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; color: white; }
+    .weight-desc { font-size: 0.78rem; color: #8a9490; line-height: 1.5; margin-bottom: 0; }
+
+    /* KEY FINDINGS */
+    .finding-card {
+      display: flex; gap: 20px; align-items: flex-start;
+      padding: 24px; background: white; border-radius: var(--radius-lg);
+      border: 1px solid rgba(13,13,12,0.08); box-shadow: var(--shadow-sm);
+    }
+    .finding-number {
+      width: 44px; height: 44px; min-width: 44px; border-radius: 50%;
+      background: var(--high-vis-yellow); color: var(--asphalt-black);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 1.1rem;
+    }
+    .finding-card h4 { font-size: 1rem; margin-bottom: 8px; }
+    .finding-card p { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0; max-width: none; }
+
+    /* GRANT */
+    .grant-card {
+      background: linear-gradient(135deg, #0D4F8A 0%, #1B79C5 60%, #0D3A6B 100%);
+      color: white; border-radius: var(--radius-xl); padding: 40px 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+    }
+    @media (max-width: 768px) { .grant-card { grid-template-columns: 1fr; padding: 28px; } }
+    .grant-amount { font-size: 4rem; font-weight: 900; line-height: 1; color: var(--high-vis-yellow); }
+    .grant-label { font-size: 1rem; opacity: 0.8; margin-top: 4px; }
+    .grant-steps { list-style: none; }
+    .grant-steps li {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.88rem; line-height: 1.5;
+    }
+    .grant-steps li:last-child { border-bottom: none; }
+    .grant-step-num {
+      width: 24px; height: 24px; min-width: 24px; border-radius: 50%;
+      background: rgba(218,255,0,0.2); color: var(--high-vis-yellow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700; margin-top: 2px;
+    }
+
+    /* MATCH SCHEDULE */
+    .schedule-table thead th { background: var(--asphalt-black); color: white; border-bottom: none; }
+    .match-date { font-weight: 700; white-space: nowrap; }
+    .match-teams { font-weight: 600; }
+    .tbd-badge {
+      display: inline-block; background: var(--bg-secondary);
+      color: var(--text-secondary); font-size: 0.7rem; font-weight: 600;
+      padding: 2px 8px; border-radius: 4px; text-transform: uppercase;
+    }
+    .venue-tag { font-size: 0.75rem; color: var(--utility-blue); font-weight: 600; }
+
+    /* FOOTER */
+    .footer-inner { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+    .footer-tagline { font-size: 0.82rem; color: var(--concrete-gray); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo-wrap">
+    <img src="../assets/cyvl_logo_black.png" alt="Cyvl" class="nav-logo" />
+    <span>Fan Zone Selector</span>
+  </div>
+  <div class="nav-links">
+    <a href="#rankings">Rankings</a>
+    <a href="#map">Map</a>
+    <a href="#comparison">Compare</a>
+    <a href="#sites">Sites</a>
+    <a href="#methodology">Scoring</a>
+    <a href="#grant">Grants</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      FIFA World Cup 2026 &mdash; Somerville, MA
+    </div>
+    <h1>Fan Zone<br /><span>Site Selector</span></h1>
+    <p class="hero-subtitle">Data-driven site selection for World Cup 2026 watch parties — powered by Cyvl infrastructure intelligence across 7 candidate locations in Somerville.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-val">7</div>
+        <div class="hero-stat-label">Sites Evaluated</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">6</div>
+        <div class="hero-stat-label">Criteria Scored</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">$10M</div>
+        <div class="hero-stat-label">State Grants Available</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">87</div>
+        <div class="hero-stat-label">Top Site Score</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">7</div>
+        <div class="hero-stat-label">Gillette Matches</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RANKINGS -->
+<section class="section section-gray" id="rankings">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Ranking Dashboard</span>
+      <h2>Leaderboard — All 7 Sites</h2>
+      <p>Scored across pavement quality, ADA accessibility, safety, amenities, capacity, and transit access. Click any row to jump to that site's full analysis.</p>
+    </div>
+
+    <div class="rankings-card">
+      <div class="rankings-card-header">
+        <div>
+          <h3>Site Rankings</h3>
+          <div class="subtitle">Somerville Fan Zone Candidates &middot; April 2026 &middot; Cyvl Infrastructure Data</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="tier-badge tier-primary">Primary</span>
+          <span class="tier-badge tier-secondary">Secondary</span>
+          <span class="tier-badge tier-neighborhood">Neighborhood</span>
+          <span class="tier-badge tier-not-recommended">Not Recommended</span>
+        </div>
+      </div>
+      <div class="leaderboard">
+
+        <a class="lb-row" href="#site-assembly-row">
+          <div class="lb-rank gold">#1</div>
+          <div>
+            <div class="lb-name">Assembly Row</div>
+            <div class="lb-sub">Orange Line &middot; 2,500 est. capacity &middot; Underground utilities &middot; PCI 79.6</div>
+          </div>
+          <div class="lb-score-wrap">
+            <div class="lb-score score-green">87</div>
+            <div class="lb-score-label">/ 100</div>
+          </div>
+          <span class="tier-badge tier-primary">Primary</span>
+        </a>
+
+        <a class="lb-row" href="#site-davis-square">
+          <div class="lb-rank silver">#2</div>
+          <div>
+            <div class="lb-name">Davis Square</div>
+            <div class="lb-sub">Red Line &middot; 1,200 est. capacity &middot; Dense food &amp; beverage &middot; PCI 77.0</div>
+          </div>
+          <div class="lb-score-wrap">
+            <div class="lb-score score-green">78</div>
+            <div class="lb-score-label">/ 100</div>
+          </div>
+          <span class="tier-badge tier-primary">Primary</span>
+        </a>
+
+        <a class="lb-row" href="#site-union-square">
+          <div class="lb-rank bronze">#3</div>
+          <div>
+            <div class="lb-name">Union Square</div>
+            <div class="lb-sub">Green Line &middot; 1,500 est. capacity &middot; New plaza redesign &middot; PCI 76.6</div>
+          </div>
+          <div class="lb-score-wrap">
+            <div class="lb-score score-green">72</div>
+            <div class="lb-score-label">/ 100</div>
+          </div>
+          <span class="tier-badge tier-secondary">Secondary</span>
+        </a>
+
+        <a class="lb-row" href="#site-east-somerville">
+          <div class="lb-rank">#4</div>
+          <div>
+            <div class="lb-name">East Somerville</div>
+            <div class="lb-sub">Green Line &middot; 600 est. capacity &middot; Best ADA ramp count (22) &middot; PCI 78.6</div>
+          </div>
+          <div class="lb-score-wrap">
+            <div class="lb-score score-yellow">65</div>
+            <div class="lb-score-label">/ 100</div>
+          </div>
+          <span class="tier-badge tier-neighborhood">Neighborhood</span>
+        </a>
+
+        <a class="lb-row" href="#site-ball-square">
+          <div class="lb-rank">#5</div>
+          <div>
+            <div class="lb-name">Ball Square</div>
+            <div class="lb-sub">Green Line &middot; 700 est. capacity &middot; 54 trees &middot; PCI 75.4</div>
+          </div>
+          <div class="lb-score-wrap">
+            <div class="lb-score score-yellow">62</div>
+            <div class="lb-score-label">/ 100</div>
+          </div>
+          <span class="tier-badge tier-neighborhood">Neighborhood</span>
+        </a>
+
+        <a class="lb-row" href="#site-magoun-square">
+          <div class="lb-rank">#6</div>
+          <div>
+            <div class="lb-name">Magoun Square</div>
+            <div class="lb-sub">Bus only &middot; 500 est. capacity &middot; 28 utility poles &middot; PCI 76.6</div>
+          </div>
+          <div class="lb-score-wrap">
+            <div class="lb-score score-red">52</div>
+            <div class="lb-score-label">/ 100</div>
+          </div>
+          <span class="tier-badge tier-not-recommended">Not Recommended</span>
+        </a>
+
+        <a class="lb-row" href="#site-teele-square">
+          <div class="lb-rank">#7</div>
+          <div>
+            <div class="lb-name">Teele Square</div>
+            <div class="lb-sub">No direct T &middot; 9 Failed pavement segments &middot; 200 poor inspections &middot; PCI 65.6</div>
+          </div>
+          <div class="lb-score-wrap">
+            <div class="lb-score score-red">45</div>
+            <div class="lb-score-label">/ 100</div>
+          </div>
+          <span class="tier-badge tier-not-recommended">Not Recommended</span>
+        </a>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="section" id="map">
+  <div class="container-wide">
+    <div class="section-header">
+      <span class="section-label">Interactive Map</span>
+      <h2>Somerville Fan Zone Candidates</h2>
+      <p>Click any marker to see a site summary. Score displayed in each pin. Green = high-scoring primary sites, yellow = neighborhood scale, red = not recommended.</p>
+    </div>
+    <div class="map-wrapper">
+      <div id="map"></div>
+      <div class="map-legend">
+        <div style="font-weight:700;font-size:0.72rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Tier</div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#2E7D32;"></div><span>Primary (75+)</span></div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#F9A825;"></div><span>Neighborhood (60–74)</span></div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#C62828;"></div><span>Not Recommended (&lt;60)</span></div>
+        <div class="map-legend-item"><div class="map-legend-dot" style="background:#1B79C5;"></div><span>T Station</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON GRID -->
+<section class="section section-gray" id="comparison">
+  <div class="container-wide">
+    <div class="section-header">
+      <span class="section-label">Side-by-Side Comparison</span>
+      <h2>All 6 Criteria Across All 7 Sites</h2>
+      <p>Color intensity reflects relative performance. Green cells = strong, red = weak. All infrastructure data from Cyvl's Somerville dataset (Project 090e18f2).</p>
+    </div>
+
+    <div class="comparison-table card" style="padding:0;overflow:hidden;">
+      <table>
+        <thead>
+          <tr>
+            <th style="border-radius:0;">Criterion</th>
+            <th>Assembly Row</th>
+            <th>Davis Sq.</th>
+            <th>Union Sq.</th>
+            <th>East Som.</th>
+            <th>Ball Sq.</th>
+            <th>Magoun Sq.</th>
+            <th>Teele Sq.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pavement Quality</strong><br/><span style="font-size:0.72rem;color:var(--text-secondary);">PCI avg &middot; poor count</span></td>
+            <td class="heat-cell heat-strong">79.6 PCI<br/><small>25 poor</small></td>
+            <td class="heat-cell heat-good">77.0 PCI<br/><small>111 poor</small></td>
+            <td class="heat-cell heat-weak">76.6 PCI<br/><small>127 poor</small></td>
+            <td class="heat-cell heat-good">78.6 PCI<br/><small>90 poor</small></td>
+            <td class="heat-cell heat-fair">75.4 PCI<br/><small>80 poor</small></td>
+            <td class="heat-cell heat-weak">76.6 PCI<br/><small>137 poor</small></td>
+            <td class="heat-cell heat-poor">65.6 PCI<br/><small>200 poor</small></td>
+          </tr>
+          <tr>
+            <td><strong>ADA Accessibility</strong><br/><span style="font-size:0.72rem;color:var(--text-secondary);">Ramps &middot; push buttons</span></td>
+            <td class="heat-cell heat-strong">20 ramps<br/><small>9 buttons</small></td>
+            <td class="heat-cell heat-good">17 ramps<br/><small>8 buttons</small></td>
+            <td class="heat-cell heat-good">17 ramps<br/><small>8 buttons</small></td>
+            <td class="heat-cell heat-strong">22 ramps<br/><small>7 buttons</small></td>
+            <td class="heat-cell heat-good">17 ramps<br/><small>4 buttons</small></td>
+            <td class="heat-cell heat-fair">13 ramps<br/><small>3 buttons</small></td>
+            <td class="heat-cell heat-weak">14 ramps<br/><small>4 buttons</small></td>
+          </tr>
+          <tr>
+            <td><strong>Safety Infrastructure</strong><br/><span style="font-size:0.72rem;color:var(--text-secondary);">Signals &middot; CCTV cameras</span></td>
+            <td class="heat-cell heat-strong">3 signals<br/><small>3 CCTV</small></td>
+            <td class="heat-cell heat-good">3 signals<br/><small>1 CCTV</small></td>
+            <td class="heat-cell heat-good">3 signals<br/><small>0 CCTV</small></td>
+            <td class="heat-cell heat-strong">11 signals<br/><small>0 CCTV</small></td>
+            <td class="heat-cell heat-fair">3 signals<br/><small>1 CCTV</small></td>
+            <td class="heat-cell heat-weak">1 signal<br/><small>1 CCTV</small></td>
+            <td class="heat-cell heat-fair">5 signals<br/><small>1 CCTV</small></td>
+          </tr>
+          <tr>
+            <td><strong>Amenities</strong><br/><span style="font-size:0.72rem;color:var(--text-secondary);">Trees &middot; streetlights</span></td>
+            <td class="heat-cell heat-strong">42 trees<br/><small>35 lights</small></td>
+            <td class="heat-cell heat-strong">46 trees<br/><small>23 lights</small></td>
+            <td class="heat-cell heat-fair">29 trees<br/><small>18 lights</small></td>
+            <td class="heat-cell heat-fair">29 trees<br/><small>18 lights</small></td>
+            <td class="heat-cell heat-strong">54 trees<br/><small>23 lights</small></td>
+            <td class="heat-cell heat-weak">26 trees<br/><small>32 lights</small></td>
+            <td class="heat-cell heat-good">56 trees<br/><small>19 lights</small></td>
+          </tr>
+          <tr>
+            <td><strong>Crowd Capacity</strong><br/><span style="font-size:0.72rem;color:var(--text-secondary);">Est. standing</span></td>
+            <td class="heat-cell heat-strong">2,500</td>
+            <td class="heat-cell heat-good">1,200</td>
+            <td class="heat-cell heat-good">1,500</td>
+            <td class="heat-cell heat-weak">600</td>
+            <td class="heat-cell heat-weak">700</td>
+            <td class="heat-cell heat-poor">500</td>
+            <td class="heat-cell heat-fair">900</td>
+          </tr>
+          <tr>
+            <td><strong>Transit Access</strong><br/><span style="font-size:0.72rem;color:var(--text-secondary);">T line &middot; walk time</span></td>
+            <td class="heat-cell heat-strong">Orange Line<br/><small>Direct</small></td>
+            <td class="heat-cell heat-strong">Red Line<br/><small>Direct</small></td>
+            <td class="heat-cell heat-good">Green Line<br/><small>Direct</small></td>
+            <td class="heat-cell heat-fair">Green Line<br/><small>~5 min</small></td>
+            <td class="heat-cell heat-fair">Green Line<br/><small>Direct</small></td>
+            <td class="heat-cell heat-poor">Bus only<br/><small>0.8mi to T</small></td>
+            <td class="heat-cell heat-weak">Bus only<br/><small>0.5mi to T</small></td>
+          </tr>
+          <tr>
+            <td><strong>Utility Poles</strong><br/><span style="font-size:0.72rem;color:var(--text-secondary);">Fewer = better for staging</span></td>
+            <td class="heat-cell heat-strong">2 poles</td>
+            <td class="heat-cell heat-weak">26 poles</td>
+            <td class="heat-cell heat-fair">16 poles</td>
+            <td class="heat-cell heat-fair">16 poles</td>
+            <td class="heat-cell heat-fair">18 poles</td>
+            <td class="heat-cell heat-poor">28 poles</td>
+            <td class="heat-cell heat-fair">17 poles</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- DETAILED SITE CARDS -->
+<section class="section" id="sites">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Detailed Site Analysis</span>
+      <h2>Full Infrastructure Profiles</h2>
+      <p>Click any site to expand its complete Cyvl infrastructure assessment, score breakdown, pros &amp; cons, and key findings.</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;">
+
+      <!-- ASSEMBLY ROW -->
+      <div class="site-card open" id="site-assembly-row">
+        <div class="site-card-header" onclick="toggleCard('assembly-row')">
+          <div>
+            <div class="site-card-rank">#1 Ranked &middot; Primary Tier</div>
+            <div class="site-card-name">Assembly Row</div>
+            <div class="site-card-meta">Orange Line &middot; East Somerville &middot; 2,500 est. capacity &middot; 37 Cyvl images</div>
+          </div>
+          <div class="site-card-score-area">
+            <div class="site-card-score score-green">87</div>
+            <span class="tier-badge tier-primary">Primary</span>
+            <div class="site-card-chevron" id="chevron-assembly-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="site-card-body">
+          <div class="photo-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="photo-count">37 Cyvl street-level images available for planning</div>
+          </div>
+          <div class="score-criteria">
+            <div class="score-criterion">
+              <div class="score-criterion-label">Pavement (15%)</div>
+              <div class="score-criterion-value score-green">12/15</div>
+              <div class="score-criterion-bar"><div class="score-criterion-fill" style="width:80%;background:var(--green-strong);"></div></div>
+            </div>
+            <div class="score-criterion">
+              <div class="score-criterion-label">ADA Access (25%)</div>
+              <div class="score-criterion-value score-green">23/25</div>
+              <div class="score-criterion-bar"><div class="score-criterion-fill" style="width:92%;background:var(--green-strong);"></div></div>
+            </div>
+            <div class="score-criterion">
+              <div class="score-criterion-label">Safety (20%)</div>
+              <div class="score-criterion-value score-green">19/20</div>
+              <div class="score-criterion-bar"><div class="score-criterion-fill" style="width:95%;background:var(--green-strong);"></div></div>
+            </div>
+            <div class="score-criterion">
+              <div class="score-criterion-label">Amenities (15%)</div>
+              <div class="score-criterion-value score-green">14/15</div>
+              <div class="score-criterion-bar"><div class="score-criterion-fill" style="width:93%;background:var(--green-strong);"></div></div>
+            </div>
+            <div class="score-criterion">
+              <div class="score-criterion-label">Capacity (15%)</div>
+              <div class="score-criterion-value score-green">13/15</div>
+              <div class="score-criterion-bar"><div class="score-criterion-fill" style="width:87%;background:var(--green-strong);"></div></div>
+            </div>
+            <div class="score-criterion">
+              <div class="score-criterion-label">Transit (10%)</div>
+              <div class="score-criterion-value score-yellow">6/10</div>
+              <div class="score-criterion-bar"><div class="score-criterion-fill" style="width:60%;background:var(--yellow-strong);"></div></div>
+            </div>
+          </div>
+          <div class="cyvl-finding">
+            <div class="finding-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--high-vis-yellow)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            </div>
+            <div><strong>Cyvl Finding:</strong> Only <strong>2 utility poles</strong> within 400m radius — underground utilities in this post-2013 development make Assembly Row uniquely suited for large-screen staging. No other site comes close: Magoun Square has 28 poles, Davis Square has 26.</div>
+          </div>
+          <div class="pros-cons">
+            <ul class="pros-cons-list">
+              <h4 class="pros">Strengths</h4>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Direct Orange Line T stop — highest transit access of all 7 sites</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Newest infrastructure in dataset — modern ADA-compliant streets</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Largest contiguous open space (~15,000 sqm) for crowd assembly</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Underground utilities eliminate pole obstacles for screen mounting</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> 3 CCTV cameras + 35 streetlights for security and night events</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Adjacent hotel and parking garage for overflow accommodation</li>
+            </ul>
+            <ul class="pros-cons-list">
+              <h4 class="cons">Limitations</h4>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Corporate/suburban feel vs. neighborhood character</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Limited shade from young tree canopy (42 trees, newer plantings)</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Middlesex Ave and Grand Union Blvd have some Poor-rated segments</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Further from Somerville's urban core — less walkable from residential neighborhoods</li>
+            </ul>
+          </div>
+          <div class="asset-grid">
+            <div class="asset-item"><div class="asset-count">20</div><div class="asset-label">ADA Ramps</div></div>
+            <div class="asset-item"><div class="asset-count">35</div><div class="asset-label">Streetlights</div></div>
+            <div class="asset-item"><div class="asset-count">42</div><div class="asset-label">Trees</div></div>
+            <div class="asset-item"><div class="asset-count">2</div><div class="asset-label">Utility Poles</div></div>
+            <div class="asset-item"><div class="asset-count">8</div><div class="asset-label">Fire Hydrants</div></div>
+            <div class="asset-item"><div class="asset-count">3</div><div class="asset-label">CCTV Cameras</div></div>
+            <div class="asset-item"><div class="asset-count">9</div><div class="asset-label">Push Buttons</div></div>
+            <div class="asset-item"><div class="asset-count">14</div><div class="asset-label">Curb Cuts</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAVIS SQUARE -->
+      <div class="site-card" id="site-davis-square">
+        <div class="site-card-header" onclick="toggleCard('davis-square')">
+          <div>
+            <div class="site-card-rank">#2 Ranked &middot; Primary Tier</div>
+            <div class="site-card-name">Davis Square</div>
+            <div class="site-card-meta">Red Line &middot; West Somerville &middot; 1,200 est. capacity &middot; 31 Cyvl images</div>
+          </div>
+          <div class="site-card-score-area">
+            <div class="site-card-score score-green">78</div>
+            <span class="tier-badge tier-primary">Primary</span>
+            <div class="site-card-chevron" id="chevron-davis-square">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="site-card-body">
+          <div class="photo-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="photo-count">31 Cyvl street-level images available</div>
+          </div>
+          <div class="score-criteria">
+            <div class="score-criterion"><div class="score-criterion-label">Pavement (15%)</div><div class="score-criterion-value score-yellow">8/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:53%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">ADA Access (25%)</div><div class="score-criterion-value score-green">21/25</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:84%;background:var(--green-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Safety (20%)</div><div class="score-criterion-value score-yellow">17/20</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:85%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Amenities (15%)</div><div class="score-criterion-value score-green">14/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:93%;background:var(--green-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Capacity (15%)</div><div class="score-criterion-value score-yellow">10/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:67%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Transit (10%)</div><div class="score-criterion-value score-green">8/10</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:80%;background:var(--green-strong);"></div></div></div>
+          </div>
+          <div class="cyvl-finding">
+            <div class="finding-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--high-vis-yellow)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div><strong>Cyvl Finding:</strong> Summer Street has <strong style="color:#FF470A;">Failed (PCI 1&ndash;9)</strong> and Serious pavement segments within 400m. 111 total poor-or-worse inspections require crowd routing plans to steer attendees away from degraded streets near the square.</div>
+          </div>
+          <div class="pros-cons">
+            <ul class="pros-cons-list">
+              <h4 class="pros">Strengths</h4>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Red Line T station — excellent multi-modal access</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Vibrant neighborhood with established food/beverage ecosystem</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Highest tree count (46) — natural shade for June/July events</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Multiple bike connections including dedicated bike path</li>
+            </ul>
+            <ul class="pros-cons-list">
+              <h4 class="cons">Limitations</h4>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> 111 poor-or-worse pavement inspections in 400m radius</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Summer Street has Failed (PCI 1&ndash;9) segments — crowd routing hazard</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> 26 utility poles complicate screen/tent logistics</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Smaller capacity (~1,200) vs. Assembly Row or Union Square</li>
+            </ul>
+          </div>
+          <div class="asset-grid">
+            <div class="asset-item"><div class="asset-count">17</div><div class="asset-label">ADA Ramps</div></div>
+            <div class="asset-item"><div class="asset-count">23</div><div class="asset-label">Streetlights</div></div>
+            <div class="asset-item"><div class="asset-count">46</div><div class="asset-label">Trees</div></div>
+            <div class="asset-item"><div class="asset-count">26</div><div class="asset-label">Utility Poles</div></div>
+            <div class="asset-item"><div class="asset-count">2</div><div class="asset-label">Fire Hydrants</div></div>
+            <div class="asset-item"><div class="asset-count">1</div><div class="asset-label">CCTV Camera</div></div>
+            <div class="asset-item"><div class="asset-count">8</div><div class="asset-label">Push Buttons</div></div>
+            <div class="asset-item"><div class="asset-count">21</div><div class="asset-label">Curb Cuts</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UNION SQUARE -->
+      <div class="site-card" id="site-union-square">
+        <div class="site-card-header" onclick="toggleCard('union-square')">
+          <div>
+            <div class="site-card-rank">#3 Ranked &middot; Secondary Tier</div>
+            <div class="site-card-name">Union Square</div>
+            <div class="site-card-meta">Green Line &middot; South Somerville &middot; 1,500 est. capacity &middot; 52 Cyvl images</div>
+          </div>
+          <div class="site-card-score-area">
+            <div class="site-card-score score-green">72</div>
+            <span class="tier-badge tier-secondary">Secondary</span>
+            <div class="site-card-chevron" id="chevron-union-square">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="site-card-body">
+          <div class="photo-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="photo-count">52 Cyvl street-level images — most-documented site in dataset</div>
+          </div>
+          <div class="score-criteria">
+            <div class="score-criterion"><div class="score-criterion-label">Pavement (15%)</div><div class="score-criterion-value score-red">7/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:47%;background:var(--red-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">ADA Access (25%)</div><div class="score-criterion-value score-green">20/25</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:80%;background:var(--green-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Safety (20%)</div><div class="score-criterion-value score-yellow">16/20</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:80%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Amenities (15%)</div><div class="score-criterion-value score-yellow">11/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:73%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Capacity (15%)</div><div class="score-criterion-value score-yellow">11/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:73%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Transit (10%)</div><div class="score-criterion-value score-yellow">7/10</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:70%;background:var(--yellow-strong);"></div></div></div>
+          </div>
+          <div class="cyvl-finding">
+            <div class="finding-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--high-vis-yellow)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            </div>
+            <div><strong>Cyvl Finding:</strong> Union Square's new plaza redesign scores high — but <strong style="color:#FF470A;">127 poor pavement inspections</strong> on surrounding approach streets (Charlestown St, Allen St, Windsor Place) require mitigation before large crowds can safely navigate to the plaza.</div>
+          </div>
+          <div class="pros-cons">
+            <ul class="pros-cons-list">
+              <h4 class="pros">Strengths</h4>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Newly redesigned plaza — purpose-built gathering space</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Green Line T station (opened 2022) — modern transit connection</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Vibrant multicultural food/beverage district (Remnant Brewing, Area Four)</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> 52 Cyvl images — most visual documentation of any site for planning</li>
+            </ul>
+            <ul class="pros-cons-list">
+              <h4 class="cons">Limitations</h4>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> 127 poor-or-worse pavement inspections — highest absolute count in dataset</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Charlestown St, Allen St, Windsor Pl have Serious/Very Poor segments</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Fewer trees (29) and no CCTV — lower shade and security baseline</li>
+            </ul>
+          </div>
+          <div class="asset-grid">
+            <div class="asset-item"><div class="asset-count">17</div><div class="asset-label">ADA Ramps</div></div>
+            <div class="asset-item"><div class="asset-count">18</div><div class="asset-label">Streetlights</div></div>
+            <div class="asset-item"><div class="asset-count">29</div><div class="asset-label">Trees</div></div>
+            <div class="asset-item"><div class="asset-count">16</div><div class="asset-label">Utility Poles</div></div>
+            <div class="asset-item"><div class="asset-count">5</div><div class="asset-label">Fire Hydrants</div></div>
+            <div class="asset-item"><div class="asset-count">0</div><div class="asset-label">CCTV Cameras</div></div>
+            <div class="asset-item"><div class="asset-count">8</div><div class="asset-label">Push Buttons</div></div>
+            <div class="asset-item"><div class="asset-count">21</div><div class="asset-label">Curb Cuts</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EAST SOMERVILLE -->
+      <div class="site-card" id="site-east-somerville">
+        <div class="site-card-header" onclick="toggleCard('east-somerville')">
+          <div>
+            <div class="site-card-rank">#4 Ranked &middot; Neighborhood Tier</div>
+            <div class="site-card-name">East Somerville</div>
+            <div class="site-card-meta">Green Line &middot; East Somerville &middot; 600 est. capacity &middot; 44 Cyvl images</div>
+          </div>
+          <div class="site-card-score-area">
+            <div class="site-card-score score-yellow">65</div>
+            <span class="tier-badge tier-neighborhood">Neighborhood</span>
+            <div class="site-card-chevron" id="chevron-east-somerville">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="site-card-body">
+          <div class="photo-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="photo-count">44 Cyvl street-level images available</div>
+          </div>
+          <div class="score-criteria">
+            <div class="score-criterion"><div class="score-criterion-label">Pavement (15%)</div><div class="score-criterion-value score-yellow">9/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:60%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">ADA Access (25%)</div><div class="score-criterion-value score-green">22/25</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:88%;background:var(--green-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Safety (20%)</div><div class="score-criterion-value score-yellow">17/20</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:85%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Amenities (15%)</div><div class="score-criterion-value score-yellow">10/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:67%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Capacity (15%)</div><div class="score-criterion-value score-red">5/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:33%;background:var(--red-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Transit (10%)</div><div class="score-criterion-value score-red">2/10</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:20%;background:var(--red-strong);"></div></div></div>
+          </div>
+          <div class="cyvl-finding">
+            <div class="finding-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--high-vis-yellow)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+            <div><strong>Cyvl Finding:</strong> East Somerville leads all 7 sites in ADA ramp count with <strong>22 ramps</strong> and 3 flashing beacons detected — the strongest pedestrian accessibility infrastructure in the dataset. Capacity (~600) is the binding constraint for large events.</div>
+          </div>
+          <div class="pros-cons">
+            <ul class="pros-cons-list">
+              <h4 class="pros">Strengths</h4>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Best ADA ramp count (22) — most accessible for mobility devices</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> 3 flashing beacons — active pedestrian safety investments</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> 11 traffic signals — managed multi-modal environment</li>
+            </ul>
+            <ul class="pros-cons-list">
+              <h4 class="cons">Limitations</h4>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Smallest estimated capacity (~600) — not suitable for large fan zones</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Washington Street corridor is high-traffic — difficult to pedestrianize</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> No CCTV detected — lower security baseline</li>
+            </ul>
+          </div>
+          <div class="asset-grid">
+            <div class="asset-item"><div class="asset-count">22</div><div class="asset-label">ADA Ramps</div></div>
+            <div class="asset-item"><div class="asset-count">18</div><div class="asset-label">Streetlights</div></div>
+            <div class="asset-item"><div class="asset-count">29</div><div class="asset-label">Trees</div></div>
+            <div class="asset-item"><div class="asset-count">16</div><div class="asset-label">Utility Poles</div></div>
+            <div class="asset-item"><div class="asset-count">5</div><div class="asset-label">Fire Hydrants</div></div>
+            <div class="asset-item"><div class="asset-count">3</div><div class="asset-label">Flash Beacons</div></div>
+            <div class="asset-item"><div class="asset-count">7</div><div class="asset-label">Push Buttons</div></div>
+            <div class="asset-item"><div class="asset-count">26</div><div class="asset-label">Curb Cuts</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BALL SQUARE -->
+      <div class="site-card" id="site-ball-square">
+        <div class="site-card-header" onclick="toggleCard('ball-square')">
+          <div>
+            <div class="site-card-rank">#5 Ranked &middot; Neighborhood Tier</div>
+            <div class="site-card-name">Ball Square</div>
+            <div class="site-card-meta">Green Line &middot; North Somerville &middot; 700 est. capacity &middot; 12 Cyvl images</div>
+          </div>
+          <div class="site-card-score-area">
+            <div class="site-card-score score-yellow">62</div>
+            <span class="tier-badge tier-neighborhood">Neighborhood</span>
+            <div class="site-card-chevron" id="chevron-ball-square">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="site-card-body">
+          <div class="photo-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="photo-count">12 Cyvl street-level images — lowest coverage of all sites</div>
+          </div>
+          <div class="score-criteria">
+            <div class="score-criterion"><div class="score-criterion-label">Pavement (15%)</div><div class="score-criterion-value score-yellow">9/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:60%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">ADA Access (25%)</div><div class="score-criterion-value score-yellow">18/25</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:72%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Safety (20%)</div><div class="score-criterion-value score-yellow">15/20</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:75%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Amenities (15%)</div><div class="score-criterion-value score-yellow">12/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:80%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Capacity (15%)</div><div class="score-criterion-value score-red">6/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:40%;background:var(--red-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Transit (10%)</div><div class="score-criterion-value score-red">2/10</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:20%;background:var(--red-strong);"></div></div></div>
+          </div>
+          <div class="cyvl-finding">
+            <div class="finding-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--high-vis-yellow)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+            <div><strong>Cyvl Finding:</strong> Ball Square has the second-highest tree count (54) and 80 poor pavement inspections — the lowest count among neighborhood squares. The new Green Line extension provides direct T access. Capacity (~700) limits event scale, but this is a solid neighborhood watch party venue.</div>
+          </div>
+          <div class="pros-cons">
+            <ul class="pros-cons-list">
+              <h4 class="pros">Strengths</h4>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Green Line T station directly at square</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Second-highest tree count (54) — excellent natural shade</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Lowest poor pavement count (80) among neighborhood squares</li>
+            </ul>
+            <ul class="pros-cons-list">
+              <h4 class="cons">Limitations</h4>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Very small gathering space (~700 capacity)</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Lowest imagery count (12) — limited visual documentation</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> No bike racks detected — limits active transport access</li>
+            </ul>
+          </div>
+          <div class="asset-grid">
+            <div class="asset-item"><div class="asset-count">17</div><div class="asset-label">ADA Ramps</div></div>
+            <div class="asset-item"><div class="asset-count">23</div><div class="asset-label">Streetlights</div></div>
+            <div class="asset-item"><div class="asset-count">54</div><div class="asset-label">Trees</div></div>
+            <div class="asset-item"><div class="asset-count">18</div><div class="asset-label">Utility Poles</div></div>
+            <div class="asset-item"><div class="asset-count">8</div><div class="asset-label">Fire Hydrants</div></div>
+            <div class="asset-item"><div class="asset-count">1</div><div class="asset-label">CCTV Camera</div></div>
+            <div class="asset-item"><div class="asset-count">4</div><div class="asset-label">Push Buttons</div></div>
+            <div class="asset-item"><div class="asset-count">18</div><div class="asset-label">Curb Cuts</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAGOUN SQUARE -->
+      <div class="site-card" id="site-magoun-square">
+        <div class="site-card-header" onclick="toggleCard('magoun-square')">
+          <div>
+            <div class="site-card-rank">#6 Ranked &middot; Not Recommended</div>
+            <div class="site-card-name">Magoun Square</div>
+            <div class="site-card-meta">Bus only &middot; 500 est. capacity &middot; 28 utility poles &middot; 65 Cyvl images</div>
+          </div>
+          <div class="site-card-score-area">
+            <div class="site-card-score score-red">52</div>
+            <span class="tier-badge tier-not-recommended">Not Recommended</span>
+            <div class="site-card-chevron" id="chevron-magoun-square">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="site-card-body">
+          <div class="photo-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="photo-count">65 Cyvl street-level images — highest imagery count of any site</div>
+          </div>
+          <div class="score-criteria">
+            <div class="score-criterion"><div class="score-criterion-label">Pavement (15%)</div><div class="score-criterion-value score-red">7/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:47%;background:var(--red-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">ADA Access (25%)</div><div class="score-criterion-value score-red">16/25</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:64%;background:var(--red-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Safety (20%)</div><div class="score-criterion-value score-red">12/20</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:60%;background:var(--red-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Amenities (15%)</div><div class="score-criterion-value score-red">8/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:53%;background:var(--red-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Capacity (15%)</div><div class="score-criterion-value score-red">4/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:27%;background:var(--red-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Transit (10%)</div><div class="score-criterion-value score-red">5/10</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:50%;background:var(--red-strong);"></div></div></div>
+          </div>
+          <div class="cyvl-finding">
+            <div class="finding-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF470A" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div><strong>Cyvl Finding:</strong> Magoun Square has <strong style="color:#FF470A;">28 utility poles</strong> within 400m — the most of any site, and 14x more than Assembly Row's 2. This fundamentally complicates large-screen mounting, tent installation, and aerial logistics for a fan zone event.</div>
+          </div>
+          <div class="pros-cons">
+            <ul class="pros-cons-list">
+              <h4 class="pros">Strengths</h4>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Highest imagery match count (65) — best-documented site for virtual planning</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Good streetlight coverage (32) for evening events</li>
+            </ul>
+            <ul class="pros-cons-list">
+              <h4 class="cons">Limitations</h4>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> No direct T access — worst transit accessibility in dataset</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> 28 utility poles — most obstructed of all sites for screen staging</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> 137 poor-or-worse pavement inspections within 400m</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Only 500-person capacity — too small for fan zone programming</li>
+            </ul>
+          </div>
+          <div class="asset-grid">
+            <div class="asset-item"><div class="asset-count">13</div><div class="asset-label">ADA Ramps</div></div>
+            <div class="asset-item"><div class="asset-count">32</div><div class="asset-label">Streetlights</div></div>
+            <div class="asset-item"><div class="asset-count">26</div><div class="asset-label">Trees</div></div>
+            <div class="asset-item"><div class="asset-count">28</div><div class="asset-label">Utility Poles</div></div>
+            <div class="asset-item"><div class="asset-count">6</div><div class="asset-label">Fire Hydrants</div></div>
+            <div class="asset-item"><div class="asset-count">1</div><div class="asset-label">CCTV Camera</div></div>
+            <div class="asset-item"><div class="asset-count">3</div><div class="asset-label">Push Buttons</div></div>
+            <div class="asset-item"><div class="asset-count">21</div><div class="asset-label">Curb Cuts</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEELE SQUARE -->
+      <div class="site-card" id="site-teele-square">
+        <div class="site-card-header" onclick="toggleCard('teele-square')">
+          <div>
+            <div class="site-card-rank">#7 Ranked &middot; Not Recommended</div>
+            <div class="site-card-name">Teele Square</div>
+            <div class="site-card-meta">No direct T &middot; 9 Failed pavement segments &middot; 200 poor inspections &middot; 31 Cyvl images</div>
+          </div>
+          <div class="site-card-score-area">
+            <div class="site-card-score score-red">45</div>
+            <span class="tier-badge tier-not-recommended">Not Recommended</span>
+            <div class="site-card-chevron" id="chevron-teele-square">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="site-card-body">
+          <div class="photo-placeholder" style="background:linear-gradient(135deg,#3B0000 0%,#1a0000 100%);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FF470A" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="photo-count" style="color:rgba(255,71,10,0.7);">31 Cyvl street-level images &middot; SAFETY DISQUALIFIER SITE</div>
+          </div>
+          <div class="score-criteria">
+            <div class="score-criterion"><div class="score-criterion-label">Pavement (15%)</div><div class="score-criterion-value score-red">4/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:27%;background:var(--red-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">ADA Access (25%)</div><div class="score-criterion-value score-red">15/25</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:60%;background:var(--red-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Safety (20%)</div><div class="score-criterion-value score-red">13/20</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:65%;background:var(--red-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Amenities (15%)</div><div class="score-criterion-value score-yellow">13/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:87%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Capacity (15%)</div><div class="score-criterion-value score-yellow">7/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:47%;background:var(--yellow-strong);"></div></div></div>
+            <div class="score-criterion"><div class="score-criterion-label">Transit (10%)</div><div class="score-criterion-value score-red">3/10</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:30%;background:var(--red-strong);"></div></div></div>
+          </div>
+          <div class="cyvl-finding" style="background:#5C0000;border:1px solid rgba(255,71,10,0.3);">
+            <div class="finding-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF470A" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div><strong style="color:#FF470A;">DISQUALIFIER &mdash; Cyvl Finding:</strong> Teele Square has <strong style="color:#FF470A;">9 Failed pavement segments (PCI &lt; 10)</strong> and 200 total poor-or-worse inspections — the worst in the entire dataset. Failed pavement creates immediate crowd safety hazards and ADA compliance failures. Hosting a public event here would expose the city to significant liability without major capital investment in pavement rehabilitation.</div>
+          </div>
+          <div class="pros-cons">
+            <ul class="pros-cons-list">
+              <h4 class="pros">Strengths</h4>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Highest tree count of all sites (56) — best natural shade</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> Adjacent Powderhouse Park — largest green space in the dataset</li>
+              <li><span class="icon" style="color:var(--green-strong);">&#10003;</span> 5 traffic signals — managed intersections</li>
+            </ul>
+            <ul class="pros-cons-list">
+              <h4 class="cons">Limitations</h4>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> Worst pavement: avg PCI 65.6 — only Fair-rated site in dataset</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> 200 poor-or-worse inspections — most in dataset</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> 9 Failed segments (PCI &lt; 10) — immediate crowd safety hazard</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> 32 Serious segments require routing around hazard zones</li>
+              <li><span class="icon" style="color:var(--red-strong);">&#10007;</span> No direct T access — lowest transit reach</li>
+            </ul>
+          </div>
+          <div class="asset-grid">
+            <div class="asset-item"><div class="asset-count">14</div><div class="asset-label">ADA Ramps</div></div>
+            <div class="asset-item"><div class="asset-count">19</div><div class="asset-label">Streetlights</div></div>
+            <div class="asset-item"><div class="asset-count">56</div><div class="asset-label">Trees</div></div>
+            <div class="asset-item"><div class="asset-count">17</div><div class="asset-label">Utility Poles</div></div>
+            <div class="asset-item"><div class="asset-count">7</div><div class="asset-label">Fire Hydrants</div></div>
+            <div class="asset-item"><div class="asset-count">1</div><div class="asset-label">CCTV Camera</div></div>
+            <div class="asset-item"><div class="asset-count">2</div><div class="asset-label">Flash Beacons</div></div>
+            <div class="asset-item"><div class="asset-count">27</div><div class="asset-label">Curb Cuts</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SCORING METHODOLOGY -->
+<section class="section section-dark" id="methodology">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label" style="color:var(--high-vis-yellow);">Scoring Methodology</span>
+      <h2 style="color:white;">Transparent Scoring Framework</h2>
+      <p style="color:#8a9490;">Every site scored on 6 criteria using objective infrastructure data from Cyvl's Somerville dataset. Weights reflect FIFA's ADA mandate and public safety requirements for large outdoor events.</p>
+    </div>
+
+    <div class="weight-grid">
+      <div class="weight-card">
+        <div class="weight-pct">25%</div>
+        <div class="weight-name">ADA Accessibility</div>
+        <p class="weight-desc">Ramp count, push buttons, curb cuts, sidewalk continuity, flashing beacons. Weighted highest because FIFA fan zones must comply with ADA accessible routes and viewing areas. Failure here is a legal disqualifier for grant funding.</p>
+      </div>
+      <div class="weight-card">
+        <div class="weight-pct">20%</div>
+        <div class="weight-name">Safety Infrastructure</div>
+        <p class="weight-desc">Traffic signal count, CCTV coverage, standalone pedestrian signals. Large public gatherings require robust traffic management and security infrastructure — ranked second after ADA compliance.</p>
+      </div>
+      <div class="weight-card">
+        <div class="weight-pct">15%</div>
+        <div class="weight-name">Pavement Quality</div>
+        <p class="weight-desc">PCI average score plus penalties for Failed/Serious segments within 400m. Poor pavement directly compromises ADA access and crowd safety — wheelchair users and standing crowds are both impacted by degraded surfaces.</p>
+      </div>
+      <div class="weight-card">
+        <div class="weight-pct">15%</div>
+        <div class="weight-name">Event Amenities</div>
+        <p class="weight-desc">Tree count for natural shade, streetlight count for night events, bike rack access, and food/beverage density. June/July Massachusetts events require sun protection. Streetlights enable evening matches.</p>
+      </div>
+      <div class="weight-card">
+        <div class="weight-pct">15%</div>
+        <div class="weight-name">Crowd Capacity</div>
+        <p class="weight-desc">Usable open area &times; 0.4 usable fraction &times; 1 person/0.56 sqm (ADA standing density). Tiers: 2,000+ people (15 pts), 1,000&ndash;1,999 (11 pts), 500&ndash;999 (7 pts), under 500 (4 pts).</p>
+      </div>
+      <div class="weight-card">
+        <div class="weight-pct">10%</div>
+        <div class="weight-name">Transit Access</div>
+        <p class="weight-desc">Direct T station (8 pts), nearby T walk (5 pts), bus-only (2 pts). Good transit reduces parking demand and enables larger attendance. Weighted lowest — Somerville's dense network means most sites have some access.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;padding:24px;background:rgba(218,255,0,0.06);border:1px solid rgba(218,255,0,0.15);border-radius:var(--radius-lg);">
+      <h4 style="color:var(--high-vis-yellow);margin-bottom:12px;">Why ADA Is Weighted Highest</h4>
+      <p style="color:#8a9490;margin-bottom:0;">FIFA fan festival requirements mandate fully accessible venues under federal ADA law. For public events on public land receiving state grant funding, ADA compliance is not optional — it is a legal prerequisite. A site with excellent pavement but inadequate ramp counts or degraded accessible routes cannot receive grant funding and exposes the city to litigation. Cyvl's infrastructure data makes ADA compliance quantifiable before a dollar of grant money is committed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- KEY FINDINGS -->
+<section class="section section-gray">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Key Findings</span>
+      <h2>What Cyvl Found That You Can't See From a Map</h2>
+      <p>Infrastructure intelligence reveals crowd safety risks, logistics constraints, and ADA compliance gaps invisible to traditional site surveys.</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="finding-card">
+        <div class="finding-number">1</div>
+        <div>
+          <h4>Teele Square: 9 Failed Pavement Segments — Immediate Safety Disqualifier</h4>
+          <p>Cyvl's pavement inspection data reveals 9 segments with PCI scores below 10 (Failed) within 400m of Teele Square — the most dangerous road condition classification. Combined with 32 Serious segments and 200 total poor-or-worse inspections (highest of all sites), Teele Square cannot safely host large crowds. A tripping hazard or inaccessible route at a FIFA event constitutes an ADA violation and creates significant municipal liability. This risk is invisible without Cyvl data.</p>
+        </div>
+      </div>
+      <div class="finding-card">
+        <div class="finding-number">2</div>
+        <div>
+          <h4>Assembly Row: Only 2 Utility Poles — Uniquely Suited for Large-Screen Staging</h4>
+          <p>Most fan zones require large LED screens (typically 10m&times;6m or larger) for match broadcasts. Utility poles create sightline obstructions, safety clearance zones, and permitting complications. Assembly Row's underground utilities (a product of its post-2013 development) leave only 2 poles detected within 400m — compared to Magoun Square's 28 and Davis Square's 26. This single data point saves event logistics teams weeks of site survey work and city coordination.</p>
+        </div>
+      </div>
+      <div class="finding-card">
+        <div class="finding-number">3</div>
+        <div>
+          <h4>Union Square's New Plaza Scores High, But 127 Poor Inspections on Approach Streets</h4>
+          <p>Union Square's post-2023 plaza redesign creates an excellent central gathering space — but the streets fans walk to reach it (Charlestown Street with Serious segments PCI 11&ndash;22, Allen Street with Very Poor PCI 25&ndash;39, Windsor Place with Very Poor PCI 38&ndash;40) represent a significant crowd routing challenge. Cyvl's 400m radius analysis revealed this disconnect: the destination is good, the journey there is not. Any grant application for Union Square must include pavement remediation funding for approach corridors.</p>
+        </div>
+      </div>
+      <div class="finding-card">
+        <div class="finding-number">4</div>
+        <div>
+          <h4>ADA Ramp Counts Vary 70% Across Sites — Critical for FIFA's Accessibility Mandate</h4>
+          <p>East Somerville leads with 22 ramps detected within 400m; Magoun Square has only 13 — a 70% difference in accessible infrastructure density. FIFA fan festival specifications require fully accessible routes, companion seating in all viewing zones, and accessible sanitation. Cyvl's above-ground asset data maps exactly where ramps exist and where gaps remain, enabling targeted capital investment before grant submission rather than after the fact.</p>
+        </div>
+      </div>
+      <div class="finding-card">
+        <div class="finding-number">5</div>
+        <div>
+          <h4>Assembly Row's CCTV Density (3 Cameras) vs. Two Sites with Zero Coverage</h4>
+          <p>Security screening is mandatory at FIFA fan festivals. While temporary security infrastructure can be deployed, existing CCTV provides continuous crowd monitoring, emergency response coordination, and post-event incident review. Assembly Row's 3 CCTV cameras — combined with its adjacent hotel security infrastructure — create a significantly stronger baseline security environment. Union Square and East Somerville have zero CCTV within 400m, meaning full security infrastructure costs would be borne by the event budget.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GRANT CONTEXT -->
+<section class="section" id="grant">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Grant Context</span>
+      <h2>Governor Healey's $10M World Cup Grant Program</h2>
+    </div>
+    <div class="grant-card">
+      <div>
+        <div class="grant-amount">$10M</div>
+        <div class="grant-label">Massachusetts Sports &amp; Entertainment Events Fund</div>
+        <div style="margin-top:20px;font-size:0.85rem;opacity:0.8;line-height:1.7;">
+          Authorized under the FY2025 Supplemental Budget and administered by the Massachusetts Office of Travel and Tourism (MOTT). Covers operations, marketing, and safety planning for World Cup-related events across 25 Massachusetts communities — 17 grantees already selected. Neighboring Cambridge has secured funding for neighborhood watch parties. Somerville is eligible for similar programming.
+        </div>
+        <div style="margin-top:16px;">
+          <a href="https://www.mass.gov/news/governor-healey-awards-10-million-to-support-world-cup-related-events-across-massachusetts" target="_blank" style="color:var(--high-vis-yellow);font-size:0.82rem;font-weight:600;">View Official Grant Announcement &rarr;</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:700;margin-bottom:16px;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.06em;opacity:0.7;">How Cyvl Strengthens Your Grant Application</div>
+        <ul class="grant-steps">
+          <li>
+            <div class="grant-step-num">1</div>
+            <div><strong>Quantify ADA Compliance</strong> — Submit exact ramp counts, curb cut locations, and sidewalk continuity data to satisfy accessibility certification requirements.</div>
+          </li>
+          <li>
+            <div class="grant-step-num">2</div>
+            <div><strong>Document Safety Infrastructure</strong> — Traffic signal counts, CCTV coverage, and lighting data demonstrate the security baseline that grant reviewers require.</div>
+          </li>
+          <li>
+            <div class="grant-step-num">3</div>
+            <div><strong>Justify Site Selection</strong> — Use the scoring framework to show objective, data-driven site selection rather than political or anecdotal site choice.</div>
+          </li>
+          <li>
+            <div class="grant-step-num">4</div>
+            <div><strong>Identify Remediation Needs</strong> — Pavement hazard data lets grant budgets include targeted infrastructure repair with specific street-level justification.</div>
+          </li>
+          <li>
+            <div class="grant-step-num">5</div>
+            <div><strong>Estimate Attendance Capacity</strong> — Cyvl's open space measurements provide the square footage basis for crowd capacity estimates required in applications.</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FIFA MATCH SCHEDULE -->
+<section class="section section-gray">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Match Schedule</span>
+      <h2>FIFA World Cup 2026 &mdash; Gillette Stadium, Foxborough</h2>
+      <p>7 matches at Gillette Stadium across the tournament window. Each match day is a watch party opportunity at Somerville fan zones. Tournament runs June 13&ndash;July 9, 2026.</p>
+    </div>
+    <div class="schedule-table card" style="padding:0;overflow:hidden;">
+      <table style="margin-bottom:0;">
+        <thead>
+          <tr>
+            <th style="border-radius:0;">#</th>
+            <th>Date</th>
+            <th>Stage</th>
+            <th>Match</th>
+            <th>Venue</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="match-date">1</td>
+            <td>June 13, 2026</td>
+            <td><span class="badge badge-blue">Group Stage</span></td>
+            <td class="match-teams"><span class="tbd-badge">TBD</span> vs <span class="tbd-badge">TBD</span></td>
+            <td class="venue-tag">Gillette Stadium</td>
+          </tr>
+          <tr>
+            <td class="match-date">2</td>
+            <td>June 16, 2026</td>
+            <td><span class="badge badge-blue">Group Stage</span></td>
+            <td class="match-teams"><span class="tbd-badge">TBD</span> vs <span class="tbd-badge">TBD</span></td>
+            <td class="venue-tag">Gillette Stadium</td>
+          </tr>
+          <tr>
+            <td class="match-date">3</td>
+            <td>June 19, 2026</td>
+            <td><span class="badge badge-blue">Group Stage</span></td>
+            <td class="match-teams"><span class="tbd-badge">TBD</span> vs <span class="tbd-badge">TBD</span></td>
+            <td class="venue-tag">Gillette Stadium</td>
+          </tr>
+          <tr>
+            <td class="match-date">4</td>
+            <td>June 22, 2026</td>
+            <td><span class="badge badge-blue">Group Stage</span></td>
+            <td class="match-teams"><span class="tbd-badge">TBD</span> vs <span class="tbd-badge">TBD</span></td>
+            <td class="venue-tag">Gillette Stadium</td>
+          </tr>
+          <tr>
+            <td class="match-date">5</td>
+            <td>June 27, 2026</td>
+            <td><span class="badge badge-blue">Group Stage</span></td>
+            <td class="match-teams"><span class="tbd-badge">TBD</span> vs <span class="tbd-badge">TBD</span></td>
+            <td class="venue-tag">Gillette Stadium</td>
+          </tr>
+          <tr>
+            <td class="match-date">6</td>
+            <td>July 1&ndash;4, 2026</td>
+            <td><span class="badge badge-yellow">Round of 16</span></td>
+            <td class="match-teams"><span class="tbd-badge">TBD</span> vs <span class="tbd-badge">TBD</span></td>
+            <td class="venue-tag">Gillette Stadium</td>
+          </tr>
+          <tr>
+            <td class="match-date">7</td>
+            <td>July 5&ndash;9, 2026</td>
+            <td><span class="badge" style="background:#FFF3E0;color:#E65100;">Quarterfinal</span></td>
+            <td class="match-teams"><span class="tbd-badge">TBD</span> vs <span class="tbd-badge">TBD</span></td>
+            <td class="venue-tag">Gillette Stadium</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.78rem;color:var(--text-secondary);margin-top:12px;">Teams TBD pending FIFA draw results. Full tournament: June 13&ndash;July 9, 2026 across 16 host cities and 3 countries.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" style="height:28px;margin-bottom:12px;" />
+        <div class="footer-tagline">Infrastructure intelligence for the cities that build tomorrow.</div>
+        <div style="margin-top:8px;font-size:0.75rem;color:#505A56;">Data sourced from Cyvl Project 090e18f2 &middot; Somerville, MA &middot; Generated April 2026</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:0.75rem;color:#505A56;line-height:2.2;">
+          <div>Grant: MA Office of Travel &amp; Tourism (MOTT)</div>
+          <div>ADA: ADA.gov outdoor event requirements</div>
+          <div>Capacity formula: FIFA fan festival specs</div>
+          <div>Infrastructure data: Cyvl Data API</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div class="footer-powered">
+        Powered by
+        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" />
+        Cyvl Infrastructure Intelligence
+      </div>
+      <div style="font-size:0.75rem;color:#505A56;">Boston CIO Demo &middot; Fan Zone Site Selector &middot; 2026</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── SITE CARD TOGGLE ──────────────────────────────────────────────────────
+  function toggleCard(id) {
+    var card = document.getElementById('site-' + id);
+    var chevron = document.getElementById('chevron-' + id);
+    card.classList.toggle('open');
+  }
+
+  // ── LEAFLET MAP ───────────────────────────────────────────────────────────
+  var sites = [
+    { name:'Assembly Row', lat:42.3941763, lon:-71.0804586, score:87, tier:'Primary', rank:1, color:'#2E7D32', transit:'Orange Line (direct)', capacity:'2,500', pci:'79.6', anchor:'#site-assembly-row' },
+    { name:'Davis Square', lat:42.3963615, lon:-71.1222329, score:78, tier:'Primary', rank:2, color:'#43A047', transit:'Red Line (direct)', capacity:'1,200', pci:'77.0', anchor:'#site-davis-square' },
+    { name:'Union Square', lat:42.3769871, lon:-71.0939352, score:72, tier:'Secondary', rank:3, color:'#66BB6A', transit:'Green Line (direct)', capacity:'1,500', pci:'76.6', anchor:'#site-union-square' },
+    { name:'East Somerville', lat:42.3797425, lon:-71.0869371, score:65, tier:'Neighborhood', rank:4, color:'#F9A825', transit:'Green Line (~5 min walk)', capacity:'600', pci:'78.6', anchor:'#site-east-somerville' },
+    { name:'Ball Square', lat:42.3997756, lon:-71.1116976, score:62, tier:'Neighborhood', rank:5, color:'#FB8C00', transit:'Green Line (direct)', capacity:'700', pci:'75.4', anchor:'#site-ball-square' },
+    { name:'Magoun Square', lat:42.3942198, lon:-71.1067727, score:52, tier:'Not Recommended', rank:6, color:'#EF5350', transit:'Bus only', capacity:'500', pci:'76.6', anchor:'#site-magoun-square' },
+    { name:'Teele Square', lat:42.4031049, lon:-71.1269938, score:45, tier:'Not Recommended', rank:7, color:'#C62828', transit:'Bus only (0.5mi to Davis)', capacity:'900', pci:'65.6', anchor:'#site-teele-square' }
+  ];
+
+  var tStations = [
+    { name:'Assembly (Orange Line)', lat:42.3920, lon:-71.0774, line:'OL' },
+    { name:'Davis (Red Line)', lat:42.3967, lon:-71.1217, line:'RL' },
+    { name:'Union Square (Green Line)', lat:42.3774, lon:-71.0943, line:'GL' },
+    { name:'East Somerville (Green Line)', lat:42.3806, lon:-71.0879, line:'GL' },
+    { name:'Ball Square (Green Line)', lat:42.4004, lon:-71.1118, line:'GL' }
+  ];
+
+  var map = L.map('map', { zoomControl: true }).setView([42.393, -71.103], 13);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd', maxZoom: 19
+  }).addTo(map);
+
+  sites.forEach(function(site) {
+    var tierColor = site.score >= 75 ? '#1B5E20' : site.score >= 60 ? '#795B00' : '#B71C1C';
+    var markerHtml = '<div style="background:' + site.color + ';color:white;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.82rem;border:3px solid white;box-shadow:0 2px 10px rgba(0,0,0,0.4);cursor:pointer;">' + site.score + '</div>';
+    var icon = L.divIcon({ html: markerHtml, iconSize:[38,38], iconAnchor:[19,19], popupAnchor:[0,-22], className:'' });
+    var popupContent = '<div style="font-family:Inter,sans-serif;min-width:210px;padding:4px;">' +
+      '<div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:' + tierColor + ';margin-bottom:2px;">Rank #' + site.rank + ' &mdash; ' + site.tier + '</div>' +
+      '<div style="font-size:1.05rem;font-weight:800;margin-bottom:10px;">' + site.name + '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:0.8rem;">' +
+        '<div><strong>Score:</strong> ' + site.score + '/100</div>' +
+        '<div><strong>Capacity:</strong> ' + site.capacity + '</div>' +
+        '<div><strong>Avg PCI:</strong> ' + site.pci + '</div>' +
+        '<div><strong>Transit:</strong> <span style="font-size:0.72rem;">' + site.transit + '</span></div>' +
+      '</div>' +
+      '<a href="' + site.anchor + '" style="display:inline-block;margin-top:10px;font-size:0.75rem;font-weight:700;color:#1B79C5;">View full analysis &rarr;</a>' +
+      '</div>';
+    L.marker([site.lat, site.lon], { icon: icon }).addTo(map).bindPopup(popupContent, { maxWidth: 260 });
+  });
+
+  var tColors = { 'OL': '#FF6B00', 'RL': '#DA291C', 'GL': '#00843D' };
+  tStations.forEach(function(t) {
+    var tHtml = '<div style="background:' + tColors[t.line] + ';color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.6rem;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);">T</div>';
+    var tIcon = L.divIcon({ html: tHtml, iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-14], className:'' });
+    L.marker([t.lat, t.lon], { icon: tIcon }).addTo(map).bindPopup('<div style="font-family:Inter,sans-serif;font-size:0.82rem;font-weight:600;">' + t.name + '</div>');
+  });
+</script>
+</body>
+</html>

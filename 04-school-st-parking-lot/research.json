@@ -1,0 +1,450 @@
+{
+  "title": "76 School St Parking Lot Party Action Plan",
+  "generated": "2026-04-02",
+  "data_sources": {
+    "cyvl_project_id": "090e18f2-0002-4a70-90b4-8f073d26294d",
+    "cyvl_scan": "scan_1185_SOMERVILLE_MA",
+    "imagery_search_ids": {
+      "parking_lot": "875743f68a394876",
+      "pavement_surface": "c1d66e217dae4cd4",
+      "sidewalk_pedestrian": "91fb84d9ac2a47b3"
+    }
+  },
+
+  "location": {
+    "address": "76 School Street, Somerville, MA 02143",
+    "lat": 42.3851785,
+    "lon": -71.1000001,
+    "neighborhood": "Spring Hill",
+    "ward": "Ward 4",
+    "zip": "02143",
+    "building_note": "Historic 1880 MBTA transfer station converted to residential/office lofts. Spring Hill neighborhood — Walk Score 92, highly walkable.",
+    "nearby_landmarks": [
+      "Osgood Park (~2 min walk)",
+      "Nunziato Field (~4 min walk)",
+      "Central Hill Memorial Park (~6 min walk)",
+      "Gilman Square MBTA Green Line (6 min walk)"
+    ],
+    "bbox": {
+      "west": -71.10364865807043,
+      "south": 42.38248356647503,
+      "east": -71.09635154192958,
+      "north": 42.38787343352497
+    }
+  },
+
+  "lot_assessment": {
+    "pavement_condition": {
+      "summary": "Mixed conditions across the 300m radius area. Nearest scored segments (Putnam St and Prescott St) range from Very Poor (40) to Good (97+). Prescott Street, the closer artery, shows predominantly Good/Satisfactory PCI scores (78-97). Putnam Street shows more variability including Poor and Very Poor patches. Road surface adjacent to 76 School St is rated Satisfactory to Good (PCI 88-89 based on nearby imagery at 42.3850).",
+      "prescott_st_avg_pci": 85.6,
+      "putnam_st_avg_pci": 71.4,
+      "access_roads_assessment": "Satisfactory for vehicle access. Any parking lot surface itself would need independent inspection for foot traffic safety — look for settled asphalt, drainage, and uneven patches.",
+      "distress_types_in_area": ["patching", "weathering", "lt_cracking", "edge_cracking", "alligator_cracking", "raveling"],
+      "foot_traffic_verdict": "Adjacent public roads are suitable for pedestrian approach. A private lot would benefit from a walk-through inspection to identify trip hazards before event."
+    },
+
+    "surrounding_infrastructure": {
+      "pavement_segments_300m": 50,
+      "condition_breakdown": {
+        "Good": "~35% of segments (PCI 85-96+)",
+        "Satisfactory": "~30% of segments (PCI 71-84)",
+        "Fair": "~20% of segments (PCI 59-70)",
+        "Poor_or_worse": "~15% of segments (PCI <55)"
+      },
+      "project_wide_context": {
+        "good_segments": 5218,
+        "satisfactory": 5057,
+        "fair": 2648,
+        "poor": 1642,
+        "very_poor": 969,
+        "serious": 369,
+        "failed": 69
+      }
+    },
+
+    "nearby_assets": {
+      "fire_hydrants_200m": 8,
+      "hydrant_ids": ["330", "989", "298", "299", "308", "995", "978", "963", "1042"],
+      "utility_poles_200m": 18,
+      "street_luminaries_200m": 16,
+      "trees_200m": 32,
+      "catch_basins_200m": 5,
+      "note": "Dense utility infrastructure. Multiple hydrants within 200m confirms good fire suppression access for event safety. Overhead utility poles may affect tent height and placement — survey required."
+    },
+
+    "parking_signs_200m": {
+      "total_signs": "50+ (paginated, more available)",
+      "regulatory_categories": {
+        "R7-1": "No Parking (multiple — 3 detected)",
+        "R7-2": "No Parking, Any Time / Tow Away (10+ detected)",
+        "R7-5": "No Parking restrictions (15+ detected)",
+        "R5-1": "Do Not Enter",
+        "R6-1L": "One Way",
+        "R6-2R": "One Way (right)",
+        "R2-1": "Speed Limit",
+        "R1-1": "Stop Sign",
+        "D3-1": "Guide/Destination signs (2 detected)",
+        "W11-2": "Pedestrian Crossing Warning (4 detected)",
+        "W13-1P": "Speed Hump Ahead Warning",
+        "W16-7P": "Supplemental Distance Plate"
+      },
+      "interpretation": "Heavy R7-x no-parking sign density confirms active parking enforcement zone. Event guests cannot use street parking immediately adjacent. Private lot must be secured as venue AND alternative guest parking arranged.",
+      "sign_condition": "All detected signs rated Good condition"
+    },
+
+    "imagery_available": {
+      "total_imagery_matches_300m": 9,
+      "parking_lot_search_total": 258,
+      "asphalt_surface_search_total": 138,
+      "sidewalk_search_total": 121,
+      "closest_confirmed_imagery": {
+        "point_id": "29d3923c-b30c-5848-9b1a-163346da0b42",
+        "lat": 42.3849922,
+        "lon": -71.1000957,
+        "pci_score": 88.91,
+        "distress_types": ["edge_cracking", "potholes", "raveling", "weathering", "lt_cracking"],
+        "detected_objects": ["car"],
+        "scan": "scan_1185_SOMERVILLE_MA",
+        "note": "Imagery at ~15m from 76 School St shows good pavement but some distress. Confirms active street use."
+      }
+    }
+  },
+
+  "regulatory_requirements": [
+    {
+      "requirement": "Property Owner Written Approval",
+      "agency": "City of Somerville / Private Lot Owner",
+      "timeline": "Before any permit applications — secure first",
+      "cost": "$0 (or negotiated lot rental fee, est. $500–$2,000/day for private lot)",
+      "details": "Somerville requires evidence of property owner approval for any private property event. This is the foundational document everything else depends on.",
+      "mandatory": true,
+      "action": "Contact lot owner; get signed letter on file"
+    },
+    {
+      "requirement": "Public Event License (CitizenServe)",
+      "agency": "City of Somerville City Clerk",
+      "timeline": "Submit at least 13 days before next City Council meeting; plan 4-6 weeks total",
+      "cost": "$50–$200 estimated (fee schedule via citizenserve.com)",
+      "details": "Required for events on private property that are open to the public or above certain size thresholds. Apply via Somerville CitizenServe portal under 'Public Event/Special Alcohol License' even if no alcohol. Email: cityclerk@somervillema.gov, Phone: 311.",
+      "source": "https://s3.amazonaws.com/somervillema-live/s3fs-public/public-event-license-application.pdf",
+      "mandatory": true,
+      "action": "Apply at somervillema.gov/citizenserve"
+    },
+    {
+      "requirement": "One-Day Special Alcohol License (if serving alcohol)",
+      "agency": "Somerville Licensing Commission",
+      "timeline": "4-6 weeks; must appear before Commission",
+      "cost": "$100–$200 (MA ABCC comparable to Boston rate of $150/day all-alcohol)",
+      "details": "Required for any alcohol service at private events. Apply via CitizenServe under 'Public Event/Special Alcohol License'. Somerville Licensing Commission: 93 Highland Ave, (617) 625-6600 x4100. Hours: M-W 8:30-4:30, Thu 8:30-7:30, Fri 8:30-12:30.",
+      "source": "https://www.somervillema.gov/departments/licensing-commission",
+      "mandatory": "Only if alcohol is served",
+      "action": "File simultaneously with Event License"
+    },
+    {
+      "requirement": "Fire Prevention Bureau Permit (tents, crowds, open flame)",
+      "agency": "Somerville Fire Prevention Bureau",
+      "timeline": "2-4 weeks before event",
+      "cost": "$75–$300 estimated",
+      "details": "Required if event includes tents over 200 sq ft, open flame/propane, candles, or anticipated crowd over 49 persons. Tent must be flame-retardant certified. No propane inside tents; propane must be 10ft+ from tent exits. Electric heat/lighting only inside structure. Apply online via CitizenServe.",
+      "contact": "FirePrevention@somervillema.gov | (617) 623-1700 x8400",
+      "source": "https://www.somervillema.gov/fireprevention",
+      "mandatory": true,
+      "action": "Call to confirm exact thresholds for your event size"
+    },
+    {
+      "requirement": "Temporary Food Service Permit",
+      "agency": "Somerville Inspectional Services / Health Dept",
+      "timeline": "2-3 weeks before event",
+      "cost": "$50–$150",
+      "details": "Required if food is prepared or served at the event (even by a caterer). Food trucks need their own permits. Handwashing station required if no running water on site.",
+      "mandatory": "If food is served",
+      "action": "Contact Inspectional Services: (617) 625-6600 ext. 2500"
+    },
+    {
+      "requirement": "Generator / Electrical Permit",
+      "agency": "Somerville Inspectional Services (Electrical Division)",
+      "timeline": "2-3 weeks before event",
+      "cost": "$100–$300",
+      "details": "Required if using a generator over 15kW or running temporary electrical service. 200m of the venue has 18+ utility poles and 16 street luminaries, suggesting potential for electrical utility hookup as alternative to generator — contact National Grid.",
+      "mandatory": "If using generator or temporary power",
+      "action": "Contact Inspectional Services; alternatively explore National Grid temporary hookup"
+    },
+    {
+      "requirement": "Noise Ordinance Compliance",
+      "agency": "City of Somerville / Somerville Police",
+      "timeline": "Plan during event; no permit needed but restrictions apply",
+      "cost": "$0 (violations: $100–$300/incident)",
+      "details": "Massachusetts and Somerville follow MassDEP noise policy: ambient +10 dB at property line is a violation. General pattern: 70 dB max daytime, 50 dB max after 11pm. Outdoor music events should end amplified sound by 10pm in a residential neighborhood context. Spring Hill is mixed residential — neighbors are close.",
+      "source": "https://catalystlegal.org/massachusetts-noise-ordinance-rules/",
+      "mandatory": "Compliance required",
+      "action": "End amplified music by 10pm; hire sound engineer with dB meter"
+    },
+    {
+      "requirement": "Zoning / Land Use Check",
+      "agency": "Somerville Planning & Zoning (OSPCD)",
+      "timeline": "Before all other permits — verify at planning stage",
+      "cost": "$0",
+      "details": "Spring Hill is a mixed-use neighborhood. Somerville adopted a new form-based zoning code in 2019. Temporary outdoor events on private lots may need a zoning determination. Contact OSPCD to confirm the specific lot is not in a restricted residential zone.",
+      "contact": "planning@somervillema.gov | somervillezoning.com",
+      "mandatory": true,
+      "action": "Email OSPCD with lot address and event description"
+    },
+    {
+      "requirement": "Special Event Liability Insurance",
+      "agency": "City of Somerville (required for permit approval)",
+      "timeline": "Secure before permit submission",
+      "cost": "$150–$500 for a one-day event policy",
+      "details": "Somerville typically requires general liability insurance of $1M per occurrence / $2M aggregate for public events. Property owner may also require additional insured status. Event insurers include NEXT Insurance, Markel, and similar specialty providers.",
+      "mandatory": true,
+      "action": "Get event insurance quote online; add City of Somerville as additional insured"
+    },
+    {
+      "requirement": "Portable Restroom Permit / Placement",
+      "agency": "Somerville DPW / property owner approval",
+      "timeline": "1-2 weeks before event",
+      "cost": "See logistics section",
+      "details": "If no indoor facilities accessible, portable toilets are required. Standard ratio: 1 unit per 50 guests for events under 4 hours; 1 per 75 for longer events. ADA-accessible unit required if event is open to public. Ensure unit placement does not block fire access or hydrants.",
+      "mandatory": "If no restroom access on-site",
+      "action": "Book rental 2+ weeks in advance; verify placement with lot owner"
+    }
+  ],
+
+  "logistics": {
+    "capacity_estimate": {
+      "small_event_100_guests": "Requires ~2,000 sq ft usable space minimum (20x100 ft lot); 100 guests standing with tables/DJ setup",
+      "medium_event_200_guests": "Requires ~4,000 sq ft; 20x200 ft or 40x100 ft lot",
+      "large_event_300_guests": "Requires ~6,000 sq ft; typical max for a private parking lot of 20-30 spaces",
+      "note": "A standard 20-space parking lot (~8,000 sq ft) comfortably holds 150-250 guests with room for tent, DJ, bar, and dance floor"
+    },
+
+    "power_options": [
+      {
+        "option": "Generator rental",
+        "description": "20-50kW diesel generator for DJ, lighting, and catering equipment",
+        "cost_estimate": "$300–$800/day including fuel",
+        "pros": "Self-contained, no utility approval needed",
+        "cons": "Noise, exhaust, requires permit if >15kW, fire separation distance required"
+      },
+      {
+        "option": "National Grid temporary hookup",
+        "description": "Utility company provides temporary metered service from nearby pole",
+        "cost_estimate": "$500–$1,500 setup + usage",
+        "pros": "Clean power, no generator noise",
+        "cons": "Requires lead time (2-4 weeks), coordination with utility, utility poles confirmed within 200m of venue"
+      },
+      {
+        "option": "Building power from 76 School St",
+        "description": "Negotiate with building to tap existing electrical panels",
+        "cost_estimate": "$200–$500 negotiated fee",
+        "pros": "Cheapest, most reliable",
+        "cons": "Depends on building owner cooperation and panel capacity"
+      }
+    ],
+
+    "restroom_plan": {
+      "units_for_100_guests": 2,
+      "units_for_200_guests": 3,
+      "units_for_300_guests": 5,
+      "ada_units": "1 ADA-accessible unit per event (always)",
+      "vendor_options": ["Portable Toilets Boston MA (portabletoiletsbostonma.com)", "ASAP Site Services", "Nationwide Waste Service"],
+      "cost_per_unit": "$170–$300 per unit per event day (Boston area pricing)",
+      "ada_unit_premium": "$50–$100 additional per ADA unit",
+      "sources": [
+        "https://restroomrentals.boston/understanding-portable-toilet-rental-prices-in-boston-ma/",
+        "https://www.asapsiteservices.com/portable-toilet-rentals/boston-ma/"
+      ]
+    },
+
+    "waste_management": {
+      "dumpster": "10-yard roll-off dumpster: $250–$400/day",
+      "recycling_bins": "Bring-your-own or rent at $30-50 each",
+      "trash_removal": "Include in vendor contract or self-haul",
+      "note": "5 catch basins within 200m — protect storm drains from food waste per EPA regs"
+    },
+
+    "noise_constraints": {
+      "hard_cutoff": "Amplified sound off by 10pm (residential neighborhood)",
+      "recommended_end": "Event wrap by 11pm",
+      "dj_sound_limit": "Keep at property line under 70 dB daytime, 50 dB post-11pm",
+      "mitigation": "Sound barriers (hay bales, acoustic drapes), aim speakers inward, hire sound engineer"
+    },
+
+    "guest_parking_plan": {
+      "problem": "The lot IS the venue; R7-x signs confirm heavy no-parking enforcement on surrounding streets. On-street parking unavailable for guests.",
+      "solutions": [
+        {
+          "option": "MBTA — Green Line Gilman Square",
+          "details": "6-minute walk from venue. Encourage transit. Post directions on invite.",
+          "cost": "$0"
+        },
+        {
+          "option": "Negotiate nearby private lot lease",
+          "details": "Contact adjacent commercial properties (laundromats, churches, retail) for evening parking rights",
+          "cost": "$200–$500 negotiated"
+        },
+        {
+          "option": "Ride-share designated drop-off zone",
+          "details": "Designate a Uber/Lyft staging area on the nearest legal curb",
+          "cost": "$0"
+        },
+        {
+          "option": "Valet parking to remote lot",
+          "details": "Valet service ferries cars to a remote lot 0.5–1 mile away",
+          "cost": "$800–$2,000 for a 200-person event"
+        }
+      ],
+      "recommendation": "Lead with MBTA promotion. Supplement with 1 nearby overflow lot agreement."
+    }
+  },
+
+  "cost_breakdown": {
+    "scenario": "200-guest evening party, 5 hours, tent + DJ + bar + catering",
+    "permits": {
+      "public_event_license": 150,
+      "alcohol_license": 150,
+      "fire_prevention_permit": 200,
+      "food_service_permit": 100,
+      "electrical_permit": 200,
+      "subtotal": 800
+    },
+    "rental_equipment": {
+      "tent_20x60": 1750,
+      "tables_and_chairs_200pax": 1200,
+      "lighting_string_bistro": 400,
+      "generator_or_power": 600,
+      "porta_potties_3_plus_ada": 950,
+      "dumpster": 350,
+      "subtotal": 5250
+    },
+    "venue_and_lot": {
+      "private_lot_rental": 1000,
+      "overflow_parking_lot": 300,
+      "subtotal": 1300
+    },
+    "insurance": {
+      "one_day_event_policy_1M": 400,
+      "subtotal": 400
+    },
+    "food_beverage": {
+      "catering_200_pax_at_35_per_head": 7000,
+      "bar_service_beer_wine": 3000,
+      "bartender_staff": 600,
+      "subtotal": 10600
+    },
+    "entertainment": {
+      "dj_4_hours": 1200,
+      "pa_system_rental": 500,
+      "subtotal": 1700
+    },
+    "staffing": {
+      "event_coordinator": 500,
+      "security_2_guards": 600,
+      "setup_breakdown_crew": 400,
+      "subtotal": 1500
+    },
+    "contingency_10pct": 2155,
+    "total_estimate": 23705,
+    "per_guest_cost": 119,
+    "note": "Range $18,000–$30,000 depending on catering quality, alcohol choices, and lot rental negotiation"
+  },
+
+  "timeline": {
+    "weeks_before": [
+      {
+        "week": "8-10 weeks out",
+        "tasks": [
+          "Confirm lot availability and sign rental agreement with property owner",
+          "Get written property owner approval letter (required for all permits)",
+          "Verify zoning compatibility with Somerville OSPCD (email planning@somervillema.gov)",
+          "Purchase event liability insurance — list City of Somerville as additional insured",
+          "Begin Public Event License application on CitizenServe"
+        ]
+      },
+      {
+        "week": "6-8 weeks out",
+        "tasks": [
+          "Submit Public Event License + Special Alcohol License applications",
+          "Book tent rental company (inventory fills fast in summer)",
+          "Book DJ and caterer",
+          "Identify and book portable toilet vendor",
+          "Negotiate overflow parking lot agreement"
+        ]
+      },
+      {
+        "week": "4-6 weeks out",
+        "tasks": [
+          "Submit Fire Prevention Bureau permit application",
+          "Submit Temporary Food Service permit (if applicable)",
+          "Submit electrical/generator permit",
+          "Confirm City Council meeting date for event license approval",
+          "Book security staff"
+        ]
+      },
+      {
+        "week": "2-4 weeks out",
+        "tasks": [
+          "Receive all permit approvals (follow up with each agency)",
+          "Confirm all vendor delivery times and load-in routes",
+          "Walk the lot with fire marshal for exit/egress layout",
+          "Print and post event signage and parking instruction cards"
+        ]
+      },
+      {
+        "week": "1 week out",
+        "tasks": [
+          "Final headcount to caterer",
+          "Confirm generator/power hookup",
+          "Walk the lot surface — mark any trip hazards with cones",
+          "Distribute MBTA directions and ride-share instructions to guests"
+        ]
+      },
+      {
+        "week": "Day of",
+        "tasks": [
+          "Tent setup 8-10 hours before event",
+          "Generator/power test",
+          "Porta-potty delivery and positioning (not blocking hydrants)",
+          "Sound check (aim speakers inward, test at property line with dB meter)",
+          "Security briefing: crowd capacity, noise cutoff at 10pm, fire exits"
+        ]
+      }
+    ]
+  },
+
+  "safety_plan": {
+    "emergency_access": {
+      "hydrants_nearby": "8 fire hydrants confirmed within 200m radius via Cyvl data. Nearest hydrant IDs: 330, 989, 298, 299. Keep 15-foot clearance around all hydrants — no tent stakes, no vehicles, no equipment.",
+      "emergency_lane": "Maintain minimum 20-foot unobstructed access lane from street to venue interior at all times. Required by Somerville Fire Code for apparatus access.",
+      "emergency_exits": "Minimum 2 exits for any tent over 200 sq ft. Exits must be clearly marked with illuminated signage. Post exit diagrams at entrance.",
+      "nearest_hospital": "Cambridge Health Alliance — Somerville Campus, 230 Highland Ave (~0.8 miles)"
+    },
+    "fire_safety": {
+      "tent_certification": "Tent fabric must carry NFPA 701 flame-retardant certification — require certificate from vendor before booking",
+      "open_flame": "No propane, open flame, or candles inside tent. Propane cooking stations minimum 10 feet from tent exits.",
+      "fire_extinguishers": "Minimum 2 ABC extinguishers per 2,500 sq ft of tent area; inspected within 12 months",
+      "smoking": "Designate smoking area 25+ feet from tent, with provided ash receptacles",
+      "utility_poles": "18+ utility poles within 200m — coordinate tent placement to avoid overhead line conflicts"
+    },
+    "crowd_management": {
+      "capacity": "Post maximum occupancy inside tent (calculate at 6 sq ft per person standing, 10 sq ft per person with seating)",
+      "security_ratio": "1 security guard per 100 guests minimum; 2 guards minimum for any event",
+      "first_aid": "First aid kit on-site; designate a sober first aid liaison for events with alcohol",
+      "noise_cutoff": "Establish hard stop at 10pm for all amplified sound; security enforces",
+      "wristbands": "Use color-coded wristbands for alcohol eligibility (21+ check at entry)"
+    }
+  },
+
+  "cyvl_data_demo_value": {
+    "insight": "Cyvl infrastructure data enabled this party plan to be built without a single site visit. Key data used:",
+    "data_points": [
+      "Exact geocoded coordinates for 76 School St (lat: 42.3852, lon: -71.1000)",
+      "50+ pavement segments scored within 300m — identified road condition for guest approach and access planning",
+      "8 fire hydrants mapped within 200m — informed safety clearance zones and Fire Prevention Bureau permit narrative",
+      "18 utility poles mapped — flagged overhead utility conflict risk for tent placement",
+      "50+ signs catalogued — 15+ R7-x no-parking signs revealed that street parking is unavailable, driving the entire guest parking strategy",
+      "258 parking lot imagery matches — confirmed visual character of the area",
+      "Street-level imagery at 42.3850, -71.1001 shows the exact block (PCI 88.91) — confirming good pavement condition for pedestrian approach",
+      "Spring Hill neighborhood identified as Walk Score 92 — validates transit-first parking strategy"
+    ]
+  }
+}

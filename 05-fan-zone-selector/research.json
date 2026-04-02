@@ -1,0 +1,681 @@
+{
+  "title": "Fan Zone Site Selector — 2026 FIFA World Cup Watch Party Analysis",
+  "generated": "2026-04-02",
+  "project_id": "090e18f2-0002-4a70-90b4-8f073d26294d",
+  "candidate_sites": [
+    {
+      "name": "Assembly Row",
+      "lat": 42.3941763,
+      "lon": -71.0804586,
+      "bbox": [-71.08532, 42.39058, -71.07559, 42.39777],
+      "imagery_matches": 37,
+      "infrastructure_score": {
+        "pavement_avg_pci": 79.6,
+        "pavement_quality_label": "Satisfactory",
+        "poor_or_worse_segments_in_sample": 2,
+        "poor_pavement_count_400m": 25,
+        "hazard_streets": ["Middlesex Avenue (Very Poor 27-33)", "Grand Union Boulevard (Poor 43-52)"],
+        "ada_features": {
+          "ramps_detected": 20,
+          "pedestrian_push_buttons": 9,
+          "curb_cuts": 14,
+          "sidewalks_detected": 18,
+          "flashing_beacons": 0,
+          "assessment": "Modern mixed-use development with ADA-compliant infrastructure. Newest streets in dataset."
+        },
+        "safety_signs": {
+          "traffic_signals": 3,
+          "traffic_signal_poles": 6,
+          "cctv_cameras": 3,
+          "stand_alone_ped_heads": 1
+        }
+      },
+      "amenities": {
+        "trees": 42,
+        "luminaries_streetlights": 35,
+        "bike_racks": 2,
+        "benches": "Abundant (mixed-use retail district)",
+        "shade_coverage": "Moderate — newer tree canopy"
+      },
+      "constraints": {
+        "hydrants": 8,
+        "utility_poles": 2,
+        "poor_pavement_segments": 25,
+        "note": "Very few utility poles — underground utilities in new development"
+      },
+      "crash_history": "Boston Vision Zero data covers Boston proper; Assembly Row/Somerville not in Boston dataset. Area is newly built (post-2013) with separated pedestrian paths.",
+      "open_space_area_sqm": 15000,
+      "estimated_capacity": 2500,
+      "capacity_basis": "Assembly Square Park + plaza area ~15,000 sqm × 0.4 usable fraction × 1 person/6 sqft standing",
+      "walkability_rating": "High",
+      "transit_access": "Assembly Orange Line station — direct T access. Kiss & ride drop-off. Multiple bus routes.",
+      "nearby_food_beverage": "Abundant — Kohl's plaza, Legoland, restaurants, hotel bars all within 400m",
+      "overall_score": 87,
+      "score_breakdown": {
+        "pavement": 12,
+        "ada": 23,
+        "safety": 19,
+        "amenities": 14,
+        "capacity": 13,
+        "transit": 6
+      },
+      "pros": [
+        "Direct Orange Line T stop — highest transit access of all 7 sites",
+        "Newest infrastructure in dataset — modern ADA-compliant streets",
+        "Largest contiguous open space for crowd assembly",
+        "Underground utilities eliminate pole obstacles for screen mounting",
+        "Strong CCTV coverage for event security",
+        "Adjacent hotel and parking garage for overflow",
+        "35 streetlights — excellent night event illumination",
+        "Only 25 poor/worse pavement inspections in 400m radius (lowest absolute count)"
+      ],
+      "cons": [
+        "More corporate/suburban feel vs. neighborhood character",
+        "Limited shade from young tree canopy",
+        "Some Poor-rated segments on Middlesex Ave and Grand Union Blvd",
+        "Further from Somerville's urban core — less walkable from residential neighborhoods"
+      ]
+    },
+    {
+      "name": "Davis Square",
+      "lat": 42.3963615,
+      "lon": -71.1222329,
+      "bbox": [-71.12710, 42.39277, -71.11737, 42.39995],
+      "imagery_matches": 31,
+      "infrastructure_score": {
+        "pavement_avg_pci": 77.0,
+        "pavement_quality_label": "Satisfactory",
+        "poor_or_worse_segments_in_sample": 6,
+        "poor_pavement_count_400m": 111,
+        "hazard_streets": [
+          "Summer Street (Serious 10-25, Failed 1-9)",
+          "Hawthorne Street (Very Poor 28-39)",
+          "Winslow Avenue (Very Poor 31-39, Poor 41-55)",
+          "Morrison Avenue (Serious 16, Very Poor 32)"
+        ],
+        "ada_features": {
+          "ramps_detected": 17,
+          "pedestrian_push_buttons": 8,
+          "curb_cuts": 21,
+          "sidewalks_detected": 18,
+          "flashing_beacons": 0,
+          "assessment": "Strong ADA infrastructure in commercial core; degraded on residential side streets"
+        },
+        "safety_signs": {
+          "traffic_signals": 3,
+          "traffic_signal_poles": 6,
+          "cctv_cameras": 1,
+          "stand_alone_ped_heads": 1
+        }
+      },
+      "amenities": {
+        "trees": 46,
+        "luminaries_streetlights": 23,
+        "bike_racks": 1,
+        "benches": "Some (Somerville Theatre plaza)",
+        "shade_coverage": "Good established tree canopy"
+      },
+      "constraints": {
+        "hydrants": 2,
+        "utility_poles": 26,
+        "poor_pavement_segments": 111,
+        "note": "Large number of aerial utility poles may complicate screen/tent installation"
+      },
+      "crash_history": "Davis Square is a busy multi-modal intersection; Boston Vision Zero data does not cover Somerville. Known high-pedestrian-volume area with signalized crossings.",
+      "open_space_area_sqm": 3500,
+      "estimated_capacity": 1200,
+      "capacity_basis": "Davis Square plaza + The Powderhouse/Memorial park ~3,500 sqm × 0.5 usable × 1 person/6 sqft",
+      "walkability_rating": "Very High",
+      "transit_access": "Davis Square Red Line station — direct T access. Multiple bus routes (88, 90, 96). Bike path connections.",
+      "nearby_food_beverage": "Excellent — dense concentration of bars, restaurants, cafes within walking distance",
+      "overall_score": 78,
+      "score_breakdown": {
+        "pavement": 8,
+        "ada": 21,
+        "safety": 17,
+        "amenities": 14,
+        "capacity": 10,
+        "transit": 8
+      },
+      "pros": [
+        "Red Line T station — excellent multi-modal access",
+        "Vibrant neighborhood with established food/beverage ecosystem",
+        "Highest tree count (46) — natural shade for June/July events",
+        "Strong existing pedestrian infrastructure",
+        "Multiple bike connections including bike path"
+      ],
+      "cons": [
+        "111 poor-or-worse pavement inspections in 400m radius — highest hazard count",
+        "Summer Street has Failed (PCI 1-9) and Serious segments — crowd routing hazard",
+        "Limited flat open gathering space — mostly street-based plaza",
+        "26 utility poles complicate screen/tent logistics",
+        "Smaller estimated capacity (~1,200) vs. Assembly Row or Union Square"
+      ]
+    },
+    {
+      "name": "Union Square",
+      "lat": 42.3769871,
+      "lon": -71.0939352,
+      "bbox": [-71.09880, 42.37339, -71.08907, 42.38058],
+      "imagery_matches": 52,
+      "infrastructure_score": {
+        "pavement_avg_pci": 76.6,
+        "pavement_quality_label": "Satisfactory",
+        "poor_or_worse_segments_in_sample": 0,
+        "poor_pavement_count_400m": 127,
+        "hazard_streets": [
+          "Windsor Place (Very Poor 38-40, Poor 43-55)",
+          "Allen Street (Very Poor 25-39)",
+          "Charlestown Street (Very Poor 25-33, Serious 11-22)",
+          "Concord Avenue (Serious 12-22, Very Poor 37)",
+          "Joseph Street (Serious 20, Very Poor 35)",
+          "Clark Street (Very Poor 28)"
+        ],
+        "ada_features": {
+          "ramps_detected": 17,
+          "pedestrian_push_buttons": 8,
+          "curb_cuts": 21,
+          "sidewalks_detected": 18,
+          "flashing_beacons": 0,
+          "assessment": "Union Square commercial core has good ADA infrastructure; surrounding residential blocks have significant pavement degradation"
+        },
+        "safety_signs": {
+          "traffic_signals": 3,
+          "traffic_signal_poles": 6,
+          "cctv_cameras": 1,
+          "stand_alone_ped_heads": 1
+        }
+      },
+      "amenities": {
+        "trees": 29,
+        "luminaries_streetlights": 18,
+        "bike_racks": 2,
+        "benches": "Limited (plaza area)",
+        "shade_coverage": "Lower tree coverage — fewer established trees"
+      },
+      "constraints": {
+        "hydrants": 5,
+        "utility_poles": 16,
+        "poor_pavement_segments": 127,
+        "note": "127 poor-or-worse pavement inspections — highest absolute count of all sites"
+      },
+      "crash_history": "Not in Boston Vision Zero coverage area. East Somerville area with moderate traffic volumes on Washington St and McGrath Highway.",
+      "open_space_area_sqm": 5000,
+      "estimated_capacity": 1500,
+      "capacity_basis": "Union Square plaza redesign (post-2023) provides ~5,000 sqm × 0.4 usable × 1 person/6 sqft",
+      "walkability_rating": "High",
+      "transit_access": "Union Square Green Line D extension station (opened 2022). Multiple bus routes. Good bike infrastructure.",
+      "nearby_food_beverage": "Strong — Union Square has numerous restaurants, bars, breweries (Remnant Brewing, Area Four, etc.)",
+      "overall_score": 72,
+      "score_breakdown": {
+        "pavement": 7,
+        "ada": 20,
+        "safety": 16,
+        "amenities": 11,
+        "capacity": 11,
+        "transit": 7
+      },
+      "pros": [
+        "Newly redesigned Union Square plaza — purpose-built gathering space",
+        "Green Line T station (new 2022) — good transit access",
+        "Vibrant food/beverage district",
+        "Highest imagery match count (52) — most photographed/scouted area",
+        "Recently renovated infrastructure in square core"
+      ],
+      "cons": [
+        "127 poor-or-worse pavement inspections — worst in dataset",
+        "Multiple Serious/Very Poor segments on approach streets (Charlestown, Allen, Joseph, Windsor)",
+        "Fewer trees (29) — less shade for summer events",
+        "Surrounding residential blocks have significant infrastructure gaps"
+      ]
+    },
+    {
+      "name": "East Somerville",
+      "lat": 42.3797425,
+      "lon": -71.0869371,
+      "bbox": [-71.09180, 42.37615, -71.08207, 42.38334],
+      "imagery_matches": 44,
+      "infrastructure_score": {
+        "pavement_avg_pci": 78.6,
+        "pavement_quality_label": "Satisfactory",
+        "poor_or_worse_segments_in_sample": 0,
+        "poor_pavement_count_400m": 90,
+        "hazard_streets": [
+          "Washington Terrace (Very Poor 40)",
+          "Washington Street (Very Poor 38)"
+        ],
+        "ada_features": {
+          "ramps_detected": 22,
+          "pedestrian_push_buttons": 7,
+          "curb_cuts": 26,
+          "sidewalks_detected": 17,
+          "flashing_beacons": 3,
+          "assessment": "Strong ADA indicators — 22 ramps and 3 flashing beacons suggest active pedestrian safety investments. 8 traffic signals indicate busy multi-modal environment."
+        },
+        "safety_signs": {
+          "traffic_signals": 11,
+          "traffic_signal_poles": 8,
+          "cctv_cameras": 0,
+          "stand_alone_ped_heads": 4
+        }
+      },
+      "amenities": {
+        "trees": 29,
+        "luminaries_streetlights": 18,
+        "bike_racks": 2,
+        "benches": "Limited",
+        "shade_coverage": "Moderate"
+      },
+      "constraints": {
+        "hydrants": 5,
+        "utility_poles": 16,
+        "poor_pavement_segments": 90,
+        "note": "Guardrails present — indicates some elevated/grade changes in area"
+      },
+      "crash_history": "Not in Boston Vision Zero coverage. Washington St/McGrath Hwy corridor has significant vehicle traffic. 11 traffic signals and 4 standalone pedestrian heads suggest managed pedestrian crossings.",
+      "open_space_area_sqm": 2000,
+      "estimated_capacity": 600,
+      "capacity_basis": "Limited dedicated open plaza space — primarily street-oriented commercial district",
+      "walkability_rating": "Moderate",
+      "transit_access": "East Somerville Green Line station (new 2022). Bus routes 86, 87, 88. Walk distance from Community Path.",
+      "nearby_food_beverage": "Moderate — growing restaurant scene along Broadway",
+      "overall_score": 65,
+      "score_breakdown": {
+        "pavement": 9,
+        "ada": 22,
+        "safety": 17,
+        "amenities": 10,
+        "capacity": 5,
+        "transit": 2
+      },
+      "pros": [
+        "Best ADA ramp count (22) — most accessible of all sites for mobility devices",
+        "3 flashing beacons indicate active pedestrian safety infrastructure",
+        "Green Line T station nearby",
+        "Moderate pavement hazard count relative to Union Square"
+      ],
+      "cons": [
+        "Smallest estimated capacity (~600) — not suitable for large fan zone",
+        "Limited contiguous open gathering space",
+        "Washington Street corridor is high-traffic — difficult to pedestrianize",
+        "Fewer amenities (trees, benches) for fan comfort",
+        "No CCTV detected — lower security infrastructure"
+      ]
+    },
+    {
+      "name": "Magoun Square",
+      "lat": 42.3942198,
+      "lon": -71.1067727,
+      "bbox": [-71.11164, 42.39063, -71.10191, 42.39781],
+      "imagery_matches": 65,
+      "infrastructure_score": {
+        "pavement_avg_pci": 76.6,
+        "pavement_quality_label": "Satisfactory",
+        "poor_or_worse_segments_in_sample": 3,
+        "poor_pavement_count_400m": 137,
+        "hazard_streets": [
+          "Multiple side streets with Poor/Very Poor ratings",
+          "Partridge Avenue (Very Poor 37)",
+          "Several unnamed streets rated Poor 42-55"
+        ],
+        "ada_features": {
+          "ramps_detected": 13,
+          "pedestrian_push_buttons": 3,
+          "curb_cuts": 21,
+          "sidewalks_detected": 30,
+          "flashing_beacons": 0,
+          "assessment": "High sidewalk count (30) but fewer ramps and push buttons — mixed ADA readiness"
+        },
+        "safety_signs": {
+          "traffic_signals": 1,
+          "traffic_signal_poles": 2,
+          "cctv_cameras": 1,
+          "stand_alone_ped_heads": 0
+        }
+      },
+      "amenities": {
+        "trees": 26,
+        "luminaries_streetlights": 32,
+        "bike_racks": 1,
+        "benches": "Limited",
+        "shade_coverage": "Moderate"
+      },
+      "constraints": {
+        "hydrants": 6,
+        "utility_poles": 28,
+        "poor_pavement_segments": 137,
+        "note": "28 utility poles — highest of all sites; significant aerial infrastructure complicates screen/staging"
+      },
+      "crash_history": "Not in Boston Vision Zero coverage. Quiet residential neighborhood square.",
+      "open_space_area_sqm": 1500,
+      "estimated_capacity": 500,
+      "capacity_basis": "Magoun Square is a small neighborhood square — limited open space",
+      "walkability_rating": "Moderate",
+      "transit_access": "No direct T stop. Bus routes 80, 87. ~0.8 miles to Ball Square T station.",
+      "nearby_food_beverage": "Limited — neighborhood convenience stores and a few restaurants",
+      "overall_score": 52,
+      "score_breakdown": {
+        "pavement": 7,
+        "ada": 16,
+        "safety": 12,
+        "amenities": 8,
+        "capacity": 4,
+        "transit": 5
+      },
+      "pros": [
+        "Highest imagery match count (65) — visually distinctive neighborhood square",
+        "Good streetlight coverage (32) for evening events",
+        "Strong sidewalk infrastructure (30 detected)"
+      ],
+      "cons": [
+        "No direct T access — lowest transit accessibility",
+        "28 utility poles — most obstructed of all sites for staging",
+        "137 poor-or-worse pavement inspections in 400m radius",
+        "Very small gathering space (~500 capacity)",
+        "Limited food/beverage infrastructure",
+        "Only 1 traffic signal in 400m — limited traffic management capability"
+      ]
+    },
+    {
+      "name": "Teele Square",
+      "lat": 42.4031049,
+      "lon": -71.1269938,
+      "bbox": [-71.13186, 42.39951, -71.12213, 42.40670],
+      "imagery_matches": 31,
+      "infrastructure_score": {
+        "pavement_avg_pci": 65.6,
+        "pavement_quality_label": "Fair",
+        "poor_or_worse_segments_in_sample": 11,
+        "poor_pavement_count_400m": 200,
+        "hazard_streets": [
+          "Multiple streets — 91 Poor, 68 Very Poor, 32 Serious, 9 Failed segments",
+          "One segment scored 7.5 (Failed)",
+          "Very Poor segment scored 31.7"
+        ],
+        "ada_features": {
+          "ramps_detected": 14,
+          "pedestrian_push_buttons": 4,
+          "curb_cuts": 27,
+          "sidewalks_detected": 16,
+          "flashing_beacons": 2,
+          "assessment": "Adequate curb cuts but lowest ramp count near commercial core; significant pavement hazards compromise ADA route continuity"
+        },
+        "safety_signs": {
+          "traffic_signals": 5,
+          "traffic_signal_poles": 1,
+          "cctv_cameras": 1,
+          "stand_alone_ped_heads": 4
+        }
+      },
+      "amenities": {
+        "trees": 56,
+        "luminaries_streetlights": 19,
+        "bike_racks": 2,
+        "benches": "Some (park nearby)",
+        "shade_coverage": "Excellent — highest tree count of all sites"
+      },
+      "constraints": {
+        "hydrants": 7,
+        "utility_poles": 17,
+        "poor_pavement_segments": 200,
+        "note": "9 Failed pavement segments — immediate safety hazard for large crowds"
+      },
+      "crash_history": "Not in Boston Vision Zero coverage. Residential area with moderate traffic.",
+      "open_space_area_sqm": 3000,
+      "estimated_capacity": 900,
+      "capacity_basis": "Powderhouse Square Park adjacent area ~3,000 sqm × 0.4 usable × 1 person/6 sqft",
+      "walkability_rating": "Moderate-High",
+      "transit_access": "Red Line at Davis Square (~0.5 miles). Bus routes 80, 87, 96. No direct T.",
+      "nearby_food_beverage": "Moderate — some restaurants, Tufts University proximity",
+      "overall_score": 45,
+      "score_breakdown": {
+        "pavement": 4,
+        "ada": 15,
+        "safety": 13,
+        "amenities": 13,
+        "capacity": 7,
+        "transit": 3
+      },
+      "pros": [
+        "Highest tree count of all sites (56) — best natural shade for summer events",
+        "Proximity to Powderhouse Park — largest green space in the dataset",
+        "5 traffic signals — managed intersections"
+      ],
+      "cons": [
+        "Worst pavement condition: avg PCI 65.6 (Fair) — only site rated Fair overall",
+        "200 poor-or-worse pavement inspections — most in dataset",
+        "9 Failed segments (PCI < 10) create immediate crowd safety hazard",
+        "32 Serious segments require crowd routing around hazard zones",
+        "No direct T access — poor transit access",
+        "Lower streetlight count (19) for evening events"
+      ]
+    },
+    {
+      "name": "Ball Square",
+      "lat": 42.3997756,
+      "lon": -71.1116976,
+      "bbox": [-71.11656, 42.39618, -71.10683, 42.40337],
+      "imagery_matches": 12,
+      "infrastructure_score": {
+        "pavement_avg_pci": 75.4,
+        "pavement_quality_label": "Satisfactory",
+        "poor_or_worse_segments_in_sample": 4,
+        "poor_pavement_count_400m": 80,
+        "hazard_streets": [
+          "One Very Poor segment (PCI 32.3)",
+          "Two Very Poor segments (36.7, 32.3)"
+        ],
+        "ada_features": {
+          "ramps_detected": 17,
+          "pedestrian_push_buttons": 4,
+          "curb_cuts": 18,
+          "sidewalks_detected": 20,
+          "flashing_beacons": 1,
+          "assessment": "Adequate ADA infrastructure. Lowest imagery match count suggests less street-level coverage."
+        },
+        "safety_signs": {
+          "traffic_signals": 3,
+          "traffic_signal_poles": 4,
+          "cctv_cameras": 1,
+          "stand_alone_ped_heads": 0
+        }
+      },
+      "amenities": {
+        "trees": 54,
+        "luminaries_streetlights": 23,
+        "bike_racks": 0,
+        "benches": "Limited",
+        "shade_coverage": "Very good — high tree count"
+      },
+      "constraints": {
+        "hydrants": 8,
+        "utility_poles": 18,
+        "poor_pavement_segments": 80,
+        "note": "No bike racks detected in sample — limits bike-to-event access"
+      },
+      "crash_history": "Not in Boston Vision Zero coverage. Quiet neighborhood intersection.",
+      "open_space_area_sqm": 2000,
+      "estimated_capacity": 700,
+      "capacity_basis": "Ball Square is a small intersection square — limited contiguous open space",
+      "walkability_rating": "Moderate-High",
+      "transit_access": "Ball Square Green Line E extension station (opened 2022). Bus routes 80, 87, 89.",
+      "nearby_food_beverage": "Moderate — Tipping Cow, a few bars and restaurants along Broadway",
+      "overall_score": 62,
+      "score_breakdown": {
+        "pavement": 9,
+        "ada": 18,
+        "safety": 15,
+        "amenities": 12,
+        "capacity": 6,
+        "transit": 2
+      },
+      "pros": [
+        "Green Line T station directly at square",
+        "Second-highest tree count (54) — good shade",
+        "Lowest absolute poor pavement count (80) among neighborhood squares",
+        "Recently extended Green Line brings new transit connectivity"
+      ],
+      "cons": [
+        "Very small gathering space (~700 capacity)",
+        "Lowest imagery match count (12) — limited street-level documentation",
+        "No bike racks detected — limits active transport access",
+        "Small neighborhood square lacks fan zone infrastructure for large events"
+      ]
+    }
+  ],
+  "site_rankings": [
+    {"rank": 1, "name": "Assembly Row", "score": 87, "tier": "Primary"},
+    {"rank": 2, "name": "Davis Square", "score": 78, "tier": "Primary"},
+    {"rank": 3, "name": "Union Square", "score": 72, "tier": "Secondary"},
+    {"rank": 4, "name": "Ball Square", "score": 62, "tier": "Neighborhood"},
+    {"rank": 5, "name": "East Somerville", "score": 65, "tier": "Neighborhood"},
+    {"rank": 6, "name": "Magoun Square", "score": 52, "tier": "Not Recommended"},
+    {"rank": 7, "name": "Teele Square", "score": 45, "tier": "Not Recommended"}
+  ],
+  "scoring_methodology": {
+    "weights": {
+      "pavement": 0.15,
+      "ada": 0.25,
+      "safety": 0.20,
+      "amenities": 0.15,
+      "capacity": 0.15,
+      "transit": 0.10
+    },
+    "pavement_scoring": {
+      "scale": "0-15 points",
+      "90-100_pci": 15,
+      "80-89_pci": 12,
+      "70-79_pci": 9,
+      "60-69_pci": 6,
+      "below_60_pci": 3,
+      "penalty": "-1 per Failed/Serious segment in 400m radius"
+    },
+    "ada_scoring": {
+      "scale": "0-25 points",
+      "factors": "Ramp count, push button count, curb cuts, sidewalk continuity, flashing beacons"
+    },
+    "safety_scoring": {
+      "scale": "0-20 points",
+      "factors": "Traffic signal count, CCTV coverage, standalone pedestrian signals, guardail management"
+    },
+    "amenities_scoring": {
+      "scale": "0-15 points",
+      "factors": "Tree count for shade, streetlight count, bike racks, adjacent food/beverage density"
+    },
+    "capacity_scoring": {
+      "scale": "0-15 points",
+      "formula": "Usable open area (sqm) × 0.4 × (1 person per 0.56 sqm standing density per ADA guidance)",
+      "tiers": {
+        "2000+_people": 15,
+        "1000-1999": 11,
+        "500-999": 7,
+        "under_500": 4
+      }
+    },
+    "transit_scoring": {
+      "scale": "0-10 points",
+      "direct_T_station": 8,
+      "nearby_T_walk": 5,
+      "bus_only": 2
+    },
+    "explanation": "ADA weighted highest (0.25) because FIFA World Cup fan zones must comply with ADA requirements for accessible routes, viewing areas, and sanitation. Safety weighted second (0.20) because large public gatherings require robust traffic management and security infrastructure. Pavement and capacity weighted equally at 0.15 each — pavement conditions affect both ADA access and crowd safety, while capacity determines event scale and grant funding eligibility. Transit at 0.10 reflects that good transit reduces parking demand and enables larger attendance without traffic congestion."
+  },
+  "above_ground_asset_summary": {
+    "note": "All counts are from first 200 assets within 400m radius; pagination indicates more assets exist",
+    "sites": {
+      "Davis_Square": {"TREE": 46, "UTILITY_POLE": 26, "RAMP": 17, "HYDRANT": 2, "LUMINARIES": 23, "PEDESTRIAN_PUSH_BUTTON": 8, "CCTV": 1, "BIKE_RACK": 1},
+      "Union_Square": {"TREE": 29, "UTILITY_POLE": 16, "RAMP": 22, "HYDRANT": 5, "LUMINARIES": 18, "PEDESTRIAN_PUSH_BUTTON": 7, "CCTV": 0, "BIKE_RACK": 2},
+      "Assembly_Row": {"TREE": 42, "UTILITY_POLE": 2, "RAMP": 20, "HYDRANT": 8, "LUMINARIES": 35, "PEDESTRIAN_PUSH_BUTTON": 9, "CCTV": 3, "BIKE_RACK": 2},
+      "East_Somerville": {"TREE": 29, "UTILITY_POLE": 16, "RAMP": 22, "HYDRANT": 5, "LUMINARIES": 18, "PEDESTRIAN_PUSH_BUTTON": 7, "BIKE_RACK": 2, "FLASHING_BEACONS": 3},
+      "Teele_Square": {"TREE": 56, "UTILITY_POLE": 17, "RAMP": 14, "HYDRANT": 7, "LUMINARIES": 19, "PEDESTRIAN_PUSH_BUTTON": 4, "CCTV": 1, "BIKE_RACK": 2, "FLASHING_BEACONS": 2},
+      "Magoun_Square": {"TREE": 26, "UTILITY_POLE": 28, "RAMP": 13, "HYDRANT": 6, "LUMINARIES": 32, "PEDESTRIAN_PUSH_BUTTON": 3, "CCTV": 1, "BIKE_RACK": 1},
+      "Ball_Square": {"TREE": 54, "UTILITY_POLE": 18, "RAMP": 17, "HYDRANT": 8, "LUMINARIES": 23, "PEDESTRIAN_PUSH_BUTTON": 4, "CCTV": 1, "FLASHING_BEACONS": 1}
+    }
+  },
+  "poor_pavement_counts": {
+    "note": "Count of Failed/Serious/Very Poor/Poor rated pavement inspection cells within 400m radius",
+    "Assembly_Row": 25,
+    "Davis_Square": 111,
+    "Union_Square": 127,
+    "East_Somerville": 90,
+    "Teele_Square": 200,
+    "Magoun_Square": 137,
+    "Ball_Square": 80
+  },
+  "fan_zone_requirements": {
+    "fifa_specs": "FIFA Fan Festivals operate across all 16 host cities for the full 39-day tournament (June 13 - July 9, 2026). Requirements include: large-screen match broadcasts of all 104 games, live entertainment, food courts, skills zones, and security perimeters. Entry is typically free but may require registration. Prohibited items include outside alcohol, large bags, sharp objects, fireworks, drones, and laser pointers. Security screening at all entry points is mandatory. Source: FIFA Fan Festival 2026 (https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/fifa-fan-festival)",
+    "ada_reqs": "ADA requirements for outdoor events include: (1) Accessible routes minimum 36 inches wide with 60x60-inch passing areas every 200 feet; (2) Ramps for any elevation change over 1/4 inch; (3) One accessible parking space per 25 total spaces, with van-accessible spaces; (4) Stable, slip-resistant temporary walkway surfaces; (5) Accessible portable restrooms; (6) Wheelchair companion seating areas at all viewing zones. Source: ADA Requirements for Outdoor Events (https://www.viptogo.com/blog/ada-requirements-for-outdoor-events)",
+    "capacity_formula": "Standing crowd: 6 sq ft per person (0.56 sqm). Mixed standing/seated: 8 sq ft per person. Reception-style: 9 sq ft per person. For World Cup fan zones, ADA guidelines require 20% of capacity designated as accessible viewing areas with companion seating. Effective standing density formula: Capacity = (Usable Area sqft) / 6. Source: Event Venue Space Per Person Requirements (https://dojobusiness.com/blogs/news/event-venue-space-comfort)",
+    "minimum_viable_site": "Based on FIFA community watch party guidelines, a minimum viable fan zone requires: 5,000+ sqft (465 sqm) of contiguous flat open space, power access for screens and sound, accessible restroom facilities, security perimeter with at least 2 entry/exit points, and food vendor clearance."
+  },
+  "grant_context": {
+    "program": "Massachusetts Sports and Entertainment Events Fund Grant Program",
+    "amount": "$10,000,000",
+    "recipients": "17 grantees covering programming in 25 communities",
+    "administrator": "Massachusetts Office of Travel and Tourism (MOTT), Executive Office of Economic Development",
+    "authorization": "Fiscal Year 2025 Supplemental Budget",
+    "purpose": "Operations, marketing, and safety planning for World Cup-related events that promote tourism and support local economies",
+    "match_dates": "7 matches at Gillette Stadium, Foxborough — June 13 through July 9, 2026",
+    "cambridge_note": "Neighboring Cambridge secured grant funding for neighborhood watch parties across its community — Somerville is eligible for similar programming",
+    "sources": [
+      "https://www.mass.gov/news/governor-healey-awards-10-million-to-support-world-cup-related-events-across-massachusetts",
+      "https://www.cbsnews.com/boston/news/world-cup-watch-parties-grants-massachusetts/",
+      "https://www.bostonglobe.com/2026/03/24/metro/healey-world-cup-watch-parties/"
+    ]
+  },
+  "ckan_data": {
+    "boston_accessible_parks": {
+      "dataset": "BPRD Accessible Park Details Augmented",
+      "dataset_id": "a2094f7e-3330-4c9e-9f32-2d8e20c1af21",
+      "note": "Dataset covers Boston Parks & Recreation Department parks — Somerville parks not included as they fall under a separate municipal jurisdiction. Somerville's parks database maintained by Somerville DPW.",
+      "resource_id_csv": "5dbfc0b1-c72c-4bc2-8ea8-4688e252a638"
+    },
+    "vision_zero_crashes": {
+      "dataset": "Vision Zero Crash Records",
+      "dataset_id": "7b29c1b2-7ec2-4023-8292-c24f5d8f0905",
+      "note": "Dataset covers Boston proper only — does not include Somerville incidents. All 7 candidate sites are in Somerville and therefore outside the Boston Vision Zero geographic coverage area.",
+      "resource_id": "e4bfe397-6bfc-49c5-9367-c879fac7401d",
+      "recommendation": "Use Somerville Vision Zero data or MassDOT crash data for Somerville-specific crash analysis"
+    }
+  },
+  "imagery_analysis": {
+    "note": "Imagery search results counted from Cyvl assess_infrastructure responses with include_imagery=true",
+    "by_site": {
+      "Assembly_Row": 37,
+      "Davis_Square": 31,
+      "Union_Square": 52,
+      "East_Somerville": 44,
+      "Teele_Square": 31,
+      "Magoun_Square": 65,
+      "Ball_Square": 12
+    },
+    "highest_coverage": "Magoun Square (65 images) and Union Square (52 images) have most street-level imagery for detailed visual assessment",
+    "lowest_coverage": "Ball Square (12 images) has limited visual documentation"
+  },
+  "recommendation": {
+    "primary": "Assembly Row",
+    "rationale": "Assembly Row scores highest (87/100) and is the clear primary recommendation for a FIFA-scale fan zone. Key advantages: (1) Direct Orange Line access for maximum attendance without parking burden; (2) Newest infrastructure with modern ADA compliance and underground utilities; (3) Largest contiguous open space estimated at 2,500 person capacity; (4) Lowest utility pole density makes screen and tent installation straightforward; (5) 35 streetlights and 3 CCTV cameras support evening events and security operations; (6) Adjacent hotel, parking garage, and dense food/beverage options provide full event ecosystem; (7) Only 25 poor-or-worse pavement inspections — far below any other site.",
+    "secondary": "Davis Square",
+    "secondary_rationale": "Davis Square (78/100) is recommended as the secondary or neighborhood-scale fan zone site. Red Line access and vibrant food/beverage ecosystem make it ideal for community watch parties. However, Summer Street and Hawthorne Street have Failed and Serious pavement segments that must be addressed for crowd routing. Recommended for events under 1,200 attendees with crowd management routing around degraded streets.",
+    "tertiary": "Union Square",
+    "tertiary_rationale": "Union Square (72/100) has the new Green Line extension and recently redesigned plaza, but 127 poor-or-worse pavement inspections on surrounding approach streets require mitigation. Best suited as a neighborhood watch party hub for Union Square's multicultural community — strong fit for the FIFA World Cup's international character.",
+    "not_recommended": ["Teele Square", "Magoun Square"],
+    "not_recommended_rationale": "Teele Square has the worst pavement conditions in the dataset (avg PCI 65.6, 9 Failed segments, 200 poor-or-worse inspections) — these represent immediate crowd safety hazards and ADA compliance failures that would require significant capital investment before hosting a public event. Magoun Square lacks transit access, has 28 utility poles, and only 500-person capacity.",
+    "cyvl_demo_talking_points": [
+      "Cyvl identified 200 poor/Failed pavement segments within 400m of Teele Square — that's a crowd safety crisis invisible to city planners without infrastructure intelligence",
+      "Assembly Row's 2 utility poles vs. Magoun Square's 28 — this data point alone saves weeks of site survey work for event logistics teams",
+      "ADA ramp counts from Cyvl: Assembly Row leads with 20 ramps in 400m — critical for FIFA's accessibility mandate",
+      "The $10M state grant program requires ADA compliance certification — Cyvl gives Somerville the data to prove compliance before grant submission",
+      "Street-level imagery at Magoun Square (65 images) and Union Square (52 images) lets planners virtually walk the site before committing resources"
+    ]
+  },
+  "data_sources": {
+    "infrastructure": "Cyvl Data API — Project 090e18f2-0002-4a70-90b4-8f073d26294d (Somerville, MA)",
+    "open_data": "Boston CKAN open data portal (data.boston.gov)",
+    "fifa_requirements": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/fifa-fan-festival",
+    "ada_requirements": "https://www.viptogo.com/blog/ada-requirements-for-outdoor-events",
+    "grant_program": "https://www.mass.gov/news/governor-healey-awards-10-million-to-support-world-cup-related-events-across-massachusetts",
+    "capacity_formula": "https://dojobusiness.com/blogs/news/event-venue-space-comfort",
+    "fan_zone_security": "https://footballgroundguide.com/news/2026-world-cup-fan-zones-guide-locations-security-rules-bag-checks-and-alcohol-laws-explained.html"
+  }
+}

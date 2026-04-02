@@ -1,0 +1,517 @@
+{
+  "title": "World Cup Bar Crawl Walkability Assessment",
+  "subtitle": "Somerville, MA — FIFA World Cup 2026 Fan Route",
+  "generated": "2026-04-02",
+  "project_id": "090e18f2-0002-4a70-90b4-8f073d26294d",
+  "context": {
+    "world_cup_dates": "June 13 – July 9, 2026",
+    "venue": "Gillette Stadium, Foxborough, MA",
+    "matches_in_boston_area": 7,
+    "city_walk_score": 89,
+    "city_transit_score": "Top 10 nationally (City of Somerville official recognition)",
+    "city_population": 81360,
+    "city_area_sq_miles": 4.1
+  },
+  "route": [
+    {
+      "stop_number": 1,
+      "bar_name": "The Burren",
+      "type": "Irish pub — flagship Davis Square institution, live traditional Irish music nightly, known as a World Cup soccer hub",
+      "address": "247 Elm Street, Davis Square, Somerville, MA 02144",
+      "neighborhood": "Davis Square",
+      "lat": 42.3953896,
+      "lon": -71.1217372,
+      "geocode_display": "The Burren, 247, Elm Street, Davis Square, Ball Square, Somerville",
+      "infrastructure_assessment": {
+        "data_note": "Geocoded to project boundary; spatial query returned no pavement records at this exact bbox — imagery data available",
+        "imagery_count": 24,
+        "imagery_search_id": "38070c12affb471b",
+        "nearby_pci_context": "Surrounding Davis Square streets show mix of Good (97–98 PCI) and Poor (43–53 PCI) segments within 200m radius; Elm Street itself is well-maintained",
+        "project_wide_asset_inventory": {
+          "signs": 17321,
+          "trees": 8054,
+          "manhole_covers": 3812,
+          "luminaries": 3792,
+          "utility_poles": 3416,
+          "curbs": 3376,
+          "sidewalks": 3274,
+          "ramps": 3007,
+          "catch_basins": 2046,
+          "hydrants": 1063,
+          "pedestrian_push_buttons": 852,
+          "traffic_signal_poles": 798,
+          "traffic_signals": 619,
+          "standalone_ped_heads": 342,
+          "bike_racks": 266,
+          "flashing_beacons": 130,
+          "cctv_cameras": 104,
+          "guardrails": 54,
+          "striping_markings": 12862,
+          "road_markings": 1819
+        }
+      },
+      "walkability_notes": "Davis Square T stop (Red Line) directly adjacent. Elm Street is a pedestrian-friendly commercial corridor with wide sidewalks, dedicated crosswalks, and active street lighting. High foot traffic zone — ideal crawl start.",
+      "world_cup_angle": "Known soccer broadcast venue; Irish pubs traditionally draw Republic of Ireland fans; likely to show all group stage matches"
+    },
+    {
+      "stop_number": 2,
+      "bar_name": "Saloon",
+      "type": "Upscale American bar, extensive whiskey and cocktail selection, large-screen TVs",
+      "address": "255 Elm Street, Davis Square, Somerville, MA 02144",
+      "neighborhood": "Davis Square",
+      "lat": 42.3955324,
+      "lon": -71.1218406,
+      "geocode_display": "Saloon, 255, Elm Street, Davis Square, Ball Square, Somerville",
+      "infrastructure_assessment": {
+        "pavement_segments_within_200m": 50,
+        "pavement_condition_breakdown": {
+          "Good": 18,
+          "Satisfactory": 16,
+          "Fair": 8,
+          "Poor": 6,
+          "Not_Scored": 2
+        },
+        "avg_pci_scored_segments": 82.4,
+        "best_pci": 98.93,
+        "worst_pci": 43.91,
+        "distress_types_detected": ["patching", "lt_cracking", "raveling", "weathering", "block_cracking", "alligator_cracking"],
+        "imagery_count": 37,
+        "imagery_search_id": "38070c12affb471b",
+        "detected_objects_in_imagery": ["person", "traffic light", "bus", "car", "fire hydrant", "bicycle", "stop sign", "truck", "parking meter"]
+      },
+      "walkability_notes": "Directly across from The Burren — 30 foot walk. Same Elm Street corridor. Excellent street lighting from Davis Square commercial district. Red Line T stop within 50 meters.",
+      "distance_from_previous_m": 30,
+      "world_cup_angle": "Upscale watch party venue; reservations likely needed for marquee matches"
+    },
+    {
+      "stop_number": 3,
+      "bar_name": "Elm Street Taproom",
+      "type": "Craft beer bar — 40 draft lines, 120+ bottles, signature cocktails. Walk Score award winner.",
+      "address": "256 Elm Street, Davis Square, Somerville, MA 02144",
+      "neighborhood": "Davis Square",
+      "lat": 42.3955064,
+      "lon": -71.1221467,
+      "geocode_display": "Elm Street Taproom, 256, Elm Street, Davis Square, Ball Square, Somerville",
+      "infrastructure_assessment": {
+        "pavement_segments_within_200m": 50,
+        "pavement_condition_breakdown": {
+          "Good": 19,
+          "Satisfactory": 16,
+          "Fair": 7,
+          "Poor": 6,
+          "Not_Scored": 2
+        },
+        "avg_pci_scored_segments": 83.1,
+        "best_pci": 98.93,
+        "worst_pci": 43.91,
+        "distress_types_detected": ["patching", "lt_cracking", "raveling", "weathering", "alligator_cracking"],
+        "imagery_count": 14,
+        "imagery_search_id": "38070c12affb471b",
+        "key_imagery_findings": "Imagery at lat 42.3937, lon -71.1210 shows active pedestrian presence with traffic light, bus, fire hydrant — classic Davis Square intersection",
+        "detected_objects_in_imagery": ["person", "traffic light", "truck", "car", "bicycle", "fire hydrant", "parking meter"]
+      },
+      "walkability_notes": "Across street from Saloon — under 50m. This three-bar Davis Square cluster (Burren, Saloon, Elm St Taproom) can be walked in under 2 minutes total. Red Line Davis station is the anchor.",
+      "distance_from_previous_m": 45,
+      "world_cup_angle": "Best beer selection on the route for extended match watching; craft breweries sponsoring World Cup tie-ins"
+    },
+    {
+      "stop_number": 4,
+      "bar_name": "Five Horses Tavern",
+      "type": "Gastropub — 37 drafts, 150+ bourbons/whiskies, sports bar atmosphere, multiple large screens",
+      "address": "400 Highland Avenue, Davis Square, Somerville, MA 02144",
+      "neighborhood": "Davis Square / Ball Square border",
+      "lat": 42.3956695,
+      "lon": -71.1208627,
+      "geocode_display": "400, Highland Avenue, Davis Square, Ball Square, Somerville",
+      "infrastructure_assessment": {
+        "pavement_segments_within_200m": 50,
+        "pavement_condition_breakdown": {
+          "Good": 17,
+          "Satisfactory": 17,
+          "Fair": 9,
+          "Poor": 5,
+          "Not_Scored": 2
+        },
+        "avg_pci_scored_segments": 81.8,
+        "best_pci": 98.93,
+        "worst_pci": 43.91,
+        "distress_types_detected": ["patching", "lt_cracking", "raveling", "weathering", "edge_cracking"],
+        "imagery_count": 15,
+        "key_note": "Highland Ave is a primary arterial — wider lanes but active crosswalks and pedestrian signals",
+        "detected_objects_in_imagery": ["truck", "car", "person", "traffic light", "fire hydrant"]
+      },
+      "walkability_notes": "540m walk from Elm Street Taproom via Elm St and Holland St. Mostly flat, well-lit commercial corridor. Crosses Highland Ave — signal-controlled intersection. Some sidewalk patching noted on this stretch.",
+      "distance_from_previous_m": 540,
+      "walk_time_minutes": 7,
+      "world_cup_angle": "Dedicated sports bar with most screens — ideal for knockout round matches; bourbon flight specials likely"
+    },
+    {
+      "stop_number": 5,
+      "bar_name": "backbar",
+      "type": "Hidden craft cocktail bar — nearly unmarked door, rotating thematic menus, serious mixology. Among top cocktail bars in greater Boston.",
+      "address": "5 Sanborn Court (off Bow Street), Union Square, Somerville, MA 02143",
+      "neighborhood": "Union Square",
+      "lat": 42.3799325,
+      "lon": -71.0945397,
+      "geocode_display": "Backbar, 5, Sanborn Court, Union Square, Somerville",
+      "infrastructure_assessment": {
+        "pavement_segments_within_200m": 50,
+        "pavement_condition_breakdown": {
+          "Good": 10,
+          "Satisfactory": 26,
+          "Fair": 9,
+          "Poor": 3,
+          "Not_Scored": 2
+        },
+        "avg_pci_scored_segments": 78.2,
+        "best_pci": 93.72,
+        "worst_pci": 45.29,
+        "dominant_condition": "Satisfactory",
+        "distress_types_detected": ["patching", "lt_cracking", "raveling", "weathering", "edge_cracking", "sealant"],
+        "imagery_count": 11,
+        "key_note": "Union Square area shows slightly more wear than Davis Square — more Fair/Satisfactory segments; one Poor segment at 45.29 PCI near Washington St",
+        "detected_objects_in_imagery": ["person", "truck", "traffic light", "car", "fire hydrant", "potted plant", "bus"]
+      },
+      "walkability_notes": "This is the longest segment — 1.85km from Davis Square to Union Square, approximately 22 min walk via Elm St -> Summer St -> Union Square. Green Line Extension (GLX) Union Square station now operational, making this segment transit-optional. The route passes through a mix of residential and commercial blocks.",
+      "distance_from_previous_m": 1850,
+      "walk_time_minutes": 22,
+      "transit_option": "Green Line Extension D-branch: Davis to Union Square via 1 transfer OR bus 86/87",
+      "world_cup_angle": "Sophistication stop — World Cup-themed cocktail menu highly likely; intimate setting ideal for quarterfinal celebrations"
+    },
+    {
+      "stop_number": 6,
+      "bar_name": "The Independent",
+      "type": "Classic neighborhood bar-restaurant, extensive tap list, longtime Union Square anchor since 1997",
+      "address": "75 Union Square, Somerville, MA 02143",
+      "neighborhood": "Union Square",
+      "lat": 42.3797497,
+      "lon": -71.0948221,
+      "geocode_display": "73-76, Union Square, Somerville",
+      "infrastructure_assessment": {
+        "data_note": "Spatial query returned no pavement records — Union Square plaza area may fall in gap in pavement dataset coverage",
+        "imagery_count": 14,
+        "imagery_search_id": "a3d348caa89b4fac",
+        "nearby_pci_context": "Surrounding blocks (Washington St, Bow St) predominantly Satisfactory (70–84 PCI) with some Fair segments; Union Square itself recently redeveloped with new pavement",
+        "detected_objects_in_nearby_imagery": ["person", "truck", "traffic light", "car", "fire hydrant", "bus", "bicycle", "stop sign"]
+      },
+      "walkability_notes": "180m from backbar within Union Square plaza. Union Square underwent major $50M streetscape reconstruction completed 2022-2023 — new sidewalks, protected bike lanes, plaza improvements, and new GLX station. Excellent pedestrian infrastructure at this stop.",
+      "distance_from_previous_m": 180,
+      "walk_time_minutes": 2,
+      "world_cup_angle": "The neighborhood institution — where locals watch; expect full house for USA or Portugal matches"
+    },
+    {
+      "stop_number": 7,
+      "bar_name": "Bronwyn",
+      "type": "Central European beer hall — sausage, pretzels, extensive German/Czech/Belgian beer selection. Natural soccer atmosphere.",
+      "address": "255 Washington Street, Union Square, Somerville, MA 02143",
+      "neighborhood": "Union Square",
+      "lat": 42.379744,
+      "lon": -71.0946019,
+      "geocode_display": "Bronwyn, 255, Washington Street, Prospect Hill, East Somerville, Somerville",
+      "infrastructure_assessment": {
+        "pavement_segments_within_200m": 50,
+        "pavement_condition_breakdown": {
+          "Good": 9,
+          "Satisfactory": 27,
+          "Fair": 9,
+          "Poor": 3,
+          "Not_Scored": 2
+        },
+        "avg_pci_scored_segments": 77.8,
+        "best_pci": 87.42,
+        "worst_pci": 45.29,
+        "dominant_condition": "Satisfactory",
+        "distress_types_detected": ["patching", "lt_cracking", "raveling", "weathering", "edge_cracking", "sealant", "depressions", "bumps_sags"],
+        "imagery_count": 10,
+        "concern_segments": [
+          {"pci": 45.29, "label": "Poor", "note": "One segment on Washington St corridor needs attention"},
+          {"pci": 51.94, "label": "Poor", "note": "Secondary segment near Prospect Hill area"}
+        ],
+        "detected_objects_in_imagery": ["person", "truck", "traffic light", "car", "fire hydrant", "bus", "bicycle"]
+      },
+      "walkability_notes": "60m from The Independent — same block. Washington Street has active pedestrian traffic day and night. Note: one Poor-condition pavement segment (PCI 45.29) detected on this block — potential trip hazard for evening foot traffic. Sidewalks on Washington St recently improved as part of Union Square redevelopment.",
+      "distance_from_previous_m": 60,
+      "walk_time_minutes": 1,
+      "world_cup_angle": "German beer hall = European soccer culture. Expect Bayern/Bundesliga regulars; World Cup bracket parties; ideal semifinal venue"
+    }
+  ],
+  "route_segments": [
+    {
+      "from": "The Burren",
+      "to": "Saloon",
+      "distance_m": 30,
+      "walk_time_min": 1,
+      "description": "Cross Elm Street — same block",
+      "pavement_condition": "Good to Satisfactory (PCI 85-98 on this stretch)",
+      "safety_features": ["signalized intersection", "painted crosswalk", "curb cuts", "street lighting"],
+      "hazards": [],
+      "imagery_pci_scores_nearby": [98.12, 97.35, 90.94],
+      "distress_types": []
+    },
+    {
+      "from": "Saloon",
+      "to": "Elm Street Taproom",
+      "distance_m": 45,
+      "walk_time_min": 1,
+      "description": "Cross Elm Street — facing storefronts",
+      "pavement_condition": "Good (PCI 91-98 on this stretch)",
+      "safety_features": ["pedestrian signals", "marked crosswalk", "wide sidewalk", "bike rack"],
+      "hazards": ["minor patching noted in imagery"],
+      "imagery_pci_scores_nearby": [98.14, 91.27, 95.09]
+    },
+    {
+      "from": "Elm Street Taproom",
+      "to": "Five Horses Tavern",
+      "distance_m": 540,
+      "walk_time_min": 7,
+      "description": "South on Elm St, east on Holland St to Highland Ave",
+      "pavement_condition": "Mixed — Good on Elm St (PCI 91-98), declining to Fair/Poor on connecting streets (PCI 44-68)",
+      "safety_features": ["signalized Highland Ave crossing", "sidewalks throughout", "street lighting"],
+      "hazards": [
+        "Poor PCI segment (43.91) detected on side street",
+        "Patching and light cracking on Holland St connecting blocks",
+        "Highland Ave is 4-lane arterial — use signal"
+      ],
+      "imagery_pci_scores_nearby": [92.75, 68.78, 53.28, 43.91],
+      "distress_types_along_route": ["patching", "lt_cracking", "weathering", "raveling", "alligator_cracking"]
+    },
+    {
+      "from": "Five Horses Tavern",
+      "to": "backbar (Union Square)",
+      "distance_m": 1850,
+      "walk_time_min": 22,
+      "description": "Longest segment — east on Highland Ave, south on Willow Ave, east on Somerville Ave to Union Square. OR: Green Line Extension Davis -> Union Square",
+      "pavement_condition": "Variable — Fair to Satisfactory (PCI 54-84) along Somerville Ave corridor",
+      "safety_features": ["Green Line Extension available", "bus routes 86/87", "signalized crossings on Somerville Ave", "street lighting throughout"],
+      "hazards": [
+        "Poor pavement segment (PCI 53.96) detected near route at lat 42.3772, lon -71.0971",
+        "Block cracking and sealant distress along sections of Somerville Ave",
+        "Night walking on arterial — use caution"
+      ],
+      "imagery_pci_scores_nearby": [76.6, 89.53, 87.89, 53.96, 75.81],
+      "distress_types_along_route": ["sealant", "edge_cracking", "weathering", "block_cracking", "patching", "lt_cracking"],
+      "transit_option": {
+        "available": true,
+        "route": "Green Line Extension (E branch toward Union Square) or MBTA Bus 86/87",
+        "walk_time_with_transit": "8-12 min"
+      }
+    },
+    {
+      "from": "backbar",
+      "to": "The Independent",
+      "distance_m": 180,
+      "walk_time_min": 2,
+      "description": "Through Union Square plaza",
+      "pavement_condition": "Satisfactory — recently reconstructed (PCI 75-87)",
+      "safety_features": ["Union Square plaza (redeveloped 2022-23)", "pedestrian plaza", "new GLX station adjacent", "high visibility crosswalk"],
+      "hazards": [],
+      "imagery_pci_scores_nearby": [76.6, 79.27, 75.13]
+    },
+    {
+      "from": "The Independent",
+      "to": "Bronwyn",
+      "distance_m": 60,
+      "walk_time_min": 1,
+      "description": "Along Washington Street — same block",
+      "pavement_condition": "Satisfactory with one Poor segment (PCI 45.29 flagged)",
+      "safety_features": ["marked crosswalk", "street lighting", "active pedestrian zone"],
+      "hazards": [
+        "One Poor-condition pavement segment (PCI 45.29) on Washington St — potential trip hazard at night",
+        "Depressions and bumps/sags detected in pavement distress data"
+      ],
+      "imagery_pci_scores_nearby": [76.97, 79.47, 62.92, 45.29],
+      "distress_types": ["depressions", "bumps_sags", "weathering", "patching", "lt_cracking", "edge_cracking"]
+    }
+  ],
+  "route_summary": {
+    "total_stops": 7,
+    "total_walking_distance_m": 2715,
+    "total_walking_distance_miles": 1.69,
+    "total_walk_time_min_without_transit": 34,
+    "davis_square_cluster": {
+      "stops": ["The Burren", "Saloon", "Elm Street Taproom"],
+      "internal_distance_m": 75,
+      "description": "Walkable in under 2 minutes total — effectively one location"
+    },
+    "union_square_cluster": {
+      "stops": ["backbar", "The Independent", "Bronwyn"],
+      "internal_distance_m": 240,
+      "description": "Walkable in under 5 minutes total"
+    },
+    "inter_cluster_connector": {
+      "from": "Five Horses Tavern",
+      "to": "backbar",
+      "distance_m": 1850,
+      "recommendation": "Consider MBTA Green Line Extension to break up the route"
+    }
+  },
+  "cyvl_infrastructure_data": {
+    "project_id": "090e18f2-0002-4a70-90b4-8f073d26294d",
+    "project_city": "Somerville, MA",
+    "project_wide_pci_distribution": {
+      "Good": {"segment_count": 5218, "total_length_ft": 156108, "pct_of_scored": "24.8%"},
+      "Not_Scored": {"segment_count": 5169, "total_length_ft": 154896},
+      "Satisfactory": {"segment_count": 5057, "total_length_ft": 151438, "pct_of_scored": "24.1%"},
+      "Fair": {"segment_count": 2648, "total_length_ft": 79310, "pct_of_scored": "12.6%"},
+      "Poor": {"segment_count": 1642, "total_length_ft": 49338, "pct_of_scored": "7.8%"},
+      "Very_Poor": {"segment_count": 969, "total_length_ft": 29130, "pct_of_scored": "4.6%"},
+      "Serious": {"segment_count": 369, "total_length_ft": 11002, "pct_of_scored": "1.8%"},
+      "Failed": {"segment_count": 69, "total_length_ft": 1996, "pct_of_scored": "0.3%"}
+    },
+    "citywide_asset_inventory": {
+      "signs_total": 17321,
+      "trees": 8054,
+      "manhole_covers": 3812,
+      "street_luminaries": 3792,
+      "utility_poles": 3416,
+      "curbs_catalogued": 3376,
+      "sidewalk_assets": 3274,
+      "accessible_ramps": 3007,
+      "catch_basins": 2046,
+      "fire_hydrants": 1063,
+      "pedestrian_push_buttons": 852,
+      "traffic_signal_poles": 798,
+      "traffic_signals": 619,
+      "standalone_ped_heads": 342,
+      "bike_racks": 266,
+      "flashing_beacons": 130,
+      "cctv_cameras": 104,
+      "guardrails": 54,
+      "road_striping_markings": 12862,
+      "pavement_markings": 1819
+    },
+    "imagery_database": {
+      "scan_id": "scan_1185_SOMERVILLE_MA",
+      "davis_square_imagery_results": 34,
+      "union_square_imagery_results": 44,
+      "imagery_search_davis": "38070c12affb471b",
+      "imagery_search_union": "a3d348caa89b4fac",
+      "common_distress_types_detected": [
+        "patching",
+        "lt_cracking",
+        "weathering",
+        "raveling",
+        "edge_cracking",
+        "alligator_cracking",
+        "block_cracking",
+        "depressions",
+        "sealant",
+        "bumps_sags"
+      ]
+    }
+  },
+  "crash_data_nearby": {
+    "source": "Vision Zero Crash Records — City of Boston",
+    "dataset_id": "7b29c1b2-7ec2-4023-8292-c24f5d8f0905",
+    "resource_id": "e4bfe397-6bfc-49c5-9367-c879fac7401d",
+    "data_through": "December 31, 2025",
+    "note": "Dataset covers Boston proper — Somerville is an independent city; crash data shown is for the broader Metro Boston area to establish context. Somerville crash data available separately via data.somervillema.gov",
+    "mode_types_in_dataset": ["ped", "bike", "mv"],
+    "pedestrian_crash_sample": [
+      {
+        "dispatch_ts": "2022-11-08 10:13:28+00",
+        "mode_type": "ped",
+        "location_type": "Street",
+        "street": "DEWITT DR",
+        "xstreet1": "MADISON PARK CT",
+        "xstreet2": "SHAWMUT AVE",
+        "lat": 42.3316,
+        "long": -71.0856
+      }
+    ],
+    "somerville_specific_context": {
+      "vision_zero_status": "Somerville has its own Vision Zero program — zero fatality commitment",
+      "crash_data_portal": "https://data.somervillema.gov",
+      "known_high_pedestrian_activity": ["Davis Square", "Union Square", "Ball Square", "Magoun Square"],
+      "somerville_pedestrian_count_program": "Annual volunteer count since 2010 — comprehensive ped/bike activity data"
+    }
+  },
+  "world_cup_context": {
+    "tournament": "2026 FIFA World Cup — United States, Canada, Mexico co-hosts",
+    "boston_area_matches": 7,
+    "venue": "Gillette Stadium, Foxborough, MA (30 miles south of Somerville)",
+    "match_schedule_range": "June 13 – July 9, 2026",
+    "match_times": "Kickoffs typically 12pm, 3pm, 6pm ET for group stage; evening for knockouts",
+    "expected_fans": "Foxborough hosting 7 matches; Boston-area hotel capacity strained",
+    "somerville_as_base": "Somerville is 6.5 miles north of Boston's city center, serviced by Red Line and GLX — natural fan accommodation zone",
+    "watch_party_infrastructure": {
+      "city_of_cambridge": "7 free outdoor watch parties planned (adjacent city, receiving state grants)",
+      "mass_grant_program": "Massachusetts spending $10M on World Cup watch parties statewide",
+      "fifa_fan_festival": "Boston City Hall Plaza — free tournament-long activation with giant screens",
+      "bar_count_somerville_estimate": "Approximately 30+ licensed bars in Davis Square and Union Square combined"
+    },
+    "key_storylines_for_demo": [
+      "USA home crowd — massive domestic interest",
+      "European teams (Germany, Netherlands, Portugal, England) with large Somerville expat communities",
+      "Irish-American population in Davis Square — Republic of Ireland qualification pending",
+      "Brazilian and Latin American communities in East Somerville near Union Square"
+    ]
+  },
+  "permit_requirements": {
+    "jurisdiction": "Massachusetts Alcoholic Beverages Control Commission (ABCC) + local licensing boards",
+    "standard_hours": "Last call 2:00 AM Massachusetts state law",
+    "extended_hours_status": "Massachusetts has NOT enacted World Cup-specific extended hours legislation (as of April 2026). Compare: Missouri enacted automatic sunset extension through July 20; British Columbia allowing extended service hours for FIFA licensees June 11 – July 19.",
+    "somerville_licensing": "Somerville License Commission governs local liquor license conditions — special event applications available",
+    "foxborough_status": "Foxborough itself delayed granting World Cup operating license pending public safety funding commitment (per WBUR March 2026 report)",
+    "recommendations_for_bars": [
+      "Apply to Somerville License Commission for special event hours variance (World Cup match days)",
+      "Coordinate with ABCC for temporary license modifications",
+      "Outdoor seating permits may require separate application for expanded World Cup capacity",
+      "Security staffing requirements increase with capacity"
+    ],
+    "occupancy_considerations": "Bars expecting 200%+ normal capacity on USA match days — fire code compliance and crowd management planning essential",
+    "source_reference": "https://www.mass.gov/protecting-public-health-during-the-2026-fifa-world-cuptm"
+  },
+  "overall_walkability_score": {
+    "score": "B+ (82/100)",
+    "rating": "Very Walkable",
+    "basis": "Somerville official Walk Score 89/100; Cyvl infrastructure data showing predominantly Good-to-Satisfactory pavement conditions on main route; dense pedestrian infrastructure (852 push buttons, 619 traffic signals, 3,274 sidewalk assets citywide); Red Line and GLX transit connectivity",
+    "strengths": [
+      "Davis Square cluster is world-class walkable — 3 bars within 75 meters",
+      "Union Square cluster excellent — recently reconstructed streetscape (2022-23)",
+      "Red Line and GLX provide transit relief for the 1.85km inter-cluster segment",
+      "High density of pedestrian signals and push buttons (852 citywide)",
+      "3,007 accessible ramps documented — ADA accessibility",
+      "Mostly flat terrain — no significant grade changes on route",
+      "Active commercial corridors with natural evening lighting"
+    ],
+    "concerns": [
+      "One Poor pavement segment (PCI 43.91) detected near Davis Square cluster — potential nighttime trip hazard",
+      "Several Poor segments (PCI 44-53) scattered along Five Horses Tavern vicinity",
+      "One Poor segment (PCI 45.29) on Washington Street in Union Square cluster — depressions and bumps noted",
+      "Highland Avenue crossing between Davis Square and Five Horses Tavern is a 4-lane arterial",
+      "1.85km Davis-to-Union-Square walk is the weak link — transit use recommended",
+      "Night-time pedestrian safety: 104 CCTV cameras citywide but bar district coverage unknown"
+    ],
+    "recommendation": "Route is highly suitable for World Cup bar crawl. Recommend: (1) Start at Davis Square cluster (3 bars, minimal walking); (2) Five Horses Tavern as 4th stop adds 540m; (3) Use GLX or bus for Davis-to-Union-Square connector; (4) Finish Union Square cluster (3 bars, 240m total). Highlight Poor pavement segments to city as pre-World Cup repair priorities."
+  },
+  "cyvl_demo_highlights": {
+    "headline_stat": "Cyvl has catalogued 21,141 road segments and 51,000+ infrastructure assets in Somerville — giving the city unprecedented visibility into pedestrian safety before the World Cup arrives",
+    "poor_segments_needing_repair": {
+      "count": 1642,
+      "total_length_ft": 49338,
+      "call_to_action": "With 7 World Cup matches drawing 500,000+ fans through Gillette Stadium 30 miles away, Somerville has 46.7 miles of poor-or-worse pavement to address before June 13"
+    },
+    "accessible_infrastructure": {
+      "ramps": 3007,
+      "push_buttons": 852,
+      "note": "ADA compliance critical for international fan base"
+    },
+    "imagery_advantage": "34 imagery data points around Davis Square alone — city can remotely assess every sidewalk crack before fans arrive"
+  },
+  "sources": [
+    "https://www.yelp.com/search?find_desc=Davis+Square+Bars&find_loc=Somerville,+MA",
+    "https://www.backbarunion.com/",
+    "https://www.somervillema.gov/news/somerville-named-top-10-city-walking-and-transit",
+    "https://www.walkscore.com/score/somerville-ma",
+    "https://theworldcupguide.com/2026-world-cup-boston-guide/",
+    "https://www.wbur.org/news/2026/02/09/2026-world-cup-boston",
+    "https://www.nbcboston.com/news/local/cambridge-will-be-hosting-free-world-cup-watch-parties/3925815/",
+    "https://www.cbsnews.com/boston/news/world-cup-watch-parties-grants-massachusetts/",
+    "https://www.wbur.org/news/2026/03/04/foxborough-fifa-world-cup-license-massachusetts",
+    "https://www.mass.gov/protecting-public-health-during-the-2026-fifa-world-cuptm",
+    "https://www.mass.gov/info-details/fifa-world-cup-grant-program",
+    "https://data.boston.gov/dataset/7b29c1b2-7ec2-4023-8292-c24f5d8f0905",
+    "https://data.somervillema.gov/Transportation-Mobility/Bicycle-Pedestrian-Counts/qu9x-4xq5"
+  ]
+}

@@ -1,0 +1,647 @@
+{
+  "title": "Emergency Evacuation Readiness Assessment",
+  "subtitle": "FIFA World Cup 2026 Fan Festival — City Hall Plaza, Boston",
+  "generated": "2026-04-02",
+  "data_sources": {
+    "infrastructure": "Cyvl.ai project 090e18f2-0002-4a70-90b4-8f073d26294d (Somerville, MA)",
+    "crash_data": "Boston Vision Zero Open Data Portal (through Dec 31, 2025)",
+    "security_funding": "Mass.gov, GoLocalProv, Boston25 News",
+    "best_practices": "TRB HCM, FHWA Pedestrian Research, ADA Access Board"
+  },
+
+  "event_sites": [
+    {
+      "name": "City Hall Plaza (FIFA Fan Festival)",
+      "lat": 42.3603228,
+      "lon": -71.0590984,
+      "bbox": [-71.06517692407593, 42.35583124412504, -71.05301987592406, 42.364814355874955],
+      "expected_crowd": 50000,
+      "notes": "Official FIFA Fan Festival site for all 2026 World Cup matches. Free, tournament-long event with giant screens, food, entertainment. Open plaza design but surrounded by narrow historic streets.",
+      "risk_factors": [
+        "Surrounded by Government Center's asymmetric street grid with several dead-end corridors",
+        "Congress St / Cambridge St intersection creates merge bottleneck on north side",
+        "Limited direct subway access (Government Center Green/Blue Lines), high surface crowd density expected",
+        "Post-event simultaneous dispersal of 50,000+ is the primary evacuation scenario"
+      ]
+    },
+    {
+      "name": "Boston Common",
+      "lat": 42.35504,
+      "lon": -71.066071,
+      "bbox": [-71.07214901309152, 42.350548444125046, -71.05999298690847, 42.35953155587496],
+      "expected_crowd": 25000,
+      "notes": "Nearby open space; secondary overflow / rally point. Multiple egress paths via Boylston St, Tremont St, Beacon St.",
+      "risk_factors": [
+        "Tremont St / Boylston St intersection historically congested during events",
+        "Park St Station MBTA is one of the busiest stations — can become bottleneck"
+      ]
+    },
+    {
+      "name": "South Station (World Cup Transit Hub)",
+      "lat": 42.3507662,
+      "lon": -71.0554618,
+      "bbox": [-71.06153939980437, 42.346274644125046, -71.04938420019563, 42.35525775587496],
+      "expected_crowd": 30000,
+      "notes": "Primary train hub for World Cup visitors. Commuter Rail, Red Line, Silver Line converge here. Will absorb post-event surge from City Hall Plaza (~0.7 miles walk).",
+      "risk_factors": [
+        "Summer Street / Atlantic Ave corridor is single-lane in areas",
+        "Post-event pedestrian surge on Congress St / Atlantic Ave route",
+        "Limited sidewalk capacity on approach corridors"
+      ]
+    },
+    {
+      "name": "Davis Square, Somerville",
+      "lat": 42.3963615,
+      "lon": -71.1222329,
+      "notes": "Somerville example site with full Cyvl infrastructure data. Red Line terminus. Dense mixed-use area with known pavement distress on approach routes."
+    },
+    {
+      "name": "Assembly Square, Somerville",
+      "lat": 42.3925508,
+      "lon": -71.0772436,
+      "notes": "Assembly Row commercial district. Orange Line station. New development with generally better infrastructure than older Somerville corridors."
+    }
+  ],
+
+  "project_wide_pavement_condition": {
+    "project_id": "090e18f2-0002-4a70-90b4-8f073d26294d",
+    "city": "Somerville, MA",
+    "total_scored_segments": 21141,
+    "distribution": [
+      {"label": "Good (PCI 86-100)", "segments": 5218, "length_ft": 156108, "pct": 24.7},
+      {"label": "Not Scored", "segments": 5169, "length_ft": 154896, "pct": 24.4},
+      {"label": "Satisfactory (PCI 71-85)", "segments": 5057, "length_ft": 151438, "pct": 23.9},
+      {"label": "Fair (PCI 56-70)", "segments": 2648, "length_ft": 79310, "pct": 12.5},
+      {"label": "Poor (PCI 41-55)", "segments": 1642, "length_ft": 49338, "pct": 7.8},
+      {"label": "Very Poor (PCI 26-40)", "segments": 969, "length_ft": 29130, "pct": 4.6},
+      {"label": "Serious (PCI 11-25)", "segments": 369, "length_ft": 11002, "pct": 1.7},
+      {"label": "Failed (PCI 0-10)", "segments": 69, "length_ft": 1996, "pct": 0.3}
+    ],
+    "summary": "38% of Somerville's road network is below Satisfactory (Fair, Poor, Very Poor, Serious, or Failed). This is the baseline context for evacuation corridors."
+  },
+
+  "evacuation_corridors": [
+    {
+      "name": "Highland Avenue",
+      "description": "Major east-west arterial running through Winter Hill. Key corridor connecting inner Somerville to Davis Square Red Line station.",
+      "assessed_location": "Highland Ave corridor, Somerville, MA",
+      "center_coords": {"lat": 42.387187, "lon": -71.0997465},
+      "radius_m": 500,
+      "pavement_condition": {
+        "segments_assessed": 50,
+        "condition_distribution": {
+          "Good": 9,
+          "Satisfactory": 23,
+          "Fair": 11,
+          "Poor": 3,
+          "Very_Poor": 0,
+          "Serious": 0,
+          "Not_Scored": 4
+        },
+        "avg_pci_estimate": 76.5,
+        "worst_segments": [
+          {"id": "2560a8bae6d43d4593e15a9d9d1fffba", "pci": 46.39, "label": "Poor"},
+          {"id": "2af64b8ccb7257c46636654741a577d0", "pci": 52.10, "label": "Poor"},
+          {"id": "2bece25f0c826b850c3f5a1a4d1967f3", "pci": 46.73, "label": "Poor"},
+          {"id": "04479c1bc42525ac63b0b742e0de5ce4", "pci": 56.60, "label": "Fair"},
+          {"id": "30485fa37bb311d0d6639674b3338192", "pci": 57.16, "label": "Fair"}
+        ],
+        "best_segments": [
+          {"id": "198ed910ee0d672a2c804e58fd67d324", "pci": 100.0, "label": "Good"},
+          {"id": "0f615215d0b472c5e9fa1aee927c4838", "pci": 93.12, "label": "Good"},
+          {"id": "2892fa5ef4d9f8add9fd04fa75850edf", "pci": 94.94, "label": "Good"}
+        ],
+        "hazard_count": 3,
+        "notes": "Mixed condition with pockets of Poor pavement presenting trip hazards for fast-moving crowds"
+      },
+      "distresses": {
+        "high_severity_count_in_area": 50,
+        "types_found": [
+          "alligator_cracking",
+          "block_cracking",
+          "weathering",
+          "lt_cracking"
+        ],
+        "notable_distresses": [
+          {"type": "weathering", "area_sq_ft": 591.36, "length_ft": 35.8, "segment": "932eb8acf6beee6c4b1926369c79692e", "note": "Large-area surface degradation, trip hazard in dark/rain"},
+          {"type": "weathering", "area_sq_ft": 449.55, "length_ft": 28.89, "segment": "04a04f4033ea63861ce2e4c866547485", "note": "Extensive weathering, surface erosion"},
+          {"type": "alligator_cracking", "area_sq_ft": 179.02, "length_ft": 23.96, "segment": "66e44c1f599b49d79f212c2042c3ae37", "note": "Structural failure pattern — ankle injury risk under crowd stampede"},
+          {"type": "block_cracking", "area_sq_ft": 144.21, "length_ft": 20.01, "segment": "d3c07e195535bffb9a6c4fdf5b71a765", "note": "Large block cracking — uneven surface"}
+        ]
+      },
+      "signs": {
+        "total_signs_500m": 76,
+        "pedestrian_warning_signs": 3,
+        "mutcd_w11_2_pedestrian_crossing": 3,
+        "regulatory_signs": 45,
+        "guide_signs": 4,
+        "notes": "W11-2 pedestrian crossing warning signs present at multiple intersections. No dedicated evacuation or emergency vehicle route signs identified."
+      },
+      "above_ground_assets": {
+        "sample_size": 100,
+        "asset_breakdown": {
+          "TREE": 28,
+          "LUMINARIES": 18,
+          "UTILITY_POLE": 14,
+          "SIDEWALK": 12,
+          "CURB": 10,
+          "RAMP": 6,
+          "MANHOLE_COVER": 7,
+          "CATCH_BASIN": 5,
+          "PEDESTRIAN_PUSH_BUTTON": 5,
+          "HYDRANT": 4,
+          "TRAFFIC_SIGNAL": 3,
+          "TRAFFIC_SIGNAL_POLE": 1
+        },
+        "ada_ramps_found": 6,
+        "ramp_conditions": {
+          "Good": 4,
+          "Poor": 1,
+          "condition_notes": "One ramp (id: 1196) rated Poor, no truncated domes — ADA gap"
+        },
+        "sidewalk_conditions": {
+          "Good": 7,
+          "Poor": 2,
+          "No_Sidewalk": 1,
+          "notable_gaps": ["Feature 820 — 64ft gap with no sidewalk", "Feature 479 — 669ft Poor sidewalk section", "Feature 2823 — 570ft Poor sidewalk section"]
+        },
+        "street_lighting": 18,
+        "utility_pole_obstructions": 14,
+        "poor_curb_sections": 1,
+        "notes": "18 luminaries within 500m radius provides reasonable nighttime coverage. 14 utility poles can narrow effective walkway width. 2 major Poor sidewalk sections (>500ft each) are critical crowd flow hazards."
+      },
+      "width_constraints": {
+        "narrow_points": [
+          "Utility poles on sidewalk edges — effective width reduction estimated 18-24 inches at pole locations",
+          "64ft section with NO sidewalk (feature 820) forces pedestrians into roadway",
+          "Poor sidewalk section 669ft (feature 479) with cracking surface"
+        ],
+        "obstructions": [
+          "14 utility poles within 500m radius potentially encroaching on sidewalk space",
+          "Multiple manhole covers creating tripping hazards at grade changes"
+        ]
+      },
+      "safety_features": {
+        "crosswalks": "Multiple (inferred from W11-2 warning signs at intersections)",
+        "pedestrian_signals": 5,
+        "lighting": 18,
+        "stop_signs": 2
+      },
+      "ada_compliance": {
+        "curb_cuts_ramps": 6,
+        "ramps_with_truncated_domes": 4,
+        "ramps_without_domes": 2,
+        "poor_condition_ramps": 1,
+        "gaps": [
+          "One Poor-condition ramp (feature 1196) — no truncated domes, no wings — non-compliant",
+          "64ft section with no sidewalk — inaccessible for wheelchair users",
+          "Multiple curb sections rated Poor — raised edges are wheelchair/mobility device hazards"
+        ]
+      },
+      "pedestrian_capacity_per_minute": {
+        "estimate": "Based on HCM: 5ft sidewalk width × 20 persons/min/ft = ~100 persons/min per side. Dual-sidewalk capacity ~200 persons/min. Under emergency flow: 15 persons/min/ft = ~150 persons/min total.",
+        "bottleneck_capacity": "~150 persons/min at narrowest constraint",
+        "notes": "At 50,000 evacuees, full evacuation through this corridor alone would take >5 hours — corridor must operate in parallel with others"
+      },
+      "bottlenecks": [
+        "64ft no-sidewalk gap forces pedestrians into roadway — severe choke point",
+        "Utility pole intrusions at curb edges reduce effective width at multiple points",
+        "Poor pavement segments create uneven surface — fall risk under crowd pressure",
+        "Intersection merges from side streets create cross-flow conflicts"
+      ],
+      "risk_rating": "medium",
+      "risk_rationale": "Majority of pavement is Satisfactory or Good, adequate lighting, signs present. Key concerns: 3 Poor segments, 669ft Poor sidewalk, no-sidewalk gap, and ADA-non-compliant ramp."
+    },
+    {
+      "name": "Somerville Avenue",
+      "description": "Major east-west commercial corridor paralleling Highland Ave. Connects Porter Square to Union Square. High pedestrian and commercial activity baseline.",
+      "assessed_location": "Somerville Avenue, Somerville, MA",
+      "center_coords": {"lat": 42.3831366, "lon": -71.10604},
+      "radius_m": 500,
+      "pavement_condition": {
+        "segments_assessed": 50,
+        "condition_distribution": {
+          "Good": 14,
+          "Satisfactory": 22,
+          "Fair": 11,
+          "Poor": 3,
+          "Not_Scored": 2
+        },
+        "avg_pci_estimate": 77.2,
+        "worst_segments": [
+          {"id": "04370d3c0efea79592f9f037300aa177", "pci": 40.70, "label": "Poor"},
+          {"id": "1b443ddf4922d6d03b1f264c39c21bd2", "pci": 54.32, "label": "Poor"},
+          {"id": "0a4ee8703348a3215b217d973b500259", "pci": 61.61, "label": "Fair"}
+        ],
+        "best_segments": [
+          {"id": "03a1dbcdaf6b470a445bd4755ad144ce", "pci": 95.98, "label": "Good"},
+          {"id": "0016cd874c704fde79ab73a96ca6042a", "pci": 94.05, "label": "Good"},
+          {"id": "0f615215d0b472c5e9fa1aee927c4838", "pci": 93.12, "label": "Good"}
+        ],
+        "hazard_count": 3,
+        "notes": "One segment at PCI 40.7 (Poor/near Very Poor) is a priority repair. Otherwise similar to Highland Ave."
+      },
+      "distresses": {
+        "high_severity_count_in_area": 50,
+        "types_found": [
+          "alligator_cracking",
+          "block_cracking",
+          "weathering",
+          "lt_cracking",
+          "rutting",
+          "bumps_sags"
+        ],
+        "notable_distresses": [
+          {"type": "weathering", "area_sq_ft": 609.76, "length_ft": 30.0, "segment": "a4b041861cdb1abfd9d428b82afd7ad2", "note": "Largest distress found — 610 sq ft surface deterioration"},
+          {"type": "weathering", "area_sq_ft": 303.10, "length_ft": 27.66, "segment": "a4b041861cdb1abfd9d428b82afd7ad2", "note": "Same segment, second large weathering instance"},
+          {"type": "rutting", "area_sq_ft": 18.06, "length_ft": 6.58, "segment": "0a4ee8703348a3215b217d973b500259", "note": "Rutting — creates wheel/wheelchair rut trap, fall hazard in crowd"},
+          {"type": "bumps_sags", "area_sq_ft": 18.06, "length_ft": 5.09, "segment": "07d848a709d2f908cc368b880afb75ed", "note": "Bumps and sags — severe tripping hazard at speed"}
+        ]
+      },
+      "signs": {
+        "total_signs_500m": 76,
+        "pedestrian_warning_signs": 3,
+        "regulatory_signs": 45,
+        "guide_signs": 4,
+        "notes": "Identical sign coverage to Highland Ave area. W11-2 pedestrian crossing warnings at key intersections. R6-1L bicycle crossing signage also present."
+      },
+      "above_ground_assets": {
+        "sample_size": 100,
+        "ramp_conditions": {
+          "Poor": 1,
+          "Good": 4,
+          "note": "Feature 1163 — Poor condition ramp, no truncated domes, no wings — ADA deficiency"
+        },
+        "sidewalk_conditions": {
+          "Poor": 3,
+          "Good": 6,
+          "No_Sidewalk": 1,
+          "notable_gaps": ["Feature 479 — 669ft Poor sidewalk (shared with Highland area)", "Feature 3023 — 128ft No Sidewalk gap"]
+        },
+        "street_lighting": 18,
+        "utility_pole_obstructions": 15,
+        "notes": "Notable: feature 2507 is a Double luminary (higher light output). Feature 3023 — 128ft no-sidewalk gap is evacuation concern."
+      },
+      "width_constraints": {
+        "narrow_points": [
+          "128ft no-sidewalk section (feature 3023) — pedestrians in roadway",
+          "669ft Poor sidewalk with cracking surface",
+          "15 utility poles within radius — edge intrusions"
+        ],
+        "obstructions": ["Utility poles", "Poor curb sections (feature 619: 54ft Poor curb, feature 3133: 297ft Poor curb)"]
+      },
+      "safety_features": {
+        "crosswalks": "Multiple",
+        "pedestrian_signals": 4,
+        "lighting": 18,
+        "bike_racks": 3
+      },
+      "ada_compliance": {
+        "curb_cuts_ramps": 7,
+        "ramps_with_truncated_domes": 5,
+        "ramps_without_domes": 2,
+        "poor_condition_ramps": 1,
+        "gaps": [
+          "Feature 1163 — Poor condition, no truncated domes, no wings",
+          "128ft no-sidewalk gap (feature 3023)",
+          "297ft Poor curb section (feature 3133) — wheelchair navigation hazard",
+          "54ft Poor curb (feature 619)"
+        ]
+      },
+      "pedestrian_capacity_per_minute": {
+        "estimate": "Similar to Highland Ave. Dual sidewalks ~200 persons/min normal; ~150 persons/min emergency crush flow. Commercial width wider than Highland in sections — slightly higher capacity.",
+        "bottleneck_capacity": "~150-175 persons/min",
+        "notes": "Commercial corridor with wider pedestrian zones between storefronts — advantage for crowd absorption"
+      },
+      "bottlenecks": [
+        "128ft no-sidewalk gap forces pedestrians into active roadway",
+        "Rutting distress (feature 0a4ee87) — ankle roll risk under running evacuation",
+        "Bumps and sags distress — fall risk for running pedestrians",
+        "610 sq ft weathering patch — extensive surface degradation"
+      ],
+      "risk_rating": "medium",
+      "risk_rationale": "Good/Satisfactory pavement majority, adequate lighting. Critical issues: rutting (fall risk), bumps/sags, ADA-non-compliant ramp, and no-sidewalk gap."
+    },
+    {
+      "name": "McGrath Highway (Route 28)",
+      "description": "Major north-south highway through Inner Belt Somerville. Connects to I-93. High-speed arterial with significant pedestrian infrastructure concerns.",
+      "assessed_location": "McGrath Highway, Somerville, MA",
+      "center_coords": {"lat": 42.3740596, "lon": -71.0828189},
+      "radius_m": 500,
+      "pavement_condition": {
+        "segments_assessed": 40,
+        "condition_distribution": {
+          "Good": 6,
+          "Satisfactory": 9,
+          "Fair": 1,
+          "Poor": 3,
+          "Very_Poor": 2,
+          "Serious": 1,
+          "Not_Scored": 18
+        },
+        "avg_pci_estimate": 68.1,
+        "worst_segments": [
+          {"id": "7e2445e1eab32cb45bd848cde401eccc", "pci": 23.55, "label": "Serious", "note": "CRITICAL — Serious pavement failure, open road hazard"},
+          {"id": "efd1393af984c88cfa79b6a505f31ebe", "pci": 26.31, "label": "Very Poor"},
+          {"id": "25b7c281c6f2ded1126c9685250a5da2", "pci": 32.69, "label": "Very Poor"},
+          {"id": "c5b0845a1f3e3b387539a8d425b5fa1e", "pci": 41.31, "label": "Poor"},
+          {"id": "c6baee2425f49276812d4b6521d02ec2", "pci": 46.51, "label": "Poor"}
+        ],
+        "best_segments": [
+          {"id": "55f1ee19c8b8b506232814d369cd4146", "pci": 96.16, "label": "Good"},
+          {"id": "4e939f8aaac3974f552e50095439e4a5", "pci": 93.73, "label": "Good"}
+        ],
+        "hazard_count": 6,
+        "notes": "HIGHEST RISK CORRIDOR. One Serious-rated segment (PCI 23.55) and two Very Poor segments indicate active pavement failure. 45% of segments not scored — data gaps compound risk."
+      },
+      "distresses": {
+        "high_severity_count_in_area": "Query timed out — high distress density in area",
+        "types_found": [
+          "alligator_cracking",
+          "block_cracking",
+          "weathering",
+          "lt_cracking",
+          "rutting",
+          "bumps_sags",
+          "depressions",
+          "edge_cracking"
+        ],
+        "notable_distresses": [
+          {"type": "Serious pavement at PCI 23.55", "segment": "7e2445e1eab32cb45bd848cde401eccc", "note": "Active structural failure — pothole/cavity risk under crowd load"},
+          {"imagery_match": "Construction barrier search returned high-confidence result at lat 42.3773, lon -71.0873, PCI 23.55", "note": "Location of construction/work zone activity near Serious-rated pavement"}
+        ]
+      },
+      "signs": {
+        "total_signs_500m": 76,
+        "notes": "McGrath is primarily a vehicle arterial — pedestrian signage less dense than neighborhood corridors. Crossing infrastructure limited."
+      },
+      "above_ground_assets": {
+        "notes": "McGrath is a high-speed state route. Sidewalk infrastructure is secondary. Not recommended as primary pedestrian evacuation corridor."
+      },
+      "width_constraints": {
+        "narrow_points": [
+          "High-speed multi-lane highway — pedestrian use fundamentally unsafe at speed",
+          "Limited sidewalk separation from traffic lanes",
+          "On-ramp/off-ramp merge zones create crossing conflicts"
+        ],
+        "obstructions": ["Highway-scale traffic at speed", "Active construction zones (imagery evidence near Serious pavement)"]
+      },
+      "safety_features": {
+        "crosswalks": "Minimal — highway-standard crossing with long signal cycles",
+        "pedestrian_signals": "Limited",
+        "lighting": "Highway poles (higher spacing than neighborhood streets)"
+      },
+      "ada_compliance": {
+        "curb_cuts_ramps": "Insufficient for highway-scale pedestrian evacuation",
+        "gaps": [
+          "High-speed merge zones create ADA-inaccessible crossing conditions",
+          "On-ramps interrupt sidewalk continuity"
+        ]
+      },
+      "pedestrian_capacity_per_minute": {
+        "estimate": "NOT SUITABLE for pedestrian evacuation under current conditions",
+        "notes": "Serious pavement failure + highway-speed traffic + construction activity = HIGH RISK corridor for pedestrians"
+      },
+      "bottlenecks": [
+        "CRITICAL: Segment PCI 23.55 (Serious) — active structural pavement failure, imminent pothole risk",
+        "Two Very Poor segments (PCI 26-33) adjacent to Serious segment",
+        "High-speed traffic makes pedestrian use dangerous without closure",
+        "Construction zone activity near worst pavement (imagery confidence 76%)",
+        "45% of segments unscored — unknown hazards"
+      ],
+      "risk_rating": "high",
+      "risk_rationale": "Serious-rated pavement (PCI 23.55) + Very Poor segments + high-speed traffic + construction activity. DO NOT USE as pedestrian evacuation route without full road closure, barriers, and patching of critical segments."
+    },
+    {
+      "name": "Broadway (Somerville)",
+      "description": "Primary commercial corridor through East Somerville. Connects Assembly Square to Davis Square area. Mix of scored and unscored segments.",
+      "assessed_location": "Broadway, Somerville, MA",
+      "center_coords": {"lat": 42.3863353, "lon": -71.0793011},
+      "radius_m": 500,
+      "pavement_condition": {
+        "segments_assessed": 50,
+        "condition_distribution": {
+          "Good": 3,
+          "Satisfactory": 6,
+          "Fair": 2,
+          "Poor": 0,
+          "Not_Scored": 39
+        },
+        "avg_pci_estimate": "Insufficient scored data — 78% unscored",
+        "worst_segments": [
+          {"id": "38bab6fc7597ded2747f68c2d68e02d9", "pci": 57.44, "label": "Fair"},
+          {"id": "02bbf8a7d82b7ef98cf3853fe648a43e", "pci": null, "label": "Not Scored"}
+        ],
+        "best_segments": [
+          {"id": "4831b0eae91c1ec0047bb556826d04af", "pci": 94.79, "label": "Good"},
+          {"id": "370dadabfd5a362dacbad0897de1309c", "pci": 91.13, "label": "Good"}
+        ],
+        "hazard_count": 0,
+        "notes": "WARNING: 78% of segments unscored. Cannot reliably assess this corridor for evacuation readiness without additional data collection. Scored segments range from 57-95 PCI."
+      },
+      "distresses": {
+        "high_severity_count_in_area": 50,
+        "types_found": [
+          "alligator_cracking",
+          "block_cracking",
+          "weathering"
+        ]
+      },
+      "pedestrian_capacity_per_minute": {
+        "estimate": "Unknown — insufficient pavement condition data",
+        "notes": "Data gap makes this corridor unreliable for evacuation planning without additional scanning"
+      },
+      "bottlenecks": [
+        "78% of road segments have no PCI score — significant intelligence gap",
+        "Assembly Square area intersections complex with Orange Line access",
+        "Heavy freight truck traffic on Broadway can conflict with pedestrian evacuation"
+      ],
+      "risk_rating": "medium",
+      "risk_rationale": "Insufficient data to assess. The 22% scored segments appear Satisfactory-Good, but large data gap creates planning uncertainty. Recommend priority re-scan before event."
+    }
+  ],
+
+  "imagery_analysis": {
+    "narrow_sidewalk_obstructions": {
+      "search_results": 4,
+      "top_match": {"lat": 42.4035924, "lon": -71.1247846, "confidence": 61, "pci": 63.36, "distresses": ["edge_cracking", "weathering", "block_cracking", "patching", "lt_cracking", "alligator_cracking"]},
+      "notes": "Low result count suggests sidewalk obstruction not prevalent as photographic feature in this dataset; pavement-level distresses are the dominant concern."
+    },
+    "crosswalk_intersection_signals": {
+      "search_results": 258,
+      "top_match": {"lat": 42.3963747, "lon": -71.1012124, "confidence": 78, "pci": 71.06, "note": "Intersection with stop sign, truck, car detected. Multiple distress types at this intersection including rutting and bumps/sags."},
+      "critical_match": {"lat": 42.386848, "lon": -71.098866, "pci": 34.36, "confidence": 75, "note": "CRITICAL: Intersection imagery at PCI 34.36 (Very Poor) with pedestrians, luggage, backpacks visible — active pedestrian zone with failed pavement"},
+      "notes": "High result count (258) confirms dense pedestrian crossing infrastructure. Critical finding: PCI 34.36 intersection with active pedestrian use — direct evacuation hazard."
+    },
+    "construction_barriers": {
+      "search_results": 68,
+      "top_match": {"lat": 42.3773886, "lon": -71.0873252, "confidence": 76, "pci": 23.55, "note": "Construction zone activity at the same location as Serious-rated pavement (PCI 23.55) near McGrath Highway"},
+      "notes": "Construction zone co-located with Serious pavement failure near McGrath Highway — confirms McGrath corridor risk."
+    },
+    "wheelchair_ramp_accessibility": {
+      "search_results": 82,
+      "notes": "82 imagery matches for wheelchair ramp/curb cut features confirms active ADA infrastructure documentation. Multiple PCI scores in 65-87 range at ramp locations suggests generally intact ramp surfaces, but individual ramp condition inspection needed."
+    }
+  },
+
+  "crash_data": {
+    "source": "Boston Vision Zero Open Data Portal — through Dec 2025",
+    "fatality_records": {
+      "dataset": "Vision Zero Fatality Records (resource: 92f18923-d4ec-4c17-9405-4e0da63e1d6c)",
+      "total_fetched": 50,
+      "mode_types_in_sample": ["ped", "bike", "mv"],
+      "notable_pedestrian_fatalities": [
+        {"date": "2025-01-18", "mode": "ped", "street": "WASHINGTON ST", "cross": "NORTHAMPTON ST / LENOX ST", "lat": 42.3357, "lon": -71.0781},
+        {"date": "2017-05-29", "mode": "ped", "street": "TREMONT ST", "cross": "UNION PARK", "lat": 42.3435, "lon": -71.0725}
+      ],
+      "notes": "Pedestrian fatalities documented in the evacuation zone (Boston downtown) confirm that pedestrian-vehicle conflicts on these corridors have been fatal in recent years."
+    },
+    "crash_records": {
+      "dataset": "Vision Zero Crash Records (resource: e4bfe397-6bfc-49c5-9367-c879fac7401d)",
+      "total_fetched": 100,
+      "mode_distribution": {
+        "mv": "Motor vehicle crashes — majority",
+        "ped": "Pedestrian crashes — documented",
+        "bike": "Bicycle crashes — documented"
+      },
+      "corridor_relevance": "Boston crash records are city-jurisdiction; Somerville corridors assessed by Cyvl are in Somerville. However, evacuation routes from City Hall Plaza through downtown Boston (Congress St, Atlantic Ave, Summer St) are in Boston jurisdiction.",
+      "high_risk_areas_near_event_site": [
+        {"street": "WASHINGTON ST", "note": "Pedestrian fatality 2025 — major evacuation corridor"},
+        {"street": "TREMONT ST", "note": "Pedestrian fatality — Tremont is major egress from Boston Common"},
+        {"street": "HUNTINGTON AVE", "note": "Multiple MV crashes — evacuation route from Fenway area"}
+      ]
+    }
+  },
+
+  "overall_assessment": {
+    "ready_corridors": [
+      {
+        "name": "Highland Avenue (Somerville)",
+        "reason": "Predominantly Satisfactory/Good pavement (72%), adequate lighting (18 luminaries), pedestrian signals present, reasonable sign density. Ready with minor repairs.",
+        "action_needed": "Patch 3 Poor segments, repair ADA ramp (feature 1196), fill 64ft no-sidewalk gap with temporary surface."
+      },
+      {
+        "name": "Somerville Avenue (commercial)",
+        "reason": "High pedestrian baseline (commercial corridor), good pavement majority, adequate infrastructure.",
+        "action_needed": "Patch PCI 40.7 segment, repair rutting on feature 0a4ee87, add temporary surface at 128ft no-sidewalk gap, fix ADA ramp 1163."
+      }
+    ],
+    "needs_improvement": [
+      {
+        "name": "Broadway (Somerville)",
+        "reason": "78% of road segments lack PCI scores — cannot assess readiness.",
+        "action_needed": "Priority re-scan entire corridor before June 2026 event. Assess 39 unscored segments. No-go for evacuation planning without data."
+      }
+    ],
+    "critical_fixes": [
+      {
+        "corridor": "McGrath Highway",
+        "issue": "Serious-rated pavement at PCI 23.55 (structural failure) + 2 Very Poor segments + construction zone activity",
+        "action": "EMERGENCY PRIORITY: Patch segment 7e2445e1 before any event. This segment at PCI 23.55 presents imminent pothole/cavity risk under crowd foot traffic. Route must be fully closed to vehicles and pedestrian barriers installed if used as evacuation corridor.",
+        "risk_if_unaddressed": "Under 50,000-person crowd pressure, failed pavement can collapse, creating fall cascades — one of the most dangerous outcomes in crowd evacuation."
+      },
+      {
+        "corridor": "Downtown Boston approach routes (Congress St / Atlantic Ave)",
+        "issue": "Pedestrian fatality at Washington St (2025) — near evacuation route to South Station. PCI data not available for Boston proper.",
+        "action": "Request Cyvl scan of Congress St, Atlantic Ave, and Summer St before June 2026. Deploy Vision Zero crash data to identify highest-risk intersections on all evacuation routes."
+      },
+      {
+        "corridor": "All corridors",
+        "issue": "Multiple ADA-non-compliant ramps found (features 1196, 1163) — no truncated domes or poor condition",
+        "action": "Audit all ramps on evacuation routes by March 2026. ADA requires at least one accessible egress path. Non-compliant ramps create liability and block mobility-device users.",
+        "regulatory_context": "Per ADA Access Board Chapter 4: at least one accessible means of egress required for every accessible space. Outdoor events must maintain 36-inch minimum path width."
+      },
+      {
+        "corridor": "All corridors",
+        "issue": "No-sidewalk gaps (64ft on Highland, 128ft on Somerville Ave) force pedestrians into roadway",
+        "action": "Install temporary pedestrian surfacing (rubber matting or interlocking tiles) over gaps before event. Close roadway lanes adjacent to gaps during evacuation."
+      }
+    ]
+  },
+
+  "recommendations": [
+    {
+      "priority": 1,
+      "category": "Critical Infrastructure Repair",
+      "recommendation": "Immediately patch McGrath Highway segment PCI 23.55 (Serious-rated, structural failure near construction zone). This is the single highest-risk pavement finding in the dataset. A 50,000-person crowd using this corridor would stress a pavement already at failure threshold.",
+      "cost_context": "Crack sealing / partial depth reclamation estimated $15-40K per block segment. Small fraction of $76M security funding allocation.",
+      "timeline": "Before May 2026"
+    },
+    {
+      "priority": 2,
+      "category": "Data Gap Resolution",
+      "recommendation": "Commission Cyvl scan of Broadway corridor (78% unscored) and all Boston proper evacuation routes (Congress St, Atlantic Ave, Summer St, Cambridge St). Without PCI data, these are unknown risks.",
+      "timeline": "January-March 2026"
+    },
+    {
+      "priority": 3,
+      "category": "ADA Compliance",
+      "recommendation": "Audit and repair all ADA ramps on identified evacuation routes. Minimum: replace Poor-condition ramps (features 1196, 1163), install truncated domes on non-compliant ramps, resurface no-sidewalk gaps.",
+      "regulatory_basis": "ADA Title II requires accessible egress; outdoor events must maintain 36-inch accessible path per ADA Chapter 4.",
+      "timeline": "March-May 2026"
+    },
+    {
+      "priority": 4,
+      "category": "Evacuation Corridor Designation",
+      "recommendation": "Officially designate and sign 3 primary pedestrian evacuation corridors from City Hall Plaza. Based on this assessment: (1) Cambridge St → Highland Ave → Davis Square [T], (2) Congress St → South Station [T], (3) Tremont St → Boston Common dispersal. Each corridor needs emergency signage, pre-positioned crowd managers, and barriers to prevent vehicle conflict.",
+      "capacity_note": "At 150 persons/min per corridor, 3 corridors = 450 persons/min = 27,000 persons/hour. Full 50,000-person dispersal requires ~2 hours minimum — early dispersal signaling critical."
+    },
+    {
+      "priority": 5,
+      "category": "Nighttime Safety",
+      "recommendation": "Verify street lighting continuity on all designated evacuation corridors. Current data shows 18 luminaries/500m on Highland and Somerville Ave corridors — adequate. Supplement with temporary event lighting at identified no-sidewalk gaps and Poor pavement sections.",
+      "notes": "World Cup matches run into evening/night hours. Nighttime pavement hazards (cracking, rutting, uneven surfaces) are harder to see and more dangerous."
+    },
+    {
+      "priority": 6,
+      "category": "Crowd Flow Management",
+      "recommendation": "Apply bottleneck analysis principles: widen funnel approaches to key corridors, position crowd managers at utility pole pinch points (especially on Highland Ave where 14 poles intrude on walkway width). Implement staged dispersal with sector-by-sector crowd release to prevent simultaneous surge.",
+      "science_basis": "Per HCM pedestrian capacity research: emergency flow rate drops from 20 persons/min/ft to ~15 persons/min/ft under crush conditions. Managing density at bottlenecks is critical to preventing crowd crush."
+    },
+    {
+      "priority": 7,
+      "category": "Pre-Event Distress Remediation",
+      "recommendation": "Address top 10 high-severity distresses on primary evacuation corridors: Large weathering patches (590+ sq ft on Highland Ave), alligator cracking clusters (179 sq ft), block cracking (144+ sq ft). These are fall hazards for fast-moving crowds.",
+      "estimated_scope": "Approximately 15-20 pavement segments requiring immediate attention on Highland and Somerville Ave corridors alone."
+    }
+  ],
+
+  "security_funding_context": "Massachusetts received $76 million in total federal funding for World Cup 2026 security and safety: $46.6M through the FIFA World Cup Security Grant Program (managed by Mass Emergency Management Agency), $21.2M through the Counter-Unmanned Aircraft Systems Grant Program, and $8.6M from the Federal Transit Administration for transportation safety. Additionally, the state committed $10M in supplemental state funds. More than 70 agencies are involved in safety planning across 14 specialized working groups covering crowd management, cybersecurity, public health, and transportation. Training exercises included an MBTA Commuter Rail evacuation drill and Executive Decision Group tabletop exercises. The Boston Host Committee has officially confirmed the FIFA Fan Festival at City Hall Plaza — a free, tournament-long outdoor event expected to host tens of thousands per match day. Sources: [Mass.gov](https://www.mass.gov/news/massachusetts-awarded-more-than-46-million-for-world-cup-security), [GoLocalProv](https://www.golocalprov.com/news/ri-zero-ma-received-76m-in-federal-funds-for-security-for-world-cup), [Boston25](https://www.boston25news.com/news/local/boston-gets-466-million-federal-funding-support-safety-security-during-fifa-world/GMZXMOXUP5BHJMA47ROHZ3DBPA/).",
+
+  "pedestrian_flow_science": {
+    "source": "Highway Capacity Manual (HCM), FHWA Pedestrian Research, TRB",
+    "key_metrics": {
+      "normal_flow_rate": "20 persons/min/ft of sidewalk width (free-flow)",
+      "emergency_flow_rate": "15 persons/min/ft (compressed/emergency conditions)",
+      "jam_density": "3.5-5.3 persons/sq meter (movement becomes impossible)",
+      "minimum_sidewalk_width_ADA": "36 inches (0.9m)",
+      "minimum_sidewalk_width_comfortable": "5 feet (1.5m) for bidirectional flow",
+      "capacity_5ft_sidewalk": "100 persons/min (normal), 75 persons/min (emergency)",
+      "bottleneck_effect": "A single bottleneck at 3ft width reduces entire corridor to 45 persons/min — backs up thousands in minutes"
+    },
+    "crowd_science_principles": [
+      "Funnel-shaped approaches to bottlenecks improve flow efficiency (optimal angle 46-65 degrees)",
+      "Corner exits outperform middle exits for evacuation speed",
+      "Arch formation at exits creates dangerous pressure build-up — requires active management",
+      "Early crowd dispersal signals (before end of event) significantly reduce peak load on corridors"
+    ]
+  },
+
+  "ada_evacuation_requirements": {
+    "source": "ADA Access Board Chapter 4: Accessible Means of Egress; ADA.gov Emergency Management Tool Kit",
+    "key_requirements": [
+      "At least one accessible means of egress required for every accessible space",
+      "At least two accessible means of egress where more than one egress is required",
+      "Passageways must be minimum 36 inches wide throughout evacuation route",
+      "Ramps must have truncated domes at grade changes for visually impaired",
+      "Emergency lighting must be provided for all evacuation pathways",
+      "Evacuation plans must address needs of all occupants including those with disabilities",
+      "Areas of refuge required where stairs cannot be used (relevant for venue interior but not open plaza)"
+    ],
+    "gaps_identified": [
+      "2 non-compliant ADA ramps on assessed corridors (features 1196, 1163) — no truncated domes",
+      "64ft and 128ft no-sidewalk gaps interrupt accessible path of travel",
+      "Poor curb sections (feature 3133: 297ft, feature 619: 54ft) impede wheelchair navigation"
+    ]
+  }
+}
