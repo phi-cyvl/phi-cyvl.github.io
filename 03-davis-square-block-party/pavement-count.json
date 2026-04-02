@@ -1,0 +1,20 @@
+{
+  "total": 1798,
+  "prior_pages_total": 1450,
+  "new_pages_total": 348,
+  "by_label": {
+    "Good": 644,
+    "Satisfactory": 396,
+    "Fair": 232,
+    "Poor": 231,
+    "Very Poor": 144,
+    "Serious": 62,
+    "Failed": 14,
+    "Not Scored": 25
+  },
+  "notes": {
+    "by_label_sum": 1748,
+    "by_label_gap": 50,
+    "gap_explanation": "50 segments from page 6 (the page just before pagination resumed) were counted in prior_pages_total but their exact label breakdown was not tracked; approximate breakdown for those 50 was Good~15, Satisfactory~18, Fair~10, Poor~1, Very Poor~1, other~5"
+  }
+}

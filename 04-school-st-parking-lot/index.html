@@ -522,24 +522,33 @@
       transform: translateY(0);
     }
 
-    /* Sticky nav */
-    .nav {
-      box-shadow: var(--shadow-sm);
-    }
     @media (max-width: 768px) {
-      .nav-links { display: none; }
       .hero-stats { gap: 28px; }
       .hero-stat-value { font-size: 2rem; }
       .infra-grid { grid-template-columns: 1fr 1fr; }
     }
 
     /* Footer */
-    .footer-tagline {
-      font-size: 0.875rem;
-      color: #8a9490;
-      margin-top: 4px;
+    .footer {
+      background: var(--asphalt-black, #0D0D0C);
+      color: rgba(255,255,255,0.6);
+      padding: 48px 24px;
+      text-align: center;
     }
-    .footer-logo { height: 24px; }
+    .footer-inner { max-width: 600px; margin: 0 auto; }
+    .footer-logo { height: 24px; opacity: 0.6; margin-bottom: 12px; }
+    .footer-tagline { font-size: 0.875rem; margin-bottom: 16px; color: rgba(255,255,255,0.5); }
+    .footer-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 20px auto; max-width: 200px; }
+    .footer-meta { font-size: 0.75rem; line-height: 1.6; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .footer-powered {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .footer-powered img { height: 32px; opacity: 0.5; }
+    .footer-powered span { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
 
     /* PCI color scale */
     .pci-excellent { color: #22c55e; }
@@ -582,27 +591,40 @@
       align-self: center;
     }
     @media (max-width: 600px) { .hero-stat-divider { display: none; } }
+
+    /* ── Mobile responsive overrides ── */
+    html, body { overflow-x: hidden; max-width: 100vw; }
+    @media (max-width: 768px) {
+      .container, [class*="container"] { max-width: 100%; padding: 0 16px; overflow-x: hidden; }
+      table { display: block; overflow-x: auto; max-width: 100%; }
+      /* Collapse all multi-column grids */
+      .grid-2, .grid-3, .grid-4, [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+      /* Fix any flex rows that don't wrap */
+      .flex, [class*="flex"] { flex-wrap: wrap; }
+      /* Ensure cards don't have min-width */
+      .card, [class*="card"] { min-width: 0; max-width: 100%; }
+    }
   </style>
 </head>
 <body>
 
 <!-- Navigation -->
 <nav class="nav">
-  <div class="container">
-    <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-      <img src="../assets/cyvl_logo_black.png" alt="Cyvl" class="nav-logo">
-      <div class="nav-links">
-        <a href="#site-assessment">Site Assessment</a>
-        <a href="#cost">Budget</a>
-        <a href="#permits">Permits</a>
-        <a href="#timeline">Timeline</a>
-        <a href="#safety">Safety</a>
-        <a href="#logistics">Logistics</a>
-        <a href="#cyvl-data">Data Story</a>
-      </div>
-      <span class="badge badge-yellow" style="font-size:0.7rem">Boston CIO Demo</span>
-    </div>
+  <a href="../index.html" title="Back to all demos" style="display:inline-flex;align-items:center;">
+    <img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="nav-logo">
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#site-assessment">Site Assessment</a>
+    <a href="#cost">Budget</a>
+    <a href="#permits">Permits</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#safety">Safety</a>
+    <a href="#logistics">Logistics</a>
+    <a href="#cyvl-data">Data Story</a>
   </div>
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- Hero -->
@@ -614,6 +636,17 @@
     </div>
     <h1>From <span class="accent">Parking Lot</span><br>to Party</h1>
     <p class="hero-subtitle">A complete action plan powered by infrastructure intelligence. Zero site visits. Real data from Cyvl's Somerville scan.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0;">
+      <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020781_MP4_1763743448495173_front_3000.jpg" alt="Street-level view near School St, Somerville" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
+        <div style="padding:8px 12px;background:rgba(13,13,12,0.8);font-size:0.7rem;color:rgba(255,255,255,0.5);">Cyvl scan · School St area · PCI 72.67</div>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020770_MP4_1763573598417451_front_3000.jpg" alt="Street near 76 School St showing fire hydrant and pavement" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
+        <div style="padding:8px 12px;background:rgba(13,13,12,0.8);font-size:0.7rem;color:rgba(255,255,255,0.5);">Cyvl scan · Somerville · PCI 68.4 · fire hydrant detected</div>
+      </div>
+    </div>
 
     <div class="hero-stats">
       <div>
@@ -699,6 +732,22 @@
             <strong style="color:var(--text-primary)">Spring Hill, Ward 4</strong> — Walk Score 92 (highly walkable). Historic 1880 MBTA transfer station. Green Line 6 min walk. Mixed residential — noise curfew critical.
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Cyvl street-level imagery — site assessment -->
+    <div style="margin:24px 0 0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;" class="scroll-reveal">
+      <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010776_MP4_1763650572504585_front_3000.jpg" alt="Somerville street pavement near School St" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+        <div style="padding:8px 12px;background:rgba(13,13,12,0.05);font-size:0.7rem;color:rgba(0,0,0,0.45);">Cyvl scan · School St vicinity · PCI 83.45</div>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX040786_MP4_1764009982383786_front_3000.jpg" alt="Sidewalk and fire hydrant on Somerville street" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+        <div style="padding:8px 12px;background:rgba(13,13,12,0.05);font-size:0.7rem;color:rgba(0,0,0,0.45);">Cyvl scan · Somerville · fire hydrant clearance zone</div>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX030786_MP4_1764005594458154_front_3000.jpg" alt="Street-level hydrant and sidewalk access" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+        <div style="padding:8px 12px;background:rgba(13,13,12,0.05);font-size:0.7rem;color:rgba(0,0,0,0.45);">Cyvl scan · Somerville · sidewalk access corridor</div>
       </div>
     </div>
 
@@ -841,7 +890,7 @@
 
       <div class="scroll-reveal">
         <div class="card" style="margin-bottom:16px;">
-          <h4 style="margin-bottom:16px;">Power Options</h4>
+          <h3 style="margin-bottom:16px;">Power Options</h3>
           <div class="power-option">
             <div style="display:flex;justify-content:space-between;align-items:baseline;">
               <div class="power-option-title">🔋 Generator Rental</div>
@@ -881,7 +930,7 @@
         </div>
 
         <div class="card">
-          <h4 style="margin-bottom:16px;">Restroom Plan</h4>
+          <h3 style="margin-bottom:16px;">Restroom Plan</h3>
           <table style="margin-bottom:0">
             <thead>
               <tr><th>Capacity</th><th>Units</th><th>Est. Cost</th></tr>
@@ -1203,6 +1252,18 @@
       <p>Infrastructure data shapes every safety decision — from hydrant clearance zones to crowd capacity.</p>
     </div>
 
+    <!-- Cyvl street-level imagery — safety reference -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;" class="scroll-reveal">
+      <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX040786_MP4_1764009982383786_front_3000.jpg" alt="Fire hydrant clearance zone Somerville" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
+        <div style="padding:8px 12px;background:rgba(255,255,255,0.04);font-size:0.7rem;color:rgba(255,255,255,0.45);">Cyvl scan · hydrant clearance reference · 15ft zone required</div>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020770_MP4_1763573598417451_front_3000.jpg" alt="Street access lane for emergency vehicles" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
+        <div style="padding:8px 12px;background:rgba(255,255,255,0.04);font-size:0.7rem;color:rgba(255,255,255,0.45);">Cyvl scan · Somerville · emergency access lane · PCI 68.4</div>
+      </div>
+    </div>
+
     <div class="safety-grid scroll-reveal">
       <div class="safety-card">
         <span class="safety-icon">🚒</span>
@@ -1272,7 +1333,7 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="scroll-reveal">
       <div>
         <div class="logistics-card" style="margin-bottom:16px;">
-          <h4 style="margin-bottom:4px;">The Parking Problem</h4>
+          <h3 style="margin-bottom:4px;">The Parking Problem</h3>
           <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:16px;">Cyvl catalogued 50+ signs within 200m. Sign analysis revealed:</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
             <span class="badge badge-red">15+ R7-5 No Parking Zones</span>
@@ -1285,7 +1346,7 @@
         </div>
 
         <div class="logistics-card">
-          <h4 style="margin-bottom:16px;">Transportation Options</h4>
+          <h3 style="margin-bottom:16px;">Transportation Options</h3>
 
           <div class="transport-option">
             <div class="transport-icon" style="background:rgba(27,121,197,0.1)">🚇</div>
@@ -1335,7 +1396,7 @@
 
       <div>
         <div class="logistics-card" style="margin-bottom:16px;">
-          <h4 style="margin-bottom:4px;">Walkability Score</h4>
+          <h3 style="margin-bottom:4px;">Walkability Score</h3>
           <div style="display:flex;align-items:baseline;gap:12px;margin:16px 0 8px;">
             <div style="font-size:3.5rem;font-weight:800;color:var(--utility-blue);line-height:1;">92</div>
             <div>
@@ -1348,7 +1409,7 @@
         </div>
 
         <div class="logistics-card" style="margin-bottom:16px;">
-          <h4 style="margin-bottom:16px;">Nearby Landmarks</h4>
+          <h3 style="margin-bottom:16px;">Nearby Landmarks</h3>
           <div style="display:flex;flex-direction:column;gap:10px;">
             <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.875rem;">
               <span>🌳 Osgood Park</span><span class="badge badge-green">2 min walk</span>
@@ -1366,7 +1427,7 @@
         </div>
 
         <div class="logistics-card">
-          <h4 style="margin-bottom:12px;">Waste Management</h4>
+          <h3 style="margin-bottom:12px;">Waste Management</h3>
           <ul style="list-style:none;font-size:0.875rem;color:var(--text-secondary);">
             <li style="padding:6px 0;border-bottom:1px solid rgba(13,13,12,0.06)">🗑️ 10-yard roll-off dumpster — $250–$400/day</li>
             <li style="padding:6px 0;border-bottom:1px solid rgba(13,13,12,0.06)">♻️ Recycling bins — $30–$50 each (bring-your-own or rent)</li>
@@ -1466,25 +1527,19 @@
 
 <!-- Footer -->
 <footer class="footer">
-  <div class="container">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
-      <div>
-        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="footer-logo">
-        <div class="footer-tagline">Infrastructure Intelligence — Plan Any Event, Anywhere</div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-size:0.875rem;color:#8a9490;">Boston CIO Demo · April 2026</div>
-        <div style="font-size:0.8rem;color:#505a56;margin-top:4px;">76 School St, Somerville MA 02143</div>
-      </div>
-    </div>
+  <div class="footer-inner">
+    <a href="../index.html"><img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="footer-logo"></a>
+    <p class="footer-tagline">Infrastructure Intelligence for Safer Communities</p>
     <div class="footer-divider"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-      <div style="font-size:0.78rem;color:#505a56;">
-        Data: Cyvl scan_1185_SOMERVILLE_MA · Infrastructure assets within 200–300m radius · PCI scores from 50 pavement segments
-      </div>
-      <div style="font-size:0.78rem;color:#505a56;">
-        Powered by <strong style="color:var(--high-vis-yellow)">Cyvl</strong> · cyvl.io
-      </div>
+    <p class="footer-meta">
+      Prepared for Santiago Garces, CIO, City of Boston<br>
+      Data: Cyvl Infrastructure API · Boston Open Data (CKAN) · Vision Zero<br>
+      Somerville, MA Pilot · 120 miles scanned · 34,000 images<br>
+      scan_1185_SOMERVILLE_MA · 76 School St · Infrastructure assets within 200–300m radius · PCI scores from 50 segments
+    </p>
+    <div class="footer-powered">
+      <img src="../assets/cyvl_sensor.png" alt="Cyvl Sensor">
+      <span>Powered by Cyvl</span>
     </div>
   </div>
 </footer>
@@ -1501,6 +1556,31 @@
     attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
     maxZoom: 19
   }).addTo(map);
+
+  // ===== Road-snapped routing helper =====
+  async function fetchRoadRoute(coords, options) {
+    var coordStr = coords.map(c => c[1] + ',' + c[0]).join(';');
+    var url = 'https://router.project-osrm.org/route/v1/foot/' + coordStr + '?overview=full&geometries=geojson';
+    try {
+      var resp = await fetch(url);
+      var data = await resp.json();
+      if (data.code === 'Ok') {
+        var latLngs = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+        L.polyline(latLngs, options).addTo(map);
+        return;
+      }
+    } catch(e) {}
+    L.polyline(coords, options).addTo(map);
+  }
+
+  // ===== Async map overlays (road-routed) =====
+  (async function() {
+    // Walking route: Gilman Square MBTA → 76 School St venue
+    await fetchRoadRoute(
+      [[42.3872, -71.0940], [42.3851785, -71.1000001]],
+      { color: '#DAFF00', weight: 3, opacity: 0.7, dashArray: '8,5' }
+    );
+  })();
 
   // Venue marker
   const venueIcon = L.divIcon({
@@ -1663,6 +1743,34 @@
       link.classList.toggle('active', link.getAttribute('href') === '#' + current);
     });
   });
+</script>
+<script>
+// ===================== HAMBURGER MENU =====================
+(function() {
+  var hamburger = document.getElementById('hamburger');
+  var navLinks = document.getElementById('navLinks');
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', function() {
+      hamburger.classList.toggle('open');
+      navLinks.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', navLinks.classList.contains('open'));
+    });
+    navLinks.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('click', function(e) {
+      if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+})();
 </script>
 
 </body>

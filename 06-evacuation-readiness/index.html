@@ -12,21 +12,8 @@
   <link rel="stylesheet" href="../assets/styles.css" />
   <style>
     /* ── PAGE-SPECIFIC OVERRIDES ── */
-    :root {
-      --signal-red: #FF470A;
-      --high-vis-yellow: #DAFF00;
-      --asphalt-black: #0D0D0C;
-      --concrete-gray: #505A56;
-      --utility-blue: #1B79C5;
-    }
 
-    /* NAV — dark variant for this demo */
-    .nav {
-      background: rgba(13,13,12,0.97) !important;
-      border-bottom: 1px solid rgba(218,255,0,0.12) !important;
-    }
-    .nav-links a { color: rgba(255,255,255,0.6) !important; }
-    .nav-links a:hover { color: #fff !important; text-decoration: none; }
+    /* NAV — uses shared dark styles from styles.css */
 
     /* HERO */
     .hero {
@@ -184,7 +171,7 @@
       margin-bottom: 10px;
       display: block;
     }
-    .threat-card h4 {
+    .threat-card h3 {
       font-size: 0.8rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -575,7 +562,7 @@
     .rec-num.p1 { background: var(--signal-red); }
     .rec-num.p2 { background: var(--utility-blue); }
     .rec-num.p3 { background: var(--asphalt-black); }
-    .rec-content h4 { font-size: 0.95rem; margin-bottom: 4px; }
+    .rec-content h3 { font-size: 0.95rem; margin-bottom: 4px; }
     .rec-content p { font-size: 0.85rem; color: var(--concrete-gray); margin: 0; max-width: none; }
     .rec-timeline {
       margin-left: auto;
@@ -619,6 +606,43 @@
     .mt-sm { margin-top: 8px; }
     .mt-md { margin-top: 16px; }
     .mt-lg { margin-top: 24px; }
+
+    /* ── MOBILE RESPONSIVE OVERRIDES ── */
+    html, body { overflow-x: hidden; max-width: 100vw; }
+    @media (max-width: 768px) {
+      .container, [class*="container"] { max-width: 100%; padding: 0 16px; overflow-x: hidden; }
+      table, .crash-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+      th, td { padding: 6px 8px; font-size: 0.75rem; white-space: nowrap; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr !important; }
+      .card, [class*="card"] { min-width: 0; max-width: 100%; }
+    }
+
+    /* ── MINIMUM FONT SIZE FIXES (< 10px → 11px) ── */
+    .pci-scale-seg { font-size: 0.6875rem !important; }
+    .severity-badge { font-size: 0.6875rem !important; }
+    .critical-callout .cc-label { font-size: 0.6875rem !important; }
+
+    /* Footer */
+    .footer {
+      background: var(--asphalt-black, #0D0D0C);
+      color: rgba(255,255,255,0.6);
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .footer-inner { max-width: 600px; margin: 0 auto; }
+    .footer-logo { height: 24px; opacity: 0.6; margin-bottom: 12px; }
+    .footer-tagline { font-size: 0.875rem; margin-bottom: 16px; color: rgba(255,255,255,0.5); }
+    .footer-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 20px auto; max-width: 200px; }
+    .footer-meta { font-size: 0.75rem; line-height: 1.6; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .footer-powered {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .footer-powered img { height: 32px; opacity: 0.5; }
+    .footer-powered span { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
   </style>
 </head>
 <body>
@@ -627,20 +651,19 @@
      NAVIGATION
 ══════════════════════════════════════════════════ -->
 <nav class="nav">
-  <div class="container">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0;">
-      <a href="../index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
-        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="nav-logo" />
-      </a>
-      <div class="nav-links">
-        <a href="#threat">Threat</a>
-        <a href="#map">Map</a>
-        <a href="#corridors">Corridors</a>
-        <a href="#spotlight">Critical Finding</a>
-        <a href="#recommendations">Recommendations</a>
-      </div>
-    </div>
+  <a href="../index.html" title="Back to all demos" style="display:inline-flex;align-items:center;">
+    <img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="nav-logo">
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#threat">Threat</a>
+    <a href="#map">Map</a>
+    <a href="#corridors">Corridors</a>
+    <a href="#spotlight">Critical Finding</a>
+    <a href="#recommendations">Recommendations</a>
   </div>
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- ═══════════════════════════════════════════════════
@@ -688,25 +711,25 @@
     <div class="threat-grid reveal">
       <div class="threat-card red-accent">
         <span class="threat-card-icon">&#127967;</span>
-        <h4>City Hall Plaza — Fan Festival</h4>
+        <h3>City Hall Plaza — Fan Festival</h3>
         <div class="big-num">50,000</div>
         <p>Expected crowd per match day. Open plaza, historic street grid, limited direct transit — simultaneous dispersal is the primary scenario.</p>
       </div>
       <div class="threat-card">
         <span class="threat-card-icon">&#9917;</span>
-        <h4>Matches at Foxborough</h4>
+        <h3>Matches at Foxborough</h3>
         <div class="big-num">7</div>
         <p>Matches create overflow crowds in Boston &amp; Somerville as fans gather at viewing parties and fan festival events across the region.</p>
       </div>
       <div class="threat-card blue-accent">
         <span class="threat-card-icon">&#127963;</span>
-        <h4>Coordinating Agencies</h4>
+        <h3>Coordinating Agencies</h3>
         <div class="big-num">70+</div>
         <p>Agencies across 14 specialized working groups: crowd management, cybersecurity, public health, and transportation coordination.</p>
       </div>
       <div class="threat-card">
         <span class="threat-card-icon">&#128651;</span>
-        <h4>Transit Stress Points</h4>
+        <h3>Transit Stress Points</h3>
         <div class="big-num">3</div>
         <p>South Station (Red + Commuter Rail), Government Center (Green + Blue), and Park St form the backbone of post-event dispersal — all at capacity risk.</p>
       </div>
@@ -809,9 +832,20 @@
           </div>
         </div>
         <div class="corridor-body">
+          <!-- Cyvl imagery — Highland Avenue -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+            <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010763_MP4_1763411149939136_front_3000.jpg" alt="Highland Avenue sidewalk and pedestrian conditions" style="width:100%;height:140px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Highland Ave corridor · PCI 66.25 · pedestrian route</div>
+            </div>
+            <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX030776_MP4_1763658749866850_front_3000.jpg" alt="Highland Avenue pavement with raveling and cracking" style="width:100%;height:140px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Highland Ave · PCI 65.68 · raveling + patching + lt_cracking</div>
+            </div>
+          </div>
           <div class="corridor-body-grid">
             <div>
-              <h4 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Pavement Metrics</h4>
+              <h3 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Pavement Metrics</h3>
               <div class="metric-row">
                 <div class="metric-item">
                   <div class="metric-label-row">
@@ -851,7 +885,7 @@
             </div>
 
             <div>
-              <h4 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Infrastructure Hazards</h4>
+              <h3 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Infrastructure Hazards</h3>
               <ul class="hazard-list">
                 <li><span class="hazard-icon">&#128683;</span><span><strong>64ft no-sidewalk gap</strong> (Feature 820) — pedestrians forced into roadway. Choke point under crowd pressure.</span></li>
                 <li><span class="hazard-icon">&#9855;</span><span><strong>Non-compliant ADA ramp</strong> (Feature 1196) — Poor condition, no truncated domes, no wings. Inaccessible egress for mobility-impaired.</span></li>
@@ -891,9 +925,20 @@
           </div>
         </div>
         <div class="corridor-body">
+          <!-- Cyvl imagery — narrow sidewalk / obstruction -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+            <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020766_MP4_1763483991734522_front_3000.jpg" alt="Narrow sidewalk with obstruction on Somerville Ave" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Somerville Ave · PCI 37.66 · sidewalk hazard zone</div>
+            </div>
+            <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX030770_MP4_1763577145338646_front_3000.jpg" alt="Sidewalk pavement degradation near Somerville Ave" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Somerville Ave · PCI 62.82 · bumps + patching</div>
+            </div>
+          </div>
           <div class="corridor-body-grid">
             <div>
-              <h4 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Pavement Metrics</h4>
+              <h3 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Pavement Metrics</h3>
               <div class="metric-row">
                 <div class="metric-item">
                   <div class="metric-label-row">
@@ -933,7 +978,7 @@
             </div>
 
             <div>
-              <h4 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Infrastructure Hazards</h4>
+              <h3 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Infrastructure Hazards</h3>
               <ul class="hazard-list">
                 <li><span class="hazard-icon">&#128683;</span><span><strong>128ft no-sidewalk gap</strong> (Feature 3023) — longer than Highland Ave gap, forces pedestrians into active vehicle lanes.</span></li>
                 <li><span class="hazard-icon">&#9855;</span><span><strong>Non-compliant ADA ramp</strong> (Feature 1163) — Poor condition, no truncated domes, no wings.</span></li>
@@ -981,9 +1026,25 @@
             <div class="cc-desc">Serious-rated pavement failure. Co-located with active construction zone (76% confidence imagery match). This is the single most dangerous infrastructure finding on any assessed corridor.</div>
           </div>
 
+          <!-- Cyvl imagery — McGrath construction zone -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0;">
+            <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.2);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX030766_MP4_1763488795141186_front_3000.jpg" alt="McGrath Highway pavement failure zone" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(255,71,10,0.06);font-size:0.65rem;color:rgba(255,71,10,0.8);">McGrath Hwy · PCI 23.55 · structural failure</div>
+            </div>
+            <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.2);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020766_MP4_1763483834237582_front_3000.jpg" alt="McGrath Highway approach showing alligator cracking" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(255,71,10,0.06);font-size:0.65rem;color:rgba(255,71,10,0.8);">McGrath approach · PCI 42.42 · alligator cracking</div>
+            </div>
+            <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.2);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX030766_MP4_1763488794141205_front_3000.jpg" alt="McGrath Highway construction zone co-location" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(255,71,10,0.06);font-size:0.65rem;color:rgba(255,71,10,0.8);">McGrath Hwy · construction co-location · 76% confidence</div>
+            </div>
+          </div>
+
           <div class="corridor-body-grid">
             <div>
-              <h4 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Pavement Metrics</h4>
+              <h3 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Pavement Metrics</h3>
               <div class="metric-row">
                 <div class="metric-item">
                   <div class="metric-label-row">
@@ -1024,7 +1085,7 @@
             </div>
 
             <div>
-              <h4 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Compounding Hazards</h4>
+              <h3 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Compounding Hazards</h3>
               <ul class="hazard-list">
                 <li><span class="hazard-icon">&#128165;</span><span><strong>Segment PCI 23.55</strong> — Structural failure threshold. Pothole/cavity risk under crowd foot traffic. Emergency repair required.</span></li>
                 <li><span class="hazard-icon">&#128679;</span><span><strong>Active construction zone</strong> co-located at lat 42.3773, lon -71.0873 — 76% imagery confidence. Construction barriers + failed pavement = dual hazard.</span></li>
@@ -1066,7 +1127,7 @@
         <div class="corridor-body">
           <div class="corridor-body-grid">
             <div>
-              <h4 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Pavement Data Coverage</h4>
+              <h3 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">Pavement Data Coverage</h3>
 
               <div style="margin-bottom:20px;">
                 <div style="background:rgba(13,13,12,0.06);border-radius:8px;padding:16px;display:flex;align-items:center;gap:16px;">
@@ -1118,7 +1179,7 @@
             </div>
 
             <div>
-              <h4 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">The Planning Problem</h4>
+              <h3 style="margin-bottom:14px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--concrete-gray);">The Planning Problem</h3>
 
               <div style="background:rgba(27,121,197,0.05);border:1px solid rgba(27,121,197,0.2);border-left:4px solid var(--utility-blue);border-radius:8px;padding:16px;margin-bottom:16px;">
                 <div style="font-size:0.85rem;font-weight:700;color:var(--asphalt-black);margin-bottom:6px;">"You can't plan what you can't measure."</div>
@@ -1197,6 +1258,10 @@
         <div class="distress-type">Structural Failure — PCI 23.55</div>
         <div class="distress-area" style="color:var(--signal-red);">McGrath Hwy</div>
         <p class="distress-desc">All distress types present — alligator cracking, block cracking, weathering, rutting, bumps/sags, depressions, edge cracking. Query timed out due to density.</p>
+        <div style="margin-top:10px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,71,10,0.2);">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020766_MP4_1763483834237582_front_3000.jpg" alt="McGrath Highway pavement failure — alligator cracking" style="width:100%;height:120px;object-fit:cover;" loading="lazy">
+          <div style="padding:5px 8px;background:rgba(255,71,10,0.08);font-size:0.62rem;color:rgba(255,71,10,0.7);">Cyvl scan · McGrath Hwy approach · PCI 42.42 · alligator + edge cracking</div>
+        </div>
       </div>
       <div class="distress-card">
         <div class="distress-severity"><span class="severity-badge med">Medium</span></div>
@@ -1208,8 +1273,8 @@
 
     <!-- Citywide context -->
     <div class="mt-lg reveal" style="background:var(--asphalt-black);border-radius:16px;padding:32px;">
-      <h4 style="color:var(--high-vis-yellow);margin-bottom:16px;">Somerville Citywide Pavement Context</h4>
-      <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:20px;">38% of Somerville's road network rates below Satisfactory — evacuation corridors cross this baseline network.</p>
+      <h3 style="color:var(--high-vis-yellow);margin-bottom:16px;">Somerville Citywide Pavement Context</h3>
+      <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:20px;">27% of Somerville's road network rates below Satisfactory — evacuation corridors cross this baseline network.</p>
       <div class="pci-scale">
         <div class="pci-scale-seg" style="width:24.7%;background:#2E7D32;">Good 25%</div>
         <div class="pci-scale-seg" style="width:23.9%;background:#558B2F;">Sat. 24%</div>
@@ -1226,7 +1291,7 @@
           <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);">Total Segments Scored</div>
         </div>
         <div>
-          <div style="font-size:1.8rem;font-weight:900;color:#EF6C00;">38%</div>
+          <div style="font-size:1.8rem;font-weight:900;color:#EF6C00;">27%</div>
           <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);">Below Satisfactory</div>
         </div>
         <div>
@@ -1297,6 +1362,17 @@
         <div class="card" style="background:var(--asphalt-black);color:#fff;border:none;">
           <h4 style="color:var(--high-vis-yellow);margin-bottom:12px;">82 Wheelchair Ramp Imagery Matches</h4>
           <p style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:16px;">Cyvl's computer vision identified 82 curb ramp / curb cut features across the Somerville project area — confirming comprehensive ADA infrastructure documentation coverage.</p>
+          <!-- Cyvl curb ramp imagery -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+            <div style="border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX040786_MP4_1764010365877286_front_3000.jpg" alt="Wheelchair ramp curb cut Somerville" style="width:100%;height:110px;object-fit:cover;" loading="lazy">
+              <div style="padding:5px 8px;background:rgba(255,255,255,0.04);font-size:0.62rem;color:rgba(255,255,255,0.4);">Curb cut · PCI 85.48</div>
+            </div>
+            <div style="border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020776_MP4_1763657619885883_front_3000.jpg" alt="Curb cut and pedestrian ramp area" style="width:100%;height:110px;object-fit:cover;" loading="lazy">
+              <div style="padding:5px 8px;background:rgba(255,255,255,0.04);font-size:0.62rem;color:rgba(255,255,255,0.4);">Ramp area · PCI 72.52</div>
+            </div>
+          </div>
           <div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:12px;">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
               <div style="text-align:center;">
@@ -1332,22 +1408,37 @@
       <div class="spotlight-pci-label">Pavement Condition Index — McGrath Highway — Serious Structural Failure</div>
       <p class="spotlight-quote">A structural pavement failure co-located with a construction zone, on a route used by tens of thousands evacuating City Hall Plaza. <em>Cyvl found it. Planners missed it.</em></p>
       <p class="spotlight-sub">Segment ID 7e2445e1eab32cb45bd848cde401eccc &middot; McGrath Highway, Somerville (lat 42.3773, lon -71.0873) &middot; Construction zone confirmed at 76% imagery confidence &middot; Adjacent Very Poor segments at PCI 26.31 and PCI 32.69</p>
+      <!-- Cyvl McGrath distress imagery -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px;">
+        <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.25);">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX030766_MP4_1763488795141186_front_3000.jpg" alt="McGrath Highway structural pavement failure zone" style="width:100%;height:140px;object-fit:cover;" loading="lazy">
+          <div style="padding:7px 10px;background:rgba(255,71,10,0.1);font-size:0.68rem;color:rgba(255,100,50,0.9);">McGrath Hwy · PCI 23.55 · Serious failure</div>
+        </div>
+        <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.25);">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020766_MP4_1763483834237582_front_3000.jpg" alt="McGrath Highway alligator cracking and edge cracking" style="width:100%;height:140px;object-fit:cover;" loading="lazy">
+          <div style="padding:7px 10px;background:rgba(255,71,10,0.1);font-size:0.68rem;color:rgba(255,100,50,0.9);">McGrath approach · PCI 42.42 · 6 distress types</div>
+        </div>
+        <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.25);">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX030766_MP4_1763488794141205_front_3000.jpg" alt="McGrath Highway construction co-location" style="width:100%;height:140px;object-fit:cover;" loading="lazy">
+          <div style="padding:7px 10px;background:rgba(255,71,10,0.1);font-size:0.68rem;color:rgba(255,100,50,0.9);">Construction co-location · 76% confidence match</div>
+        </div>
+      </div>
     </div>
 
     <div class="grid grid-3 mt-lg reveal" style="margin-top:24px;">
       <div class="card" style="text-align:center;">
         <div style="font-size:2rem;margin-bottom:8px;">&#128165;</div>
-        <h4>Structural Failure</h4>
+        <h3>Structural Failure</h3>
         <p style="font-size:0.85rem;color:var(--concrete-gray);margin:0;">PCI 23.55 places this segment in the "Serious" category — active structural failure. Under the weight of thousands of pedestrians, pavement cavities can collapse and trigger falls.</p>
       </div>
       <div class="card" style="text-align:center;">
         <div style="font-size:2rem;margin-bottom:8px;">&#128679;</div>
-        <h4>Construction Co-Location</h4>
+        <h3>Construction Co-Location</h3>
         <p style="font-size:0.85rem;color:var(--concrete-gray);margin:0;">Cyvl imagery search returned a 76% confidence match for construction zone activity at the exact coordinates of the PCI 23.55 segment. Two independent hazards at one location.</p>
       </div>
       <div class="card" style="text-align:center;">
         <div style="font-size:2rem;margin-bottom:8px;">&#127939;</div>
-        <h4>Crowd Cascade Risk</h4>
+        <h3>Crowd Cascade Risk</h3>
         <p style="font-size:0.85rem;color:var(--concrete-gray);margin:0;">At jam density (3.5-5.3 persons/sq meter), a single fall triggers a cascade. Failed pavement creates the initiating stumble. This is one of the most dangerous crowd safety failure modes.</p>
       </div>
     </div>
@@ -1415,7 +1506,7 @@
     </div>
 
     <div class="card mt-lg reveal" style="border-left:4px solid var(--utility-blue);">
-      <h4>Boston vs. Somerville Jurisdiction Gap</h4>
+      <h3>Boston vs. Somerville Jurisdiction Gap</h3>
       <p style="margin:0;font-size:0.875rem;color:var(--concrete-gray);">Boston Vision Zero crash records cover Boston jurisdiction. The Cyvl Somerville project covers Somerville's corridor network. The path from City Hall Plaza to Somerville evacuation routes passes through Boston streets (Congress St, Cambridge St, Storrow Dr area) — where <strong>no Cyvl PCI data currently exists.</strong> These corridors require priority scanning before June 2026.</p>
     </div>
   </div>
@@ -1437,7 +1528,7 @@
       <div class="rec-card priority-1">
         <div class="rec-num p1">1</div>
         <div class="rec-content">
-          <h4>Emergency Repair — McGrath Highway PCI 23.55</h4>
+          <h3>Emergency Repair — McGrath Highway PCI 23.55</h3>
           <p>Patch segment 7e2445e1 (Serious-rated structural failure) before any event planning places this route in service. Address the two adjacent Very Poor segments (PCI 26.31, 32.69). Install barriers at construction zone overlap. Cost estimated $15-40K per block — a fraction of the $76M safety allocation.</p>
         </div>
         <div class="rec-timeline">Before May 2026</div>
@@ -1446,7 +1537,7 @@
       <div class="rec-card priority-2">
         <div class="rec-num p2">2</div>
         <div class="rec-content">
-          <h4>Commission Broadway Re-Scan + Boston Corridor Scan</h4>
+          <h3>Commission Broadway Re-Scan + Boston Corridor Scan</h3>
           <p>Broadway has 78% unscored segments — cannot be used in evacuation planning without data. Additionally, Congress St, Atlantic Ave, Summer St, and Cambridge St (Boston jurisdiction) need Cyvl scanning. These are the primary City Hall Plaza dispersal routes with zero current PCI data.</p>
         </div>
         <div class="rec-timeline">Jan-Mar 2026</div>
@@ -1455,7 +1546,7 @@
       <div class="rec-card priority-2">
         <div class="rec-num p2">3</div>
         <div class="rec-content">
-          <h4>ADA Ramp Repair — Features 1196 &amp; 1163</h4>
+          <h3>ADA Ramp Repair — Features 1196 &amp; 1163</h3>
           <p>Replace both non-compliant ramps with ADA-compliant units including truncated domes, wing flares, and minimum 36-inch width. Install temporary surface bridging over 64ft (Highland Ave) and 128ft (Somerville Ave) no-sidewalk gaps. Per ADA Title II, every accessible space requires at least one accessible egress path.</p>
         </div>
         <div class="rec-timeline">Mar-May 2026</div>
@@ -1464,7 +1555,7 @@
       <div class="rec-card priority-3">
         <div class="rec-num p3">4</div>
         <div class="rec-content">
-          <h4>Designate &amp; Sign 3 Primary Evacuation Corridors</h4>
+          <h3>Designate &amp; Sign 3 Primary Evacuation Corridors</h3>
           <p>Officially designate: (1) Cambridge St to Highland Ave to Davis Square Red Line, (2) Congress St to South Station, (3) Tremont St to Boston Common dispersal. Install emergency evacuation signage, pre-position crowd managers at identified utility pole pinch points, and establish vehicle exclusion zones. At 150 persons/min per corridor: 3 corridors handle 27,000 persons/hour — full 50K dispersal requires ~2 hours minimum with staged release.</p>
         </div>
         <div class="rec-timeline">Apr-May 2026</div>
@@ -1473,7 +1564,7 @@
       <div class="rec-card priority-3">
         <div class="rec-num p3">5</div>
         <div class="rec-content">
-          <h4>Pre-Event Distress Remediation — Top 15-20 Segments</h4>
+          <h3>Pre-Event Distress Remediation — Top 15-20 Segments</h3>
           <p>Address high-severity distresses on Highland and Somerville Ave: 591 sq ft weathering (Highland), 610 sq ft weathering (Somerville Ave), 179 sq ft alligator cracking, rutting and bumps/sags on PCI 40.7 segment. These are fall hazards for fast-moving crowds — especially critical for nighttime events when pavement damage is harder to see.</p>
         </div>
         <div class="rec-timeline">May 2026</div>
@@ -1482,7 +1573,7 @@
       <div class="rec-card" style="border-left:4px solid var(--high-vis-yellow);">
         <div class="rec-num" style="background:var(--high-vis-yellow);color:var(--asphalt-black);">6</div>
         <div class="rec-content">
-          <h4>Deploy Cyvl Continuous Monitoring During Event Period</h4>
+          <h3>Deploy Cyvl Continuous Monitoring During Event Period</h3>
           <p>Run Cyvl scanning vehicles on designated evacuation corridors weekly during the June 2026 event period to detect rapid pavement deterioration, new construction activity, and infrastructure changes. Real-time condition data enables emergency rerouting if a corridor degrades between matches.</p>
         </div>
         <div class="rec-timeline">June 2026</div>
@@ -1521,19 +1612,20 @@
 <!-- ═══════════════════════════════════════════════════
      FOOTER
 ══════════════════════════════════════════════════ -->
-<footer style="background:var(--asphalt-black);padding:48px 0;border-top:1px solid rgba(218,255,0,0.1);">
-  <div class="container">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px;">
-      <div>
-        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" style="height:28px;opacity:0.9;" />
-        <div style="font-size:0.8rem;color:rgba(255,255,255,0.35);margin-top:8px;">Keeping Communities Safe Through Infrastructure Intelligence</div>
-      </div>
-      <div style="text-align:right;">
-        <p style="font-size:0.8rem;color:rgba(255,255,255,0.3);margin:0;max-width:none;">Infrastructure data: Cyvl.ai Somerville, MA project (090e18f2-0002-4a70-90b4-8f073d26294d)</p>
-        <p style="font-size:0.8rem;color:rgba(255,255,255,0.3);margin:4px 0 0;max-width:none;">Crash data: Boston Vision Zero Open Data Portal &middot; Funding: Mass.gov, GoLocalProv, Boston25</p>
-        <p style="font-size:0.8rem;color:rgba(255,255,255,0.3);margin:4px 0 0;max-width:none;">Pedestrian flow science: Highway Capacity Manual (HCM), FHWA &middot; ADA: ADA Access Board Chapter 4</p>
-        <p style="font-size:0.8rem;color:rgba(255,255,255,0.2);margin:8px 0 0;max-width:none;">Analysis generated 2026-04-02 &middot; Demo for Boston CIO briefing</p>
-      </div>
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="../index.html"><img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="footer-logo"></a>
+    <p class="footer-tagline">Infrastructure Intelligence for Safer Communities</p>
+    <div class="footer-divider"></div>
+    <p class="footer-meta">
+      Prepared for Santiago Garces, CIO, City of Boston<br>
+      Data: Cyvl Infrastructure API · Boston Open Data (CKAN) · Vision Zero<br>
+      Somerville, MA Pilot · 120 miles scanned · 34,000 images<br>
+      Project 090e18f2-0002-4a70-90b4-8f073d26294d · Crash data: Boston Vision Zero · HCM/FHWA pedestrian flow · ADA Access Board Ch. 4
+    </p>
+    <div class="footer-powered">
+      <img src="../assets/cyvl_sensor.png" alt="Cyvl Sensor">
+      <span>Powered by Cyvl</span>
     </div>
   </div>
 </footer>
@@ -1603,21 +1695,43 @@ const adaIcon = makeMarker('#1B79C5', '#fff', 'rgba(27,121,197,0.25)');
     .bindPopup('<strong>' + s.name + '</strong><br><span style="font-size:0.8rem;color:#666;">' + s.note + '</span>');
 });
 
-// Corridor polylines
-[
-  { name: 'Highland Avenue (Medium Risk)', color: '#F59E0B', weight: 5, dash: null,
-    coords: [[42.392, -71.1175], [42.3872, -71.0997], [42.383, -71.082]] },
-  { name: 'Somerville Avenue (Medium Risk)', color: '#F59E0B', weight: 5, dash: null,
-    coords: [[42.387, -71.119], [42.3831, -71.106], [42.38, -71.094]] },
-  { name: 'McGrath Highway — HIGH RISK (PCI 23.55)', color: '#FF470A', weight: 6, dash: null,
-    coords: [[42.3926, -71.0772], [42.3774, -71.0828], [42.364, -71.078]] },
-  { name: 'Broadway — Data Gap (78% unscored)', color: '#1B79C5', weight: 4, dash: '8,8',
-    coords: [[42.3926, -71.0772], [42.3863, -71.0793], [42.381, -71.094]] }
-].forEach(c => {
-  L.polyline(c.coords, { color: c.color, weight: c.weight, opacity: 0.85, dashArray: c.dash })
-    .addTo(map)
-    .bindPopup('<strong>' + c.name + '</strong>');
-});
+// Road-snapped route helper
+function fetchRoute(waypoints, opts, targetMap) {
+  var coords = waypoints.map(function(w) { return w[1] + ',' + w[0]; }).join(';');
+  fetch('https://router.project-osrm.org/route/v1/foot/' + coords + '?overview=full&geometries=geojson')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.routes && data.routes[0]) {
+        var path = data.routes[0].geometry.coordinates.map(function(c) { return [c[1], c[0]]; });
+        L.polyline(path, opts).addTo(targetMap);
+      }
+    })
+    .catch(function() {
+      L.polyline(waypoints, opts).addTo(targetMap);
+    });
+}
+
+// Corridor polylines — road-snapped via OSRM
+fetchRoute(
+  [[42.392, -71.1175], [42.3872, -71.0997], [42.383, -71.082]],
+  { color: '#F59E0B', weight: 5, opacity: 0.85, dashArray: null },
+  map
+);
+fetchRoute(
+  [[42.387, -71.119], [42.3831, -71.106], [42.38, -71.094]],
+  { color: '#F59E0B', weight: 5, opacity: 0.85, dashArray: null },
+  map
+);
+fetchRoute(
+  [[42.3926, -71.0772], [42.3774, -71.0828], [42.364, -71.078]],
+  { color: '#FF470A', weight: 6, opacity: 0.85, dashArray: null },
+  map
+);
+fetchRoute(
+  [[42.3926, -71.0772], [42.3863, -71.0793], [42.381, -71.094]],
+  { color: '#1B79C5', weight: 4, opacity: 0.85, dashArray: '8,8' },
+  map
+);
 
 // Hazard points
 [
@@ -1641,6 +1755,34 @@ const adaIcon = makeMarker('#1B79C5', '#fff', 'rgba(27,121,197,0.25)');
     .addTo(map)
     .bindPopup('<span style="font-size:0.8rem;">&#9855; ' + p.label + '</span>');
 });
+</script>
+<script>
+// ===================== HAMBURGER MENU =====================
+(function() {
+  var hamburger = document.getElementById('hamburger');
+  var navLinks = document.getElementById('navLinks');
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', function() {
+      hamburger.classList.toggle('open');
+      navLinks.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', navLinks.classList.contains('open'));
+    });
+    navLinks.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('click', function(e) {
+      if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+})();
 </script>
 </body>
 </html>

@@ -1,0 +1,23 @@
+{
+  "total": 3289,
+  "by_type": {
+    "TREE": 792,
+    "CURB": 369,
+    "LUMINARIES": 358,
+    "SIDEWALK": 345,
+    "UTILITY_POLE": 334,
+    "MANHOLE_COVER": 326,
+    "RAMP": 274,
+    "CATCH_BASIN": 180,
+    "HYDRANT": 101,
+    "PEDESTRIAN_PUSH_BUTTON": 67,
+    "TRAFFIC_SIGNAL_POLE": 49,
+    "TRAFFIC_SIGNAL": 42,
+    "STAND_ALONE_PEDESTRIAN_HEAD": 18,
+    "BIKE_RACK": 17,
+    "FLASHING_BEACONS": 12,
+    "CCTV": 5
+  },
+  "source": "direct database query",
+  "query": "SELECT asset_type, COUNT(*) FROM public.above_ground_assets WHERE project_id = '090e18f2-0002-4a70-90b4-8f073d26294d' AND ST_DWithin(geometry::geography, ST_SetSRID(ST_MakePoint(-71.1222329, 42.3963615), 4326)::geography, 500) GROUP BY asset_type ORDER BY count DESC"
+}

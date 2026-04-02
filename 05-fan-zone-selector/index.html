@@ -21,9 +21,7 @@
       --red-bg: #FFEBEE;
     }
 
-    /* NAV */
-    .nav-logo-wrap { display: flex; align-items: center; gap: 10px; }
-    .nav-logo-wrap span { font-weight: 700; font-size: 0.9rem; color: var(--text-secondary); border-left: 2px solid #e0e0e0; padding-left: 10px; }
+    /* NAV — uses shared dark styles from styles.css */
 
     /* HERO */
     .hero { padding: 72px 0 56px; }
@@ -267,19 +265,46 @@
     .venue-tag { font-size: 0.75rem; color: var(--utility-blue); font-weight: 600; }
 
     /* FOOTER */
-    .footer-inner { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
-    .footer-tagline { font-size: 0.82rem; color: var(--concrete-gray); }
+    .footer {
+      background: var(--asphalt-black, #0D0D0C);
+      color: rgba(255,255,255,0.6);
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .footer-inner { max-width: 600px; margin: 0 auto; }
+    .footer-logo { height: 24px; opacity: 0.6; margin-bottom: 12px; }
+    .footer-tagline { font-size: 0.875rem; margin-bottom: 16px; color: rgba(255,255,255,0.5); }
+    .footer-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 20px auto; max-width: 200px; }
+    .footer-meta { font-size: 0.75rem; line-height: 1.6; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .footer-powered {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .footer-powered img { height: 32px; opacity: 0.5; }
+    .footer-powered span { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+
+    /* MOBILE RESPONSIVE OVERRIDES */
+    html, body { overflow-x: hidden; max-width: 100vw; }
+    @media (max-width: 768px) {
+      table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+      th, td { padding: 6px 8px; font-size: 0.75rem; white-space: nowrap; }
+      .container, [class*="container"] { max-width: 100%; padding: 0 16px; overflow-x: hidden; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr !important; }
+      .card, [class*="card"] { min-width: 0; max-width: 100%; }
+    }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav class="nav">
-  <div class="nav-logo-wrap">
-    <img src="../assets/cyvl_logo_black.png" alt="Cyvl" class="nav-logo" />
-    <span>Fan Zone Selector</span>
-  </div>
-  <div class="nav-links">
+  <a href="../index.html" title="Back to all demos" style="display:inline-flex;align-items:center;">
+    <img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="nav-logo">
+  </a>
+  <div class="nav-links" id="navLinks">
     <a href="#rankings">Rankings</a>
     <a href="#map">Map</a>
     <a href="#comparison">Compare</a>
@@ -287,6 +312,9 @@
     <a href="#methodology">Scoring</a>
     <a href="#grant">Grants</a>
   </div>
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -592,9 +620,20 @@
           </div>
         </div>
         <div class="site-card-body">
-          <div class="photo-placeholder">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <div class="photo-count">37 Cyvl street-level images available for planning</div>
+          <!-- Cyvl street-level imagery — Assembly Row -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
+            <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX050786_MP4_1764015483290556_front_3000.jpg" alt="Assembly Row area street view" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Assembly Row · PCI 66.2</div>
+            </div>
+            <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX060786_MP4_1764016000281793_front_3000.jpg" alt="Assembly Row street infrastructure" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Assembly Row · PCI 72.81</div>
+            </div>
+            <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+              <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX050786_MP4_1764015489290454_front_3000.jpg" alt="Assembly Row open space pavement" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+              <div style="padding:6px 8px;background:rgba(13,13,12,0.05);font-size:0.65rem;color:rgba(0,0,0,0.4);">Assembly Row · PCI 81.05</div>
+            </div>
           </div>
           <div class="score-criteria">
             <div class="score-criterion">
@@ -682,9 +721,10 @@
           </div>
         </div>
         <div class="site-card-body">
-          <div class="photo-placeholder">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <div class="photo-count">31 Cyvl street-level images available</div>
+          <!-- Cyvl street-level imagery — Davis Square -->
+          <div style="margin-bottom:16px;border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+            <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010776_MP4_1763651148994875_front_3000.jpg" alt="Davis Square street-level view" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+            <div style="padding:8px 12px;background:rgba(13,13,12,0.05);font-size:0.7rem;color:rgba(0,0,0,0.4);">Cyvl scan · Davis Square · PCI 68.78 · patching + weathering detected</div>
           </div>
           <div class="score-criteria">
             <div class="score-criterion"><div class="score-criterion-label">Pavement (15%)</div><div class="score-criterion-value score-yellow">8/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:53%;background:var(--yellow-strong);"></div></div></div>
@@ -746,9 +786,10 @@
           </div>
         </div>
         <div class="site-card-body">
-          <div class="photo-placeholder">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <div class="photo-count">52 Cyvl street-level images — most-documented site in dataset</div>
+          <!-- Cyvl street-level imagery — Union Square -->
+          <div style="margin-bottom:16px;border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+            <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020766_MP4_1763484033733706_front_3000.jpg" alt="Union Square street-level view showing pavement condition" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+            <div style="padding:8px 12px;background:rgba(13,13,12,0.05);font-size:0.7rem;color:rgba(0,0,0,0.4);">Cyvl scan · Union Square area · PCI 37.66 · approach street condition</div>
           </div>
           <div class="score-criteria">
             <div class="score-criterion"><div class="score-criterion-label">Pavement (15%)</div><div class="score-criterion-value score-red">7/15</div><div class="score-criterion-bar"><div class="score-criterion-fill" style="width:47%;background:var(--red-strong);"></div></div></div>
@@ -1081,7 +1122,7 @@
     </div>
 
     <div style="margin-top:32px;padding:24px;background:rgba(218,255,0,0.06);border:1px solid rgba(218,255,0,0.15);border-radius:var(--radius-lg);">
-      <h4 style="color:var(--high-vis-yellow);margin-bottom:12px;">Why ADA Is Weighted Highest</h4>
+      <h3 style="color:var(--high-vis-yellow);margin-bottom:12px;">Why ADA Is Weighted Highest</h3>
       <p style="color:#8a9490;margin-bottom:0;">FIFA fan festival requirements mandate fully accessible venues under federal ADA law. For public events on public land receiving state grant funding, ADA compliance is not optional — it is a legal prerequisite. A site with excellent pavement but inadequate ramp counts or degraded accessible routes cannot receive grant funding and exposes the city to litigation. Cyvl's infrastructure data makes ADA compliance quantifiable before a dollar of grant money is committed.</p>
     </div>
   </div>
@@ -1100,35 +1141,35 @@
       <div class="finding-card">
         <div class="finding-number">1</div>
         <div>
-          <h4>Teele Square: 9 Failed Pavement Segments — Immediate Safety Disqualifier</h4>
+          <h3>Teele Square: 9 Failed Pavement Segments — Immediate Safety Disqualifier</h3>
           <p>Cyvl's pavement inspection data reveals 9 segments with PCI scores below 10 (Failed) within 400m of Teele Square — the most dangerous road condition classification. Combined with 32 Serious segments and 200 total poor-or-worse inspections (highest of all sites), Teele Square cannot safely host large crowds. A tripping hazard or inaccessible route at a FIFA event constitutes an ADA violation and creates significant municipal liability. This risk is invisible without Cyvl data.</p>
         </div>
       </div>
       <div class="finding-card">
         <div class="finding-number">2</div>
         <div>
-          <h4>Assembly Row: Only 2 Utility Poles — Uniquely Suited for Large-Screen Staging</h4>
+          <h3>Assembly Row: Only 2 Utility Poles — Uniquely Suited for Large-Screen Staging</h3>
           <p>Most fan zones require large LED screens (typically 10m&times;6m or larger) for match broadcasts. Utility poles create sightline obstructions, safety clearance zones, and permitting complications. Assembly Row's underground utilities (a product of its post-2013 development) leave only 2 poles detected within 400m — compared to Magoun Square's 28 and Davis Square's 26. This single data point saves event logistics teams weeks of site survey work and city coordination.</p>
         </div>
       </div>
       <div class="finding-card">
         <div class="finding-number">3</div>
         <div>
-          <h4>Union Square's New Plaza Scores High, But 127 Poor Inspections on Approach Streets</h4>
+          <h3>Union Square's New Plaza Scores High, But 127 Poor Inspections on Approach Streets</h3>
           <p>Union Square's post-2023 plaza redesign creates an excellent central gathering space — but the streets fans walk to reach it (Charlestown Street with Serious segments PCI 11&ndash;22, Allen Street with Very Poor PCI 25&ndash;39, Windsor Place with Very Poor PCI 38&ndash;40) represent a significant crowd routing challenge. Cyvl's 400m radius analysis revealed this disconnect: the destination is good, the journey there is not. Any grant application for Union Square must include pavement remediation funding for approach corridors.</p>
         </div>
       </div>
       <div class="finding-card">
         <div class="finding-number">4</div>
         <div>
-          <h4>ADA Ramp Counts Vary 70% Across Sites — Critical for FIFA's Accessibility Mandate</h4>
+          <h3>ADA Ramp Counts Vary 70% Across Sites — Critical for FIFA's Accessibility Mandate</h3>
           <p>East Somerville leads with 22 ramps detected within 400m; Magoun Square has only 13 — a 70% difference in accessible infrastructure density. FIFA fan festival specifications require fully accessible routes, companion seating in all viewing zones, and accessible sanitation. Cyvl's above-ground asset data maps exactly where ramps exist and where gaps remain, enabling targeted capital investment before grant submission rather than after the fact.</p>
         </div>
       </div>
       <div class="finding-card">
         <div class="finding-number">5</div>
         <div>
-          <h4>Assembly Row's CCTV Density (3 Cameras) vs. Two Sites with Zero Coverage</h4>
+          <h3>Assembly Row's CCTV Density (3 Cameras) vs. Two Sites with Zero Coverage</h3>
           <p>Security screening is mandatory at FIFA fan festivals. While temporary security infrastructure can be deployed, existing CCTV provides continuous crowd monitoring, emergency response coordination, and post-event incident review. Assembly Row's 3 CCTV cameras — combined with its adjacent hotel security infrastructure — create a significantly stronger baseline security environment. Union Square and East Somerville have zero CCTV within 400m, meaning full security infrastructure costs would be borne by the event budget.</p>
         </div>
       </div>
@@ -1261,30 +1302,19 @@
 
 <!-- FOOTER -->
 <footer class="footer">
-  <div class="container">
-    <div class="footer-inner">
-      <div>
-        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" style="height:28px;margin-bottom:12px;" />
-        <div class="footer-tagline">Infrastructure intelligence for the cities that build tomorrow.</div>
-        <div style="margin-top:8px;font-size:0.75rem;color:#505A56;">Data sourced from Cyvl Project 090e18f2 &middot; Somerville, MA &middot; Generated April 2026</div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-size:0.75rem;color:#505A56;line-height:2.2;">
-          <div>Grant: MA Office of Travel &amp; Tourism (MOTT)</div>
-          <div>ADA: ADA.gov outdoor event requirements</div>
-          <div>Capacity formula: FIFA fan festival specs</div>
-          <div>Infrastructure data: Cyvl Data API</div>
-        </div>
-      </div>
-    </div>
+  <div class="footer-inner">
+    <a href="../index.html"><img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="footer-logo"></a>
+    <p class="footer-tagline">Infrastructure Intelligence for Safer Communities</p>
     <div class="footer-divider"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-      <div class="footer-powered">
-        Powered by
-        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" />
-        Cyvl Infrastructure Intelligence
-      </div>
-      <div style="font-size:0.75rem;color:#505A56;">Boston CIO Demo &middot; Fan Zone Site Selector &middot; 2026</div>
+    <p class="footer-meta">
+      Prepared for Santiago Garces, CIO, City of Boston<br>
+      Data: Cyvl Infrastructure API · Boston Open Data (CKAN) · Vision Zero<br>
+      Somerville, MA Pilot · 120 miles scanned · 34,000 images<br>
+      Project 090e18f2 · Grant: MA Office of Travel &amp; Tourism (MOTT) · ADA: ADA.gov · Capacity: FIFA fan festival specs
+    </p>
+    <div class="footer-powered">
+      <img src="../assets/cyvl_sensor.png" alt="Cyvl Sensor">
+      <span>Powered by Cyvl</span>
     </div>
   </div>
 </footer>
@@ -1347,6 +1377,34 @@
     var tIcon = L.divIcon({ html: tHtml, iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-14], className:'' });
     L.marker([t.lat, t.lon], { icon: tIcon }).addTo(map).bindPopup('<div style="font-family:Inter,sans-serif;font-size:0.82rem;font-weight:600;">' + t.name + '</div>');
   });
+</script>
+<script>
+// ===================== HAMBURGER MENU =====================
+(function() {
+  var hamburger = document.getElementById('hamburger');
+  var navLinks = document.getElementById('navLinks');
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', function() {
+      hamburger.classList.toggle('open');
+      navLinks.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', navLinks.classList.contains('open'));
+    });
+    navLinks.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('click', function(e) {
+      if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+})();
 </script>
 </body>
 </html>

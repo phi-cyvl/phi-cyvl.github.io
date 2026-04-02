@@ -7,7 +7,7 @@
   <link rel="icon" href="../assets/cyvl_favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="../assets/styles.css" />
@@ -115,49 +115,87 @@
       color: rgba(255,255,255,0.5);
     }
 
-    /* Sticky nav */
-    .site-nav {
-      position: sticky;
-      top: 0;
-      z-index: 200;
-      background: rgba(13,13,12,0.95);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(218,255,0,0.12);
-      padding: 0 24px;
-    }
-    .site-nav-inner {
-      max-width: 1200px;
-      margin: 0 auto;
+    /* Standardized nav */
+    .nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 56px;
+      padding: 12px 24px;
+      background: rgba(13,13,12,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
-    .site-nav img { height: 22px; }
-    .site-nav-links {
+    .nav-logo { height: 28px; }
+    .nav-links {
       display: flex;
-      gap: 28px;
-      list-style: none;
+      align-items: center;
+      gap: 8px;
     }
-    .site-nav-links a {
-      color: rgba(255,255,255,0.5);
-      font-size: 0.8rem;
-      font-weight: 600;
+    .nav-links a {
+      color: rgba(255,255,255,0.6);
       text-decoration: none;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      transition: color 0.2s;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+      transition: color 0.2s, background 0.2s;
     }
-    .site-nav-links a:hover { color: var(--high-vis-yellow); }
-    .nav-cta {
-      background: var(--high-vis-yellow);
-      color: var(--asphalt-black);
-      padding: 7px 18px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-decoration: none;
-      letter-spacing: 0.02em;
+    .nav-links a:hover, .nav-links a.active {
+      color: #fff;
+      background: rgba(255,255,255,0.06);
+    }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 1001;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: 53px;
+        left: 0;
+        right: 0;
+        background: rgba(13,13,12,0.98);
+        backdrop-filter: blur(16px);
+        flex-direction: column;
+        padding: 16px 24px;
+        gap: 4px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        max-height: calc(100vh - 53px);
+        overflow-y: auto;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a {
+        font-size: 0.875rem;
+        padding: 10px 16px;
+        border-radius: 8px;
+        width: 100%;
+      }
+      .nav-links a:hover { background: rgba(218,255,0,0.08); }
     }
 
     /* Section headers */
@@ -287,7 +325,7 @@
       justify-content: center;
       font-size: 1rem;
     }
-    .critical-alert-text h5 {
+    .critical-alert-text h3 {
       font-size: 0.9rem;
       font-weight: 700;
       color: #FF6B47;
@@ -330,7 +368,7 @@
     .type-coffee { background: #EFEBE9; color: #4E342E; }
     .type-bar { background: #EDE7F6; color: #4527A0; }
     .type-retail { background: #E8F5E9; color: #1B5E20; }
-    .business-card h4 { font-size: 1rem; margin-bottom: 4px; }
+    .business-card h3 { font-size: 1rem; margin-bottom: 4px; }
     .business-card .address {
       font-size: 0.78rem;
       color: var(--concrete-gray);
@@ -472,7 +510,7 @@
       line-height: 1.5;
     }
     .sensory-card .icon { font-size: 1.5rem; margin-bottom: 8px; }
-    .sensory-card h5 { font-size: 0.9rem; margin-bottom: 6px; }
+    .sensory-card h4 { font-size: 0.9rem; margin-bottom: 6px; }
 
     /* Street closure plan */
     .closure-zone {
@@ -482,7 +520,7 @@
       padding: 20px;
       margin-bottom: 14px;
     }
-    .closure-zone h4 {
+    .closure-zone h3 {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -543,7 +581,7 @@
       border-radius: 50%;
       border: 3px solid var(--asphalt-black);
     }
-    .permit-body h4 {
+    .permit-body h3 {
       font-size: 1rem;
       color: white;
       margin-bottom: 4px;
@@ -593,7 +631,7 @@
       line-height: 1;
       margin-bottom: 6px;
     }
-    .cyvl-found-card h4 {
+    .cyvl-found-card h3 {
       font-size: 1rem;
       color: white;
       margin-bottom: 8px;
@@ -771,7 +809,7 @@
       justify-content: space-between;
       margin-bottom: 6px;
     }
-    .hazard-header h5 {
+    .hazard-header h3 {
       font-size: 0.9rem;
       font-weight: 700;
       color: white;
@@ -805,24 +843,59 @@
     .popup-title { font-size: 0.9rem; font-weight: 700; color: var(--high-vis-yellow); margin-bottom: 4px; }
     .popup-detail { font-size: 0.78rem; color: rgba(255,255,255,0.7); line-height: 1.4; }
     .popup-badge-row { margin-top: 6px; }
+
+    /* ============================
+       MOBILE RESPONSIVE OVERRIDES
+    ============================ */
+    html, body { overflow-x: hidden; max-width: 100vw; }
+    @media (max-width: 768px) {
+      table { display: block; overflow-x: auto; max-width: 100%; }
+      .container, [class*="container"] { max-width: 100%; padding: 0 16px; overflow-x: hidden; }
+      /* Grid collapse */
+      .grid-2, .grid-3, .grid-4, [class*="grid"] { grid-template-columns: 1fr !important; }
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--asphalt-black, #0D0D0C);
+      color: rgba(255,255,255,0.6);
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .footer-inner { max-width: 600px; margin: 0 auto; }
+    .footer-logo { height: 24px; opacity: 0.6; margin-bottom: 12px; }
+    .footer-tagline { font-size: 0.875rem; margin-bottom: 16px; color: rgba(255,255,255,0.5); }
+    .footer-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 20px auto; max-width: 200px; }
+    .footer-meta { font-size: 0.75rem; line-height: 1.6; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .footer-powered {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .footer-powered img { height: 32px; opacity: 0.5; }
+    .footer-powered span { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
   </style>
 </head>
 <body>
 
 <!-- NAVIGATION -->
-<nav class="site-nav">
-  <div class="site-nav-inner">
-    <img src="../assets/cyvl_logo_white.png" alt="Cyvl" />
-    <ul class="site-nav-links">
-      <li><a href="#map">Map</a></li>
-      <li><a href="#infrastructure">Infrastructure</a></li>
-      <li><a href="#businesses">Businesses</a></li>
-      <li><a href="#accessibility">Accessibility</a></li>
-      <li><a href="#permits">Permits</a></li>
-      <li><a href="#cyvl-found">Cyvl Found</a></li>
-    </ul>
-    <a href="#cyvl-found" class="nav-cta">View Data</a>
+<nav class="nav">
+  <a href="../index.html" title="Back to all demos" style="display:inline-flex;align-items:center;">
+    <img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="nav-logo">
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#map">Map</a>
+    <a href="#infrastructure">Infrastructure</a>
+    <a href="#businesses">Businesses</a>
+    <a href="#accessibility">Accessibility</a>
+    <a href="#permits">Permits</a>
+    <a href="#cyvl-found">Cyvl Found</a>
   </div>
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -849,12 +922,20 @@
         <div class="hero-stat-label">Est. Attendance</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-value">200</div>
+        <div class="hero-stat-value">1,798</div>
         <div class="hero-stat-label">Pavement Segments Analyzed</div>
       </div>
       <div class="hero-stat">
         <div class="hero-stat-value">500m</div>
         <div class="hero-stat-label">Survey Radius</div>
+      </div>
+    </div>
+
+    <!-- Hero street imagery -->
+    <div class="cyvl-image" style="margin:32px 0 0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);max-width:900px;">
+      <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020786_MP4_1764001470028055_front_3000.jpg" alt="Davis Square street — Elm Street corridor" style="width:100%;height:280px;object-fit:cover;" loading="lazy">
+      <div style="padding:8px 12px;background:rgba(13,13,12,0.85);font-size:0.7rem;color:rgba(255,255,255,0.5);">
+        Cyvl scan · PCI 85.6 · Elm St at Davis Square · Detected: person, parking meter, car, fire hydrant
       </div>
     </div>
   </div>
@@ -901,6 +982,28 @@
         Critical Pavement Segment
       </div>
     </div>
+
+    <!-- Map section street thumbnails -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px;" class="reveal">
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010776_MP4_1763651148994875_front_3000.jpg" alt="Davis Square intersection — Elm St scan" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+        <div style="padding:6px 10px;background:rgba(13,13,12,0.85);font-size:0.68rem;color:rgba(255,255,255,0.5);">
+          PCI 68.8 · patching, weathering · person, traffic light
+        </div>
+      </div>
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010763_MP4_1763409265166361_front_3000.jpg" alt="Davis Square crosswalk and intersection" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+        <div style="padding:6px 10px;background:rgba(13,13,12,0.85);font-size:0.68rem;color:rgba(255,255,255,0.5);">
+          PCI 86.1 · crosswalk · Detected: stop sign, car
+        </div>
+      </div>
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX030783_MP4_1763754145579742_front_3000.jpg" alt="Davis Square pedestrian zone with cyclists" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+        <div style="padding:6px 10px;background:rgba(13,13,12,0.85);font-size:0.68rem;color:rgba(255,255,255,0.5);">
+          PCI 33.0 · pedestrian zone · Detected: person, bicycle, car
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -910,7 +1013,7 @@
     <div class="section-label reveal">Cyvl Scan — scan_1185_SOMERVILLE_MA</div>
     <h2 style="color:white;margin-bottom:8px;" class="reveal">Infrastructure Report Card</h2>
     <p style="color:rgba(255,255,255,0.6);margin-bottom:40px;max-width:640px;" class="reveal">
-      200 pavement segments, 200 signs, and 200+ above-ground assets inventoried within 500 meters of Davis Square. Real data — not estimates.
+      1,798 pavement segments, 2,190 signs, and 3,289 above-ground assets inventoried within 500 meters of Davis Square. Real data — not estimates.
     </p>
 
     <!-- TABS -->
@@ -926,8 +1029,24 @@
       <div class="critical-alert" style="margin-bottom:24px;">
         <div class="critical-alert-icon">⚠</div>
         <div class="critical-alert-text">
-          <h5>2 FAILED SEGMENTS REQUIRE IMMEDIATE ACTION</h5>
+          <h3>2 FAILED SEGMENTS REQUIRE IMMEDIATE ACTION</h3>
           <p>PCI scores of 1.2 and 9.6 — catastrophic for wheelchair and mobility device users. Must be repaired or permanently barricaded before event day. 12 additional Serious segments require matting or repair.</p>
+        </div>
+      </div>
+
+      <!-- Pavement condition imagery -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+        <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.3);">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX040786_MP4_1764009496392022_front_3000.jpg" alt="Pavement distress — cracking and deterioration" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
+          <div style="padding:6px 10px;background:rgba(13,13,12,0.9);font-size:0.68rem;color:rgba(255,255,255,0.5);">
+            <span style="color:#FF6B47;font-weight:700;">PCI 36.0 — Poor</span> · Somerville, MA · pavement distress scan
+          </div>
+        </div>
+        <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.5);">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010783_MP4_1763746792282478_front_3000.jpg" alt="Failed pavement segment — serious structural damage" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
+          <div style="padding:6px 10px;background:rgba(13,13,12,0.9);font-size:0.68rem;color:rgba(255,255,255,0.5);">
+            <span style="color:#FF470A;font-weight:700;">PCI 31.5 — Very Poor</span> · Somerville, MA · priority repair segment
+          </div>
         </div>
       </div>
 
@@ -1106,7 +1225,7 @@
       <div class="critical-alert" style="margin-top:16px;border-color:rgba(255,152,0,0.4);background:rgba(255,152,0,0.08);">
         <div class="critical-alert-icon" style="background:#FF9800;">!</div>
         <div class="critical-alert-text">
-          <h5 style="color:#FFB74D;">3 Poor-Condition Signs Need Replacement</h5>
+          <h3 style="color:#FFB74D;">3 Poor-Condition Signs Need Replacement</h3>
           <p>Poor signs within the event radius should be replaced prior to the event for attendee safety and city liability protection. Cyvl's inventory provides exact locations for DPW work orders.</p>
         </div>
       </div>
@@ -1158,7 +1277,7 @@
       </div>
 
       <div style="background:rgba(218,255,0,0.06);border:1px solid rgba(218,255,0,0.15);border-radius:12px;padding:20px;">
-        <h4 style="color:var(--high-vis-yellow);margin-bottom:12px;">Event Planning Highlights</h4>
+        <h3 style="color:var(--high-vis-yellow);margin-bottom:12px;">Event Planning Highlights</h3>
         <ul style="list-style:none;padding:0;color:rgba(255,255,255,0.75);font-size:0.85rem;line-height:2;">
           <li>🌳 <strong style="color:white;">48 trees</strong> — design quiet zones and seating areas around existing canopy</li>
           <li>⚡ <strong style="color:white;">32 utility poles</strong> — assess tap points for stage and vendor booth power (coordinate with Eversource)</li>
@@ -1174,7 +1293,7 @@
     <div id="tab-hazards" class="main-tab-panel">
       <div class="severity-critical">
         <div class="hazard-header">
-          <h5>Failed Pavement Segments (PCI &lt; 10)</h5>
+          <h3>Failed Pavement Segments (PCI &lt; 10)</h3>
           <span class="sev-tag sev-critical">Critical</span>
         </div>
         <div class="hazard-body">
@@ -1182,9 +1301,25 @@
         </div>
       </div>
 
+      <!-- Failed pavement imagery -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 16px;">
+        <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.5);">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX040786_MP4_1764009496392022_front_3000.jpg" alt="Failed pavement segment PCI 36 — Somerville scan" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+          <div style="padding:6px 10px;background:rgba(13,13,12,0.9);font-size:0.68rem;color:rgba(255,255,255,0.5);">
+            <span style="color:#FF470A;font-weight:700;">Pavement Distress Detected</span> · PCI 36.0 · scan_1185_SOMERVILLE_MA
+          </div>
+        </div>
+        <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.5);">
+          <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX040786_MP4_1764010342377685_front_3000.jpg" alt="Serious pavement deterioration — DPW action required" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+          <div style="padding:6px 10px;background:rgba(13,13,12,0.9);font-size:0.68rem;color:rgba(255,255,255,0.5);">
+            <span style="color:#FF470A;font-weight:700;">Severe Deterioration</span> · Repair Required · scan_1185_SOMERVILLE_MA
+          </div>
+        </div>
+      </div>
+
       <div class="severity-high">
         <div class="hazard-header">
-          <h5>Serious Pavement Segments (PCI 10–25)</h5>
+          <h3>Serious Pavement Segments (PCI 10–25)</h3>
           <span class="sev-tag sev-high">High</span>
         </div>
         <div class="hazard-body">
@@ -1194,7 +1329,7 @@
 
       <div class="severity-medium">
         <div class="hazard-header">
-          <h5>Poor-Condition Signs</h5>
+          <h3>Poor-Condition Signs</h3>
           <span class="sev-tag sev-medium">Medium</span>
         </div>
         <div class="hazard-body">
@@ -1204,7 +1339,7 @@
 
       <div class="severity-medium">
         <div class="hazard-header">
-          <h5>Manhole Covers (22 in radius)</h5>
+          <h3>Manhole Covers (22 in radius)</h3>
           <span class="sev-tag sev-medium">Medium</span>
         </div>
         <div class="hazard-body">
@@ -1214,7 +1349,7 @@
 
       <div class="severity-medium">
         <div class="hazard-header">
-          <h5>Very Poor / Poor Pavement (PCI 26–55)</h5>
+          <h3>Very Poor / Poor Pavement (PCI 26–55)</h3>
           <span class="sev-tag sev-medium">Medium</span>
         </div>
         <div class="hazard-body">
@@ -1236,14 +1371,31 @@
   <div class="container">
     <div class="section-label dark reveal">12 Businesses Profiled</div>
     <h2 style="margin-bottom:8px;" class="reveal">Business Participation Plan</h2>
-    <p style="color:var(--concrete-gray);margin-bottom:40px;max-width:600px;" class="reveal">
+    <p style="color:var(--concrete-gray);margin-bottom:24px;max-width:600px;" class="reveal">
       Every participating business profiled with a proposed event role and estimated revenue lift — derived from ArtBeat 2025 attendance benchmarks and NEA community event impact data.
     </p>
+
+    <!-- Commercial district street imagery -->
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:36px;" class="reveal">
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(13,13,12,0.1);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020786_MP4_1764001470028055_front_3000.jpg" alt="Davis Square commercial corridor — Elm Street storefronts" style="width:100%;height:200px;object-fit:cover;" loading="lazy">
+        <div style="padding:6px 10px;background:rgba(13,13,12,0.07);font-size:0.68rem;color:rgba(13,13,12,0.45);">
+          Cyvl scan · Elm St commercial corridor · PCI 85.6 · person, parking meter, car
+        </div>
+      </div>
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(13,13,12,0.1);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010776_MP4_1763651073496146_front_3000.jpg" alt="Davis Square streetscape — business district" style="width:100%;height:200px;object-fit:cover;" loading="lazy">
+        <div style="padding:6px 10px;background:rgba(13,13,12,0.07);font-size:0.68rem;color:rgba(13,13,12,0.45);">
+          Cyvl scan · Davis Sq · PCI 90.3
+        </div>
+      </div>
+    </div>
+
     <div class="business-grid">
 
       <div class="business-card reveal">
         <span class="business-type-badge type-coffee">Coffee Shop</span>
-        <h4>Diesel Cafe</h4>
+        <h3>Diesel Cafe</h3>
         <div class="address">257 Elm St, Somerville, MA 02144</div>
         <div class="role">Official event coffee sponsor; outdoor service window; barista showcase. Named Best Coffee Shop Somerville 2025.</div>
         <span class="revenue-tag">+$2,000–$4,000</span>
@@ -1251,7 +1403,7 @@
 
       <div class="business-card reveal">
         <span class="business-type-badge type-food">Restaurant / Bar</span>
-        <h4>Foundry on Elm</h4>
+        <h3>Foundry on Elm</h3>
         <div class="address">Elm St, Davis Square, Somerville</div>
         <div class="role">Outdoor bar service; event after-party venue; food vendor booth anchoring the Elm Street corridor.</div>
         <span class="revenue-tag">+$3,000–$6,000</span>
@@ -1259,7 +1411,7 @@
 
       <div class="business-card reveal">
         <span class="business-type-badge type-food">American Diner</span>
-        <h4>Rosebud Bar &amp; Kitchen</h4>
+        <h3>Rosebud Bar &amp; Kitchen</h3>
         <div class="address">Elm St, Davis Square, Somerville</div>
         <div class="role">Featured food vendor; brunch programming anchor; iconic Worcester Lunch Car provides historic character for event identity.</div>
         <span class="revenue-tag">+$2,500–$5,000</span>
@@ -1267,7 +1419,7 @@
 
       <div class="business-card reveal">
         <span class="business-type-badge type-bar">Mexican / Tequila Bar</span>
-        <h4>The Painted Burro</h4>
+        <h3>The Painted Burro</h3>
         <div class="address">Elm St, Davis Square, Somerville</div>
         <div class="role">Outdoor tequila garden; cocktail sponsor; live music pairing. 100+ tequilas — a marquee activation.</div>
         <span class="revenue-tag">+$3,000–$5,500</span>
@@ -1275,7 +1427,7 @@
 
       <div class="business-card reveal">
         <span class="business-type-badge type-bar">Wine Bar</span>
-        <h4>Spoke Wine Bar</h4>
+        <h3>Spoke Wine Bar</h3>
         <div class="address">Davis Square, Somerville, MA</div>
         <div class="role">Wine tasting station at quiet zone end of Elm Street. Upscale pairing with local food producers. Anchors accessible seating area.</div>
         <span class="revenue-tag">+$1,500–$3,000</span>
@@ -1283,7 +1435,7 @@
 
       <div class="business-card reveal">
         <span class="business-type-badge type-food">BBQ Restaurant</span>
-        <h4>Redbones BBQ</h4>
+        <h3>Redbones BBQ</h3>
         <div class="address">55 Chester St, Somerville, MA 02144</div>
         <div class="role">Outdoor BBQ station; headline food vendor; crowd-pleaser anchor. Long-running Davis Square institution for southern-style smoked meats.</div>
         <span class="revenue-tag">+$4,000–$7,000</span>
@@ -1291,7 +1443,7 @@
 
       <div class="business-card reveal">
         <span class="business-type-badge type-food">Specialty Food</span>
-        <h4>Dave's Fresh Pasta</h4>
+        <h3>Dave's Fresh Pasta</h3>
         <div class="address">Davis Square, Somerville, MA</div>
         <div class="role">Artisan food showcase; vendor booth highlighting local makers. Fresh pasta and charcuterie — a neighborhood staple since 1999.</div>
         <span class="revenue-tag">+$1,000–$2,000</span>
@@ -1299,7 +1451,7 @@
 
       <div class="business-card reveal">
         <span class="business-type-badge type-food">Casual Restaurant</span>
-        <h4>Boston Burger Company</h4>
+        <h3>Boston Burger Company</h3>
         <div class="address">37 Davis Sq, Somerville, MA</div>
         <div class="role">Family food zone vendor; kids programming food sponsor. Named Best Hamburger in Somerville 2025 — family event anchor.</div>
         <span class="revenue-tag">+$2,000–$4,000</span>
@@ -1307,7 +1459,7 @@
 
       <div class="business-card reveal">
         <span class="business-type-badge type-coffee">Coffee Shop</span>
-        <h4>New Leaf Espresso</h4>
+        <h3>New Leaf Espresso</h3>
         <div class="address">310 Highland Ave, Somerville, MA</div>
         <div class="role">Second coffee vendor; espresso bar activation near Highland Avenue event boundary. Named Best Espresso Somerville 2025.</div>
         <span class="revenue-tag">+$1,000–$2,500</span>
@@ -1315,7 +1467,7 @@
 
       <div class="business-card reveal">
         <span class="business-type-badge type-food">Japanese / Ramen</span>
-        <h4>Tsurumen 1000</h4>
+        <h3>Tsurumen 1000</h3>
         <div class="address">Davis Square, Somerville, MA</div>
         <div class="role">Specialty food booth; cultural diversity showcase; local chef spotlight. Authentic Osaka-style ramen by Chef Masuo Onishi.</div>
         <span class="revenue-tag">+$1,500–$2,500</span>
@@ -1323,7 +1475,7 @@
 
       <div class="business-card reveal">
         <span class="business-type-badge type-food">Thai Restaurant</span>
-        <h4>Dakzen</h4>
+        <h3>Dakzen</h3>
         <div class="address">Davis Square, Somerville, MA</div>
         <div class="role">International food zone vendor; street food programming. Thai street noodles with slow-simmered broths — cultural variety for the event.</div>
         <span class="revenue-tag">+$1,000–$2,000</span>
@@ -1331,7 +1483,7 @@
 
       <div class="business-card reveal">
         <span class="business-type-badge type-bar">Irish Pub</span>
-        <h4>The Burren</h4>
+        <h3>The Burren</h3>
         <div class="address">247 Elm St, Somerville, MA 02144</div>
         <div class="role">Live music stage sponsor; outdoor beer garden; Irish cultural programming. Davis Square's premier nightlife anchor with built-in stage infrastructure.</div>
         <span class="revenue-tag">+$3,000–$6,000</span>
@@ -1412,10 +1564,32 @@
     <p style="color:rgba(255,255,255,0.6);margin-bottom:12px;max-width:640px;" class="reveal">
       Cyvl infrastructure data drives every accessibility decision — no guessing, full documentation for ADA compliance. 21 ramps, 6 push-button signals, all mapped.
     </p>
-    <div style="margin-bottom:36px;" class="reveal">
+    <div style="margin-bottom:24px;" class="reveal">
       <span class="badge" style="background:rgba(76,175,80,0.15);color:#4CAF50;border:1px solid rgba(76,175,80,0.3);margin-right:8px;">♿ 21 ADA Curb Ramps</span>
       <span class="badge" style="background:rgba(27,121,197,0.15);color:#64B5F6;border:1px solid rgba(27,121,197,0.3);margin-right:8px;">🔔 6 Push-Button Signals</span>
       <span class="badge" style="background:rgba(156,39,176,0.15);color:#CE93D8;border:1px solid rgba(156,39,176,0.3);">🚇 Accessible T Station</span>
+    </div>
+
+    <!-- Accessibility imagery -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px;" class="reveal">
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020776_MP4_1763657668885058_front_3000.jpg" alt="ADA accessible sidewalk — wheelchair ramp approach" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+        <div style="padding:6px 10px;background:rgba(13,13,12,0.85);font-size:0.68rem;color:rgba(255,255,255,0.5);">
+          ADA ramp scan · PCI 66.6 · Somerville, MA
+        </div>
+      </div>
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010786_MP4_1763998664575602_front_3000.jpg" alt="Accessible sidewalk route — push-button signal" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+        <div style="padding:6px 10px;background:rgba(13,13,12,0.85);font-size:0.68rem;color:rgba(255,255,255,0.5);">
+          ADA route · PCI 81.9 · pedestrian signal zone
+        </div>
+      </div>
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010786_MP4_1763997672092423_front_3000.jpg" alt="Crosswalk and pedestrian intersection" style="width:100%;height:160px;object-fit:cover;" loading="lazy">
+        <div style="padding:6px 10px;background:rgba(13,13,12,0.85);font-size:0.68rem;color:rgba(255,255,255,0.5);">
+          Crosswalk scan · PCI 49.7 · pedestrian crossing
+        </div>
+      </div>
     </div>
 
     <h3 style="color:white;font-size:1.1rem;margin-bottom:16px;" class="reveal">ADA-Compliant Approach Routes</h3>
@@ -1467,22 +1641,22 @@
         <div class="sensory-grid">
           <div class="sensory-card">
             <div class="icon">🌳</div>
-            <h5>Quiet Zone</h5>
+            <h4>Quiet Zone</h4>
             Near Spoke Wine Bar, north end of Elm St — tree canopy from 48 documented trees, lower noise exposure.
           </div>
           <div class="sensory-card">
             <div class="icon">📢</div>
-            <h5>Audio Loop</h5>
+            <h4>Audio Loop</h4>
             Stage audio system to include FM hearing loop transmitter for hearing-impaired attendees at all programming zones.
           </div>
           <div class="sensory-card">
             <div class="icon">🔠</div>
-            <h5>Large Print</h5>
+            <h4>Large Print</h4>
             All event signage in large print, high contrast. Audio descriptions at information booths.
           </div>
           <div class="sensory-card">
             <div class="icon">🔔</div>
-            <h5>Audible Signals</h5>
+            <h4>Audible Signals</h4>
             6 push-button pedestrian signals guide visually impaired attendees through all key intersections.
           </div>
         </div>
@@ -1491,7 +1665,7 @@
       <div class="reveal">
         <h3 style="color:white;font-size:1.1rem;margin-bottom:16px;">Surface Remediation Required</h3>
         <div style="background:rgba(255,71,10,0.08);border:1px solid rgba(255,71,10,0.25);border-radius:12px;padding:20px;margin-bottom:16px;">
-          <h5 style="color:#FF6B47;margin-bottom:8px;">Pre-Event DPW Work Orders</h5>
+          <h4 style="color:#FF6B47;margin-bottom:8px;">Pre-Event DPW Work Orders</h4>
           <ul style="list-style:none;padding:0;font-size:0.83rem;color:rgba(255,255,255,0.7);line-height:1.8;">
             <li>✦ Repair or barricade 2 Failed pavement segments (PCI 1.2, 9.6)</li>
             <li>✦ Apply temporary matting on 12 Serious segments (PCI 10–25)</li>
@@ -1522,40 +1696,40 @@
 
     <div class="reveal">
       <div class="closure-zone">
-        <h4>
+        <h3>
           <span class="closure-badge closure-primary">Primary Closure</span>
           Elm Street — Heart of the Event
-        </h4>
+        </h3>
         <p style="font-size:0.85rem;color:rgba(13,13,12,0.7);margin:0 0 6px;">Between Holland St and Highland Ave intersection — approximately 600–800 feet / 3 blocks. Core commercial corridor with highest restaurant and cafe density. Cyvl data confirms Good/Satisfactory pavement (PCI 80–98) in this zone — ideal for accessible event surface.</p>
       </div>
 
       <div class="closure-zone" style="border-color:rgba(27,121,197,0.25);background:rgba(27,121,197,0.04);">
-        <h4>
+        <h3>
           <span class="closure-badge closure-secondary">Pedestrian Zone</span>
           College Avenue (Partial)
-        </h4>
+        </h3>
         <p style="font-size:0.85rem;color:rgba(13,13,12,0.7);margin:0 0 6px;">From Elm St intersection to MBTA Davis Station entrance. Maintains pedestrian flow from accessible Red Line station into event. MBTA coordination required for Bus Routes 87 and 89 deviations via Highland Ave.</p>
       </div>
 
       <div class="closure-zone" style="border-color:rgba(156,39,176,0.2);background:rgba(156,39,176,0.03);">
-        <h4>
+        <h3>
           <span class="closure-badge" style="background:rgba(156,39,176,0.12);color:#7B1FA2;border:1px solid rgba(156,39,176,0.3);">Staging Area</span>
           Holland Street (Partial — First Block)
-        </h4>
+        </h3>
         <p style="font-size:0.85rem;color:rgba(13,13,12,0.7);margin:0 0 6px;">Vendor/logistics staging zone. Good pavement (PCI 87–89). Designated mobility device parking. EMS staging area. Separates event logistics from public pedestrian zones.</p>
       </div>
 
       <div class="closure-zone" style="border-color:rgba(76,175,80,0.25);background:rgba(76,175,80,0.04);">
-        <h4>
+        <h3>
           <span class="closure-badge closure-open">Remains Open</span>
           Highland Avenue — Primary Vehicle Bypass
-        </h4>
+        </h3>
         <p style="font-size:0.85rem;color:rgba(13,13,12,0.7);margin:0 0 6px;">Major arterial stays open as primary vehicle bypass. Porter Square via Beacon Street and Ball Square via Broadway serve as alternate routes. MBTA Bus Routes 87 and 89 deviate via Highland Ave during closure period.</p>
       </div>
     </div>
 
     <div style="background:var(--asphalt-black);border-radius:14px;padding:24px;margin-top:24px;" class="reveal">
-      <h4 style="color:white;margin-bottom:16px;">DPW Requirements Checklist</h4>
+      <h3 style="color:white;margin-bottom:16px;">DPW Requirements Checklist</h3>
       <ul class="dpw-list">
         <li><span class="dpw-check">✓</span>All street closure devices supplied by Somerville DPW or specified by Parking Department</li>
         <li><span class="dpw-check">✓</span>No privately owned vehicles used as barricades — city equipment only</li>
@@ -1585,7 +1759,7 @@
           <div class="permit-week-num">–6</div>
         </div>
         <div class="permit-body">
-          <h4>Public Event / Block Party License</h4>
+          <h3>Public Event / Block Party License</h3>
           <p>Completed online application (CitizenServe — somervillema.gov/blockparty). Written approval from all abutting residents and businesses. 1 week written notice to all abutting parties required before event.</p>
           <div class="permit-issuer">City of Somerville — No fee</div>
         </div>
@@ -1597,7 +1771,7 @@
           <div class="permit-week-num">–6</div>
         </div>
         <div class="permit-body">
-          <h4>Street Closure Authorization</h4>
+          <h3>Street Closure Authorization</h3>
           <p>Filed simultaneously with block party license. Specifies all closure devices, confirms 12-foot emergency clearance plan, documents hydrant buffer zones.</p>
           <div class="permit-issuer">Somerville DPW / Parking Department</div>
         </div>
@@ -1609,7 +1783,7 @@
           <div class="permit-week-num">–5</div>
         </div>
         <div class="permit-body">
-          <h4>Special Alcohol License</h4>
+          <h3>Special Alcohol License</h3>
           <p>Required for any outdoor alcohol service. The Burren, Foundry on Elm, Painted Burro, and Spoke Wine Bar apply individually or under event umbrella license. Filed via CitizenServe combined application.</p>
           <div class="permit-issuer">City of Somerville</div>
         </div>
@@ -1621,7 +1795,7 @@
           <div class="permit-week-num">–5</div>
         </div>
         <div class="permit-body">
-          <h4>MBTA Coordination</h4>
+          <h3>MBTA Coordination</h3>
           <p>Notification required for closure affecting Bus Routes 87 and 89. MBTA reviews and adjusts routes. Must be finalized before permit approval completes. Contact MBTA directly before permit finalization.</p>
           <div class="permit-issuer">MBTA — No fee, coordination only</div>
         </div>
@@ -1633,7 +1807,7 @@
           <div class="permit-week-num">–4</div>
         </div>
         <div class="permit-body">
-          <h4>Temporary Noise / Amplified Sound Permit</h4>
+          <h3>Temporary Noise / Amplified Sound Permit</h3>
           <p>Required for outdoor amplified music and PA systems. Stage design must meet Somerville decibel limits. Event end time must align with city noise ordinance cutoff.</p>
           <div class="permit-issuer">City of Somerville</div>
         </div>
@@ -1645,7 +1819,7 @@
           <div class="permit-week-num">–3</div>
         </div>
         <div class="permit-body">
-          <h4>Temporary Food Vendor Permits</h4>
+          <h3>Temporary Food Vendor Permits</h3>
           <p>Each food vendor operating outside their licensed premises requires individual temporary food permit. Inspections may be required for new or temporary kitchen setups. 12 vendors profiled — all require permits.</p>
           <div class="permit-issuer">Somerville Health Department</div>
         </div>
@@ -1657,7 +1831,7 @@
           <div class="permit-week-num">–2</div>
         </div>
         <div class="permit-body">
-          <h4>ADA Compliance Documentation</h4>
+          <h3>ADA Compliance Documentation</h3>
           <p>Self-certification with Somerville Disability Rights Commission. Event layout must demonstrate accessible routes to all activity areas. <strong style="color:var(--high-vis-yellow);">Cyvl infrastructure data provides the compliance documentation baseline</strong> — exact ramp locations, PCI scores, signal positions all on record.</p>
           <div class="permit-issuer">Somerville Commission for Persons with Disabilities</div>
         </div>
@@ -1680,56 +1854,84 @@
 
       <div class="cyvl-found-card reveal">
         <div class="cyvl-found-number">2</div>
-        <h4>Failed Pavement Segments Within 500m</h4>
+        <h3>Failed Pavement Segments Within 500m</h3>
         <p>PCI scores of 1.2 and 9.6 — catastrophic for wheelchair users. Before this event could be safely held, the city needed to know exactly where they were. Cyvl delivered exact GPS coordinates for DPW work orders. No guessing. No liability exposure.</p>
       </div>
 
       <div class="cyvl-found-card reveal">
         <div class="cyvl-found-number">343</div>
-        <h4>Crosswalk &amp; Pedestrian Imagery Matches</h4>
+        <h3>Crosswalk &amp; Pedestrian Imagery Matches</h3>
         <p>343 high-confidence imagery results (80% confidence) across the Somerville dataset. The city can see every intersection, every crossing, and every potential mobility hazard before the event — without a single site visit.</p>
       </div>
 
       <div class="cyvl-found-card reveal">
         <div class="cyvl-found-number">79</div>
-        <h4>ADA Ramp &amp; Sidewalk Imagery Matches</h4>
+        <h3>ADA Ramp &amp; Sidewalk Imagery Matches</h3>
         <p>79 imagery matches at 76% confidence supporting the 21 inventoried RAMP assets. Visual verification of every curb cut and ramp approach in the event radius. ADA compliance documentation has never been this thorough.</p>
       </div>
 
       <div class="cyvl-found-card reveal">
         <div class="cyvl-found-number">21</div>
-        <h4>ADA Curb Ramps — Inventoried &amp; Mapped</h4>
+        <h3>ADA Curb Ramps — Inventoried &amp; Mapped</h3>
         <p>Not guessed. Not estimated. The city can guarantee accessible routes because Cyvl mapped every single one. Exact locations available for event layout planning and ADA self-certification documentation.</p>
       </div>
 
       <div class="cyvl-found-card reveal">
         <div class="cyvl-found-number">48</div>
-        <h4>Trees Providing Natural Shade</h4>
+        <h3>Trees Providing Natural Shade</h3>
         <p>Cyvl's above-ground asset inventory let planners design the quiet zone and seating areas around real canopy — not assumptions. 48 trees positioned for optimal summer heat management and sensory-sensitive attendee comfort.</p>
       </div>
 
       <div class="cyvl-found-card reveal">
-        <div class="cyvl-found-number">200</div>
-        <h4>Signs Inventoried — 190 in Good Condition</h4>
-        <p>Event planners know exactly which 3 Poor-condition signs to replace before thousands of attendees arrive. The same sign inventory powers the temporary wayfinding overlay plan — 200+ anchor points for accessible route markers.</p>
+        <div class="cyvl-found-number">2,190</div>
+        <h3>Signs Inventoried — 96% in Good Condition</h3>
+        <p>Event planners know exactly which Poor-condition signs to replace before thousands of attendees arrive. The same sign inventory powers the temporary wayfinding overlay plan — 2,190 anchor points for accessible route markers.</p>
       </div>
 
       <div class="cyvl-found-card reveal">
         <div class="cyvl-found-number">6</div>
-        <h4>ADA Push-Button Signals Confirmed</h4>
+        <h3>ADA Push-Button Signals Confirmed</h3>
         <p>6 audible pedestrian signal locations at key intersections — the accessible routing plan follows the infrastructure, not the other way around. Every accessible route passes through a confirmed signal location.</p>
       </div>
 
       <div class="cyvl-found-card reveal" style="border-color:rgba(218,255,0,0.25);background:rgba(218,255,0,0.05);">
         <div class="cyvl-found-number" style="font-size:2.5rem;">$50M+</div>
-        <h4>City Budget Intelligence</h4>
+        <h3>City Budget Intelligence</h3>
         <p>The same data that makes this block party safe is the data that helps Somerville prioritize its annual pavement repair budget year-round. Every failed segment is a capital planning decision. Cyvl makes those decisions with evidence.</p>
       </div>
 
     </div>
 
+    <!-- What Cyvl Found — street imagery grid -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:40px;" class="reveal">
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010776_MP4_1763651148994875_front_3000.jpg" alt="Davis Square intersection scan" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+        <div style="padding:5px 8px;background:rgba(13,13,12,0.9);font-size:0.65rem;color:rgba(255,255,255,0.45);">
+          PCI 68.8 · lt_cracking · patching
+        </div>
+      </div>
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX020783_MP4_1763751564650900_front_3000.jpg" alt="Sidewalk accessibility scan" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+        <div style="padding:5px 8px;background:rgba(13,13,12,0.9);font-size:0.65rem;color:rgba(255,255,255,0.45);">
+          PCI 50.1 · ADA ramp zone
+        </div>
+      </div>
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX010776_MP4_1763651081496012_front_3000.jpg" alt="Street view — Davis Square event area" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+        <div style="padding:5px 8px;background:rgba(13,13,12,0.9);font-size:0.65rem;color:rgba(255,255,255,0.45);">
+          PCI 71.9 · event zone
+        </div>
+      </div>
+      <div class="cyvl-image" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,71,10,0.3);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/0e9ad4538ce0a1b7876a5bcfd6275a942b2f92472dfa4b85e93f424eb4a62eda/images/GX040786_MP4_1764010342377685_front_3000.jpg" alt="Failed pavement — DPW action required" style="width:100%;height:130px;object-fit:cover;" loading="lazy">
+        <div style="padding:5px 8px;background:rgba(13,13,12,0.9);font-size:0.65rem;color:rgba(255,71,10,0.7);">
+          Critical — pavement failure detected
+        </div>
+      </div>
+    </div>
+
     <!-- Survey scan badge -->
-    <div style="margin-top:48px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;" class="reveal">
+    <div style="margin-top:32px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;" class="reveal">
       <div>
         <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.4);margin-bottom:4px;">Data Source</div>
         <div style="font-weight:700;color:white;font-size:0.95rem;">Cyvl Scan: scan_1185_SOMERVILLE_MA</div>
@@ -1759,54 +1961,19 @@
 
 <!-- FOOTER -->
 <footer class="footer">
-  <div class="container">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:24px;margin-bottom:32px;">
-      <div>
-        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" style="height:26px;margin-bottom:14px;display:block;opacity:0.9;" />
-        <p style="font-size:0.83rem;color:rgba(255,255,255,0.4);max-width:340px;margin:0;">
-          Infrastructure intelligence for cities. Cyvl's sensor platform scans, maps, and analyzes urban infrastructure — so cities can plan, budget, and build with confidence.
-        </p>
-      </div>
-      <div>
-        <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);margin-bottom:10px;">Prepared For</div>
-        <div style="font-size:1rem;font-weight:700;color:white;">Boston CIO Briefing</div>
-        <div style="font-size:0.83rem;color:rgba(255,255,255,0.5);">Davis Square, Somerville, MA</div>
-        <div style="font-size:0.83rem;color:rgba(255,255,255,0.5);">Monday News Interview Demo · April 2026</div>
-      </div>
-      <div>
-        <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);margin-bottom:10px;">Data Confidence</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:80px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;">
-              <div style="width:80%;height:100%;background:#4CAF50;border-radius:3px;"></div>
-            </div>
-            <span style="font-size:0.78rem;color:rgba(255,255,255,0.6);">Pavement: 200 segments</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:80px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;">
-              <div style="width:76%;height:100%;background:var(--high-vis-yellow);border-radius:3px;"></div>
-            </div>
-            <span style="font-size:0.78rem;color:rgba(255,255,255,0.6);">ADA Ramps: 76% confidence</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:80px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;">
-              <div style="width:80%;height:100%;background:#1B79C5;border-radius:3px;"></div>
-            </div>
-            <span style="font-size:0.78rem;color:rgba(255,255,255,0.6);">Pedestrian: 80% confidence</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="footer-inner">
+    <a href="../index.html"><img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="footer-logo"></a>
+    <p class="footer-tagline">Infrastructure Intelligence for Safer Communities</p>
     <div class="footer-divider"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-      <div class="footer-powered">
-        <span style="color:rgba(255,255,255,0.3);font-size:0.8rem;">Infrastructure data powered by</span>
-        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" />
-        <span style="color:rgba(255,255,255,0.3);font-size:0.8rem;">· Somerville Scan 2026</span>
-      </div>
-      <div style="font-size:0.75rem;color:rgba(255,255,255,0.25);">
-        All data from Cyvl infrastructure scans. Revenue projections based on NEA community event impact studies.
-      </div>
+    <p class="footer-meta">
+      Prepared for Santiago Garces, CIO, City of Boston<br>
+      Data: Cyvl Infrastructure API · Boston Open Data (CKAN) · Vision Zero<br>
+      Somerville, MA Pilot · 120 miles scanned · 34,000 images<br>
+      Davis Square · Pavement: 1,798 segments · ADA Ramps: 76% confidence · Pedestrian: 80% confidence
+    </p>
+    <div class="footer-powered">
+      <img src="../assets/cyvl_sensor.png" alt="Cyvl Sensor">
+      <span>Powered by Cyvl</span>
     </div>
   </div>
 </footer>
@@ -1829,79 +1996,112 @@ document.addEventListener('DOMContentLoaded', function() {
     maxZoom: 20
   }).addTo(map);
 
+  // ---- ROAD-SNAPPED ROUTING HELPER ----
+  // Fetches a pedestrian route from OSRM and draws it as a polyline.
+  // Falls back to a straight-line polyline if OSRM is unavailable.
+  async function fetchRoadRoute(coords, options, popupHtml) {
+    var coordStr = coords.map(function(c) { return c[1] + ',' + c[0]; }).join(';');
+    var url = 'https://router.project-osrm.org/route/v1/foot/' + coordStr + '?overview=full&geometries=geojson';
+    try {
+      var resp = await fetch(url);
+      var data = await resp.json();
+      if (data.code === 'Ok') {
+        var latLngs = data.routes[0].geometry.coordinates.map(function(c) { return [c[1], c[0]]; });
+        var pl = L.polyline(latLngs, options).addTo(map);
+        if (popupHtml) pl.bindPopup(popupHtml);
+        return pl;
+      }
+    } catch(e) {
+      // OSRM unavailable — fall through to straight-line fallback
+    }
+    var pl = L.polyline(coords, options).addTo(map);
+    if (popupHtml) pl.bindPopup(popupHtml);
+    return pl;
+  }
+
   // ---- STREET CLOSURES ----
-  // Elm Street primary closure
-  const elmStreetCoords = [
-    [42.3960, -71.1234], // Holland St end
-    [42.3954, -71.1219], // Highland Ave end
-  ];
-  L.polyline(elmStreetCoords, {
-    color: '#DAFF00',
-    weight: 8,
-    opacity: 0.9,
-    dashArray: null,
-  }).addTo(map).bindPopup(`
-    <div class="popup-title">🚫 PRIMARY CLOSURE — Elm Street</div>
+  // Elm Street primary closure — road-snapped along Elm St
+  fetchRoadRoute(
+    [
+      [42.3960, -71.1234], // Holland St end
+      [42.3954, -71.1219], // Highland Ave end
+    ],
+    {
+      color: '#DAFF00',
+      weight: 8,
+      opacity: 0.9,
+      dashArray: null,
+    },
+    `<div class="popup-title">🚫 PRIMARY CLOSURE — Elm Street</div>
     <div class="popup-detail">Heart of the event zone. 3 blocks / ~700ft closed to vehicle traffic.<br/>Good pavement (PCI 80–98) — ideal event surface.</div>
-    <div class="popup-badge-row"><span style="background:#DAFF00;color:#0D0D0C;padding:2px 8px;border-radius:100px;font-size:0.7rem;font-weight:700;">PRIMARY CLOSURE</span></div>
-  `);
+    <div class="popup-badge-row"><span style="background:#DAFF00;color:#0D0D0C;padding:2px 8px;border-radius:100px;font-size:0.7rem;font-weight:700;">PRIMARY CLOSURE</span></div>`
+  );
 
-  // College Ave pedestrian zone
-  L.polyline([
-    [42.3965, -71.1223],
-    [42.3975, -71.1223],
-  ], {
-    color: '#1B79C5',
-    weight: 6,
-    opacity: 0.85,
-    dashArray: '10, 6',
-  }).addTo(map).bindPopup(`
-    <div class="popup-title">🚶 PEDESTRIAN ZONE — College Avenue</div>
-    <div class="popup-detail">MBTA Red Line Davis Station access route.<br/>Pedestrian-only during event. MBTA coordination required.</div>
-  `);
+  // College Ave pedestrian zone — road-snapped along College Ave
+  fetchRoadRoute(
+    [
+      [42.3965, -71.1223],
+      [42.3975, -71.1223],
+    ],
+    {
+      color: '#1B79C5',
+      weight: 6,
+      opacity: 0.85,
+      dashArray: '10, 6',
+    },
+    `<div class="popup-title">🚶 PEDESTRIAN ZONE — College Avenue</div>
+    <div class="popup-detail">MBTA Red Line Davis Station access route.<br/>Pedestrian-only during event. MBTA coordination required.</div>`
+  );
 
-  // Holland Street staging
-  L.polyline([
-    [42.3968, -71.1228],
-    [42.3975, -71.1235],
-  ], {
-    color: '#9C27B0',
-    weight: 6,
-    opacity: 0.75,
-    dashArray: '8, 5',
-  }).addTo(map).bindPopup(`
-    <div class="popup-title">🏗️ STAGING AREA — Holland Street</div>
-    <div class="popup-detail">Vendor/logistics staging. EMS staging zone.<br/>Good pavement PCI 87–89. Mobility device parking.</div>
-  `);
+  // Holland Street staging — road-snapped along Holland St
+  fetchRoadRoute(
+    [
+      [42.3968, -71.1228],
+      [42.3975, -71.1235],
+    ],
+    {
+      color: '#9C27B0',
+      weight: 6,
+      opacity: 0.75,
+      dashArray: '8, 5',
+    },
+    `<div class="popup-title">🏗️ STAGING AREA — Holland Street</div>
+    <div class="popup-detail">Vendor/logistics staging. EMS staging zone.<br/>Good pavement PCI 87–89. Mobility device parking.</div>`
+  );
 
-  // Highland Avenue — stays open
-  L.polyline([
-    [42.3968, -71.1210],
-    [42.3945, -71.1185],
-  ], {
-    color: '#4CAF50',
-    weight: 5,
-    opacity: 0.6,
-    dashArray: '4, 4',
-  }).addTo(map).bindPopup(`
-    <div class="popup-title">✅ OPEN — Highland Avenue (Vehicle Bypass)</div>
-    <div class="popup-detail">Primary vehicle bypass. MBTA Bus Routes 87 &amp; 89 deviation route.</div>
-  `);
+  // Highland Avenue bypass — road-snapped along Highland Ave
+  fetchRoadRoute(
+    [
+      [42.3968, -71.1210],
+      [42.3945, -71.1185],
+    ],
+    {
+      color: '#4CAF50',
+      weight: 5,
+      opacity: 0.6,
+      dashArray: '4, 4',
+    },
+    `<div class="popup-title">✅ OPEN — Highland Avenue (Vehicle Bypass)</div>
+    <div class="popup-detail">Primary vehicle bypass. MBTA Bus Routes 87 &amp; 89 deviation route.</div>`
+  );
 
   // ---- ADA ACCESSIBLE ROUTES ----
-  L.polyline([
-    [42.3975, -71.1223],
-    [42.3965, -71.1223],
-    [42.3960, -71.1225],
-  ], {
-    color: '#4CAF50',
-    weight: 4,
-    opacity: 0.9,
-    dashArray: '6, 3',
-  }).addTo(map).bindPopup(`
-    <div class="popup-title">♿ ADA ROUTE — MBTA → Event Zone</div>
-    <div class="popup-detail">PCI 85–90 (Good). ADA ramps confirmed. Push-button signal at College Ave / Elm St intersection.</div>
-  `);
+  // Road-snapped pedestrian route from MBTA station to event zone
+  fetchRoadRoute(
+    [
+      [42.3975, -71.1223],
+      [42.3965, -71.1223],
+      [42.3960, -71.1225],
+    ],
+    {
+      color: '#4CAF50',
+      weight: 4,
+      opacity: 0.9,
+      dashArray: '6, 3',
+    },
+    `<div class="popup-title">♿ ADA ROUTE — MBTA → Event Zone</div>
+    <div class="popup-detail">PCI 85–90 (Good). ADA ramps confirmed. Push-button signal at College Ave / Elm St intersection.</div>`
+  );
 
   // ---- BUSINESS MARKERS ----
   function businessIcon(color) {
@@ -1974,7 +2174,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function criticalIcon(pci) {
     return L.divIcon({
       className: '',
-      html: `<div style="background:#E53935;color:white;font-size:0.6rem;font-weight:800;padding:2px 5px;border-radius:4px;border:1.5px solid white;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.5);">PCI ${pci}</div>`,
+      html: `<div style="background:#E53935;color:white;font-size:0.72rem;font-weight:800;padding:2px 5px;border-radius:4px;border:1.5px solid white;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.5);">PCI ${pci}</div>`,
       iconSize: [50, 20],
       iconAnchor: [25, 10],
     });
@@ -1999,7 +2199,7 @@ document.addEventListener('DOMContentLoaded', function() {
   L.marker([42.3975, -71.1223], {
     icon: L.divIcon({
       className: '',
-      html: `<div style="background:#DA291C;color:white;font-size:0.65rem;font-weight:800;padding:4px 8px;border-radius:6px;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.5);">🚇 T</div>`,
+      html: `<div style="background:#DA291C;color:white;font-size:0.72rem;font-weight:800;padding:4px 8px;border-radius:6px;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.5);">🚇 T</div>`,
       iconSize: [36, 28],
       iconAnchor: [18, 14],
     })
@@ -2009,18 +2209,21 @@ document.addEventListener('DOMContentLoaded', function() {
   `);
 
   // ---- EMERGENCY VEHICLE LANE ----
-  L.polyline([
-    [42.3960, -71.1234],
-    [42.3954, -71.1219],
-  ], {
-    color: '#F44336',
-    weight: 3,
-    opacity: 0.7,
-    dashArray: '2, 6',
-  }).addTo(map).bindPopup(`
-    <div class="popup-title">🚑 Emergency Vehicle Lane</div>
-    <div class="popup-detail">12-foot minimum clearance maintained on Elm Street.<br/>Unobstructed at all times during event.</div>
-  `);
+  // Road-snapped along Elm St (overlaid on the primary closure route)
+  fetchRoadRoute(
+    [
+      [42.3960, -71.1234],
+      [42.3954, -71.1219],
+    ],
+    {
+      color: '#F44336',
+      weight: 3,
+      opacity: 0.7,
+      dashArray: '2, 6',
+    },
+    `<div class="popup-title">🚑 Emergency Vehicle Lane</div>
+    <div class="popup-detail">12-foot minimum clearance maintained on Elm Street.<br/>Unobstructed at all times during event.</div>`
+  );
 
   // ---- EVENT CENTER MARKER ----
   L.circleMarker([42.3963615, -71.1222329], {
@@ -2097,6 +2300,34 @@ const revenueObserver = new IntersectionObserver((entries) => {
 
 const revenueViz = document.querySelector('.revenue-visual');
 if (revenueViz) revenueObserver.observe(revenueViz);
+</script>
+<script>
+// ===================== HAMBURGER MENU =====================
+(function() {
+  var hamburger = document.getElementById('hamburger');
+  var navLinks = document.getElementById('navLinks');
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', function() {
+      hamburger.classList.toggle('open');
+      navLinks.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', navLinks.classList.contains('open'));
+    });
+    navLinks.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('click', function(e) {
+      if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+})();
 </script>
 
 </body>

@@ -7,16 +7,14 @@
   <link rel="icon" href="../assets/cyvl_favicon.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <link rel="stylesheet" href="../assets/styles.css" />
   <style>
     /* ── Page-level overrides ─────────────────────────────────────────── */
     body { background: #F8F8F7; }
 
-    /* Nav */
-    .nav { box-shadow: 0 1px 0 rgba(13,13,12,0.08); }
-    .nav-logo { height: 26px; }
+    /* Nav — dark override (shared styles.css has base nav, this demo overrides to dark) */
 
     /* Hero */
     .hero {
@@ -170,7 +168,7 @@
     .badge-sweet { background: var(--utility-blue); color: white; }
     .badge-indie { background: #2E7D32; color: white; }
     .block-card-body { padding: 20px 22px 24px; }
-    .block-card-body h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .block-card-body h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
     .block-desc { font-size: 0.85rem; color: var(--concrete-gray); margin-bottom: 14px; line-height: 1.5; }
     .block-meta-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
     .block-meta-list li {
@@ -546,20 +544,26 @@
     }
 
     /* Footer */
-    .footer { background: var(--asphalt-black); }
-    .footer-top {
+    .footer {
+      background: var(--asphalt-black, #0D0D0C);
+      color: rgba(255,255,255,0.6);
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .footer-inner { max-width: 600px; margin: 0 auto; }
+    .footer-logo { height: 24px; opacity: 0.6; margin-bottom: 12px; }
+    .footer-tagline { font-size: 0.875rem; margin-bottom: 16px; color: rgba(255,255,255,0.5); }
+    .footer-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 20px auto; max-width: 200px; }
+    .footer-meta { font-size: 0.75rem; line-height: 1.6; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .footer-powered {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
     }
-    .footer-bottom { padding-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .footer-note { font-size: 0.78rem; color: #3E4742; }
-    .footer-powered { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #3E4742; }
-    .footer-powered img { height: 18px; opacity: 0.4; }
+    .footer-powered img { height: 32px; opacity: 0.5; }
+    .footer-powered span { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
 
     /* Misc utilities */
     .pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -586,23 +590,35 @@
       .hero-stat { padding: 0; margin: 0; border-right: none; }
       .hero-stat-value { font-size: 1.8rem; }
     }
+
+    /* ── Mobile responsive fixes ──────────────────────────────────────── */
+    html, body { overflow-x: hidden; max-width: 100vw; }
+    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+    @media (max-width: 768px) {
+      .container, .container-wide, [class*="container"] { max-width: 100%; padding: 0 16px; overflow-x: hidden; }
+      table { font-size: 0.75rem; }
+      th, td { padding: 6px 8px; white-space: nowrap; }
+    }
   </style>
 </head>
 <body>
 
 <!-- ── Navigation ─────────────────────────────────────────────────────── -->
 <nav class="nav">
-  <div class="container flex items-center justify-between" style="padding:0 var(--space-lg);">
-    <img src="../assets/cyvl_logo_black.png" alt="Cyvl" class="nav-logo" />
-    <div class="nav-links" style="display:flex;gap:20px;align-items:center;">
-      <a href="#blocks">Best Blocks</a>
-      <a href="#permits">Permits</a>
-      <a href="#costs">Costs</a>
-      <a href="#checklist">Checklist</a>
-      <a href="#map-section">Map</a>
-      <a href="#world-cup">World Cup</a>
-    </div>
+  <a href="../index.html" title="Back to all demos" style="display:inline-flex;align-items:center;">
+    <img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="nav-logo">
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#blocks">Best Blocks</a>
+    <a href="#permits">Permits</a>
+    <a href="#costs">Costs</a>
+    <a href="#checklist">Checklist</a>
+    <a href="#map-section">Map</a>
+    <a href="#world-cup">World Cup</a>
   </div>
+  <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- ── Hero ───────────────────────────────────────────────────────────── -->
@@ -632,6 +648,14 @@
       </div>
     </div>
   </div>
+  <!-- Cyvl hero image — Newbury St / Back Bay street scan -->
+  <div style="margin-top:40px;width:100%;max-height:340px;overflow:hidden;position:relative;">
+    <img src="https://dcygqrjfsypox.cloudfront.net/4079eeb95830d1cb1d040bf54118541502118886238acbea2ca72f90dea892e2/images/GX030711_MP4_1745422935614962_front_3000.jpg" alt="Cyvl scan of Newbury Street, Boston" style="width:100%;height:340px;object-fit:cover;display:block;" loading="lazy">
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 24px;background:linear-gradient(transparent,rgba(0,0,0,0.7));font-size:0.72rem;color:rgba(255,255,255,0.7);display:flex;justify-content:space-between;align-items:center;">
+      <span>Cyvl scan · Boston Full · Back Bay / Newbury Street · scan_0851_BOSTON_MA</span>
+      <span style="color:var(--high-vis-yellow);font-weight:600;">799 imagery matches</span>
+    </div>
+  </div>
 </section>
 
 <!-- ── Best Blocks ─────────────────────────────────────────────────────── -->
@@ -652,7 +676,7 @@
           <span class="block-badge badge-best">Highest Traffic</span>
         </div>
         <div class="block-card-body">
-          <h4>Lower Newbury</h4>
+          <h3>Lower Newbury</h3>
           <p class="block-desc">Closest to Public Garden and Arlington T stop. Most upscale retail character — photogenic brownstone facades, premium brand neighbors. Best for fashion, lifestyle, and high-end food.</p>
           <div class="block-meter">
             <div class="block-meter-label"><span>Foot traffic</span><span>20–25K/day</span></div>
@@ -674,6 +698,12 @@
             <span class="anchor-chip">J.P. Licks (173)</span>
             <span class="anchor-chip">Ben &amp; Jerry's (174)</span>
           </div>
+          <div style="margin:16px 0 0;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+            <img src="https://dcygqrjfsypox.cloudfront.net/4079eeb95830d1cb1d040bf54118541502118886238acbea2ca72f90dea892e2/images/GX030711_MP4_1745422935614962_front_3000.jpg" alt="Cyvl scan of 100 Block Newbury Street" style="width:100%;height:200px;object-fit:cover;" loading="lazy">
+            <div style="padding:8px 12px;background:rgba(0,0,0,0.04);font-size:0.7rem;color:#505A56;">
+              Cyvl scan · Boston Full · 100 Block · Detected: traffic light, bench, potted plant, person, car, stop sign
+            </div>
+          </div>
         </div>
       </div>
 
@@ -685,7 +715,7 @@
           <span class="block-badge badge-sweet">Sweet Spot</span>
         </div>
         <div class="block-card-body">
-          <h4>Mid Newbury</h4>
+          <h3>Mid Newbury</h3>
           <p class="block-desc">Proven brand activation territory. Nike Marathon Activation is filed here for April 2026. Google, Nike, and Adidas run sidewalk events in this zone — highest precedent for approvals.</p>
           <div class="block-meter">
             <div class="block-meter-label"><span>Foot traffic</span><span>18–22K/day</span></div>
@@ -706,6 +736,12 @@
             <span class="anchor-chip">Baguette Cafe (224)</span>
             <span class="anchor-chip">Amorino (249)</span>
           </div>
+          <div style="margin:16px 0 0;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+            <img src="https://dcygqrjfsypox.cloudfront.net/f85329cc4dae69f5f80c48b0e85d37489ac2b3845fa3258797c2ef3746a30c7f/images/GX011030_MP4_1749828700238147_front_3000.jpg" alt="Cyvl scan of 200 Block Newbury Street" style="width:100%;height:200px;object-fit:cover;" loading="lazy">
+            <div style="padding:8px 12px;background:rgba(0,0,0,0.04);font-size:0.7rem;color:#505A56;">
+              Cyvl scan · Boston Full · 200 Block (Mid Newbury) · scan_0794_BOSTON_MA
+            </div>
+          </div>
         </div>
       </div>
 
@@ -717,7 +753,7 @@
           <span class="block-badge badge-indie">Indie Friendly</span>
         </div>
         <div class="block-card-body">
-          <h4>Upper Newbury</h4>
+          <h3>Upper Newbury</h3>
           <p class="block-desc">Direct Hynes/ICA T stop. More independent business character — lower rent for private space, less corporate competition. George Howell Coffee and Pink Carrot just opened at 400. Great for authentic brands.</p>
           <div class="block-meter">
             <div class="block-meter-label"><span>Foot traffic</span><span>15–20K/day</span></div>
@@ -737,6 +773,12 @@
             <span class="anchor-chip">George Howell (400)</span>
             <span class="anchor-chip">Pink Carrot (400)</span>
             <span class="anchor-chip">Tao's (336)</span>
+          </div>
+          <div style="margin:16px 0 0;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,0.08);">
+            <img src="https://dcygqrjfsypox.cloudfront.net/f85329cc4dae69f5f80c48b0e85d37489ac2b3845fa3258797c2ef3746a30c7f/images/GX011044_MP4_1750174659830022_front_3000.jpg" alt="Cyvl scan of 300 Block Newbury Street" style="width:100%;height:200px;object-fit:cover;" loading="lazy">
+            <div style="padding:8px 12px;background:rgba(0,0,0,0.04);font-size:0.7rem;color:#505A56;">
+              Cyvl scan · Boston Full · 300 Block (Upper Newbury) · Detected: horse, truck, umbrella, person, car
+            </div>
           </div>
         </div>
       </div>
@@ -1653,7 +1695,7 @@
     </div>
 
     <div class="cyvl-demo-note">
-      <strong>Demo note:</strong> Cyvl's current project covers Somerville, MA — representative of Boston-area street intelligence capability. For Newbury Street specifically, Cyvl would show: sidewalk widths (15–20 ft available), pavement scores for crowd safety, sign inventory for World Cup wayfinding, and outdoor dining footprint detection.
+      <strong>Live data — Boston Full project:</strong> Cyvl's Boston Full dataset (8d8f8cd6) covers all of Boston including Newbury Street. 49 pavement segments scored within 200m of 200 Newbury St · 799 imagery matches for Newbury Street storefronts and sidewalk · 1 direct match at 200 Newbury. Project spans 883 miles and 237,000 images.
     </div>
 
     <div class="infra-grid">
@@ -1669,7 +1711,13 @@
           <span class="detect-chip">umbrella</span>
           <span class="detect-chip">car</span>
         </div>
-        <div style="margin-top:12px;font-size:0.72rem;color:#3E4742;">Most representative for pop-up demo · Somerville reference imagery</div>
+        <div style="margin:12px 0;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+          <img src="https://dcygqrjfsypox.cloudfront.net/f85329cc4dae69f5f80c48b0e85d37489ac2b3845fa3258797c2ef3746a30c7f/images/GX011030_MP4_1749828700238147_front_3000.jpg" alt="Cyvl scan of Newbury Street sidewalk dining" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
+          <div style="padding:6px 10px;background:rgba(255,255,255,0.04);font-size:0.65rem;color:#3E4742;">
+            Cyvl scan · Boston Full · Back Bay · PCI 66.6 · scan_0794_BOSTON_MA
+          </div>
+        </div>
+        <div style="margin-top:4px;font-size:0.72rem;color:#3E4742;">Newbury St avg PCI matches this scene · Boston Full dataset</div>
       </div>
 
       <div class="infra-card">
@@ -1686,7 +1734,13 @@
           <span class="detect-chip">potted plant</span>
           <span class="detect-chip">fire hydrant</span>
         </div>
-        <div style="margin-top:12px;font-size:0.72rem;color:#3E4742;">Somerville reference imagery</div>
+        <div style="margin:12px 0;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+          <img src="https://dcygqrjfsypox.cloudfront.net/4079eeb95830d1cb1d040bf54118541502118886238acbea2ca72f90dea892e2/images/GX030711_MP4_1745422935614962_front_3000.jpg" alt="Cyvl scan of Newbury Street active street scene" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
+          <div style="padding:6px 10px;background:rgba(255,255,255,0.04);font-size:0.65rem;color:#3E4742;">
+            Cyvl scan · Boston Full · Newbury St · PCI 83.1 · Detected: traffic light, bench, potted plant, person, car, stop sign
+          </div>
+        </div>
+        <div style="margin-top:4px;font-size:0.72rem;color:#3E4742;">Boston Full dataset · 20 Satisfactory segments on Newbury St</div>
       </div>
 
       <div class="infra-card">
@@ -1702,7 +1756,71 @@
           <span class="detect-chip">bus</span>
           <span class="detect-chip">car</span>
         </div>
-        <div style="margin-top:12px;font-size:0.72rem;color:#3E4742;">Somerville reference imagery</div>
+        <div style="margin:12px 0;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+          <img src="https://dcygqrjfsypox.cloudfront.net/f85329cc4dae69f5f80c48b0e85d37489ac2b3845fa3258797c2ef3746a30c7f/images/GX011044_MP4_1750174659830022_front_3000.jpg" alt="Cyvl scan of Newbury Street outdoor dining" style="width:100%;height:180px;object-fit:cover;" loading="lazy">
+          <div style="padding:6px 10px;background:rgba(255,255,255,0.04);font-size:0.65rem;color:#3E4742;">
+            Cyvl scan · Boston Full · Back Bay · PCI 89.2 · Detected: horse, truck, umbrella, person, car
+          </div>
+        </div>
+        <div style="margin-top:4px;font-size:0.72rem;color:#3E4742;">Boston Full dataset · 799 imagery matches on Newbury St</div>
+      </div>
+    </div>
+
+    <!-- Newbury Street Pavement Data — Boston Full project -->
+    <div style="margin-top:28px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px 24px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#3E4742;margin-bottom:4px;">Newbury Street Pavement — 200m around 200 Newbury</div>
+          <div style="font-size:1.5rem;font-weight:800;color:var(--high-vis-yellow);letter-spacing:-0.03em;">49 Segments Scored</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#3E4742;margin-bottom:4px;">Average PCI</div>
+          <div style="font-size:1.5rem;font-weight:800;color:#FFB74D;letter-spacing:-0.03em;">66.4 <span style="font-size:0.9rem;font-weight:600;color:#8A9490;">Fair</span></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px;">
+        <div style="background:rgba(102,187,106,0.12);border:1px solid rgba(102,187,106,0.2);border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:1.2rem;font-weight:800;color:#66BB6A;">1</div>
+          <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em;color:#66BB6A;margin-top:2px;">Good</div>
+          <div style="font-size:0.6rem;color:#3E4742;margin-top:2px;">PCI 70–100</div>
+        </div>
+        <div style="background:rgba(129,199,132,0.12);border:1px solid rgba(129,199,132,0.2);border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:1.2rem;font-weight:800;color:#81C784;">20</div>
+          <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em;color:#81C784;margin-top:2px;">Satisfactory</div>
+          <div style="font-size:0.6rem;color:#3E4742;margin-top:2px;">PCI 55–69</div>
+        </div>
+        <div style="background:rgba(255,183,77,0.12);border:1px solid rgba(255,183,77,0.2);border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:1.2rem;font-weight:800;color:#FFB74D;">19</div>
+          <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em;color:#FFB74D;margin-top:2px;">Fair</div>
+          <div style="font-size:0.6rem;color:#3E4742;margin-top:2px;">PCI 40–54</div>
+        </div>
+        <div style="background:rgba(239,83,80,0.12);border:1px solid rgba(239,83,80,0.2);border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:1.2rem;font-weight:800;color:#EF5350;">8</div>
+          <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em;color:#EF5350;margin-top:2px;">Poor</div>
+          <div style="font-size:0.6rem;color:#3E4742;margin-top:2px;">PCI 25–39</div>
+        </div>
+        <div style="background:rgba(183,28,28,0.15);border:1px solid rgba(183,28,28,0.3);border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:1.2rem;font-weight:800;color:#EF9A9A;">1</div>
+          <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em;color:#EF9A9A;margin-top:2px;">Very Poor</div>
+          <div style="font-size:0.6rem;color:#3E4742;margin-top:2px;">PCI 39.14</div>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://dcygqrjfsypox.cloudfront.net/4079eeb95830d1cb1d040bf54118541502118886238acbea2ca72f90dea892e2/images/GX010724_MP4_1745500773006654_front_3000.jpg" alt="Cyvl pavement condition scan Back Bay Boston" style="width:100%;height:220px;object-fit:cover;" loading="lazy">
+        <div style="padding:8px 12px;background:rgba(255,255,255,0.04);font-size:0.68rem;color:#3E4742;display:flex;justify-content:space-between;">
+          <span>Cyvl scan · Boston Full · Back Bay · scan_0794_BOSTON_MA</span>
+          <span style="color:#FFB74D;font-weight:600;">Avg PCI 66.4 · Fair</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:rgba(239,83,80,0.08);border:1px solid rgba(239,83,80,0.15);border-radius:8px;padding:12px;">
+          <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#EF5350;margin-bottom:4px;">⚠ Pop-Up Planning Flag</div>
+          <div style="font-size:0.8rem;color:#8A9490;line-height:1.5;">8 Poor + 1 Very Poor segments (PCI 39–54) — avoid these zones for outdoor dining, tent anchoring, and heavy equipment placement. Best segment scores 87.33.</div>
+        </div>
+        <div style="background:rgba(218,255,0,0.06);border:1px solid rgba(218,255,0,0.12);border-radius:8px;padding:12px;">
+          <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--high-vis-yellow);margin-bottom:4px;">799 Imagery Matches</div>
+          <div style="font-size:0.8rem;color:#8A9490;line-height:1.5;">799 street-level images matched for "Newbury Street storefronts sidewalk" · 1 direct match at 200 Newbury location · Full visual documentation available.</div>
+        </div>
       </div>
     </div>
 
@@ -1726,35 +1844,26 @@
 
     <div style="margin-top:24px;padding:20px 24px;background:rgba(27,121,197,0.08);border:1px solid rgba(27,121,197,0.15);border-radius:12px;">
       <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#64B5F6;margin-bottom:8px;">The Cyvl Story for Boston CIO</div>
-      <p style="color:#8A9490;font-size:0.9rem;margin-bottom:0;max-width:none;">Cyvl's infrastructure intelligence platform tells city planners exactly where sidewalk capacity exists, pavement conditions for safe crowd flow, sign inventory for wayfinding, and outdoor dining footprint — all critical for managing 100K+ international FIFA World Cup visitors moving through Back Bay. This is the story: <strong style="color:white;">infrastructure visibility for event-ready cities.</strong></p>
+      <p style="color:#8A9490;font-size:0.9rem;margin-bottom:0;max-width:none;">Cyvl's Boston Full dataset already covers Newbury Street — 49 pavement segments scored, avg PCI 66.4, and 799 street-level images indexed. City planners can see exactly where the 8 Poor and 1 Very Poor segments are before approving pop-up permits, where sidewalk capacity supports outdoor dining, and where crowd flow is constrained by surface condition — all critical for managing 100K+ international FIFA World Cup visitors through Back Bay. This is the story: <strong style="color:white;">infrastructure visibility for event-ready cities.</strong></p>
     </div>
   </div>
 </section>
 
 <!-- ── Footer ─────────────────────────────────────────────────────────────── -->
-<footer class="footer section">
-  <div class="container">
-    <div class="footer-top">
-      <div>
-        <img src="../assets/cyvl_logo_white.png" alt="Cyvl" style="height:26px;margin-bottom:12px;display:block;" />
-        <div style="font-size:0.82rem;color:#3E4742;max-width:360px;line-height:1.6;">Infrastructure intelligence for cities. Pavement scoring, asset detection, sidewalk analysis — helping cities plan smarter events, safer streets, and better public spaces.</div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#3E4742;margin-bottom:8px;">Data Sources</div>
-        <div style="font-size:0.78rem;color:#3E4742;line-height:1.8;">
-          City of Boston MOCAL (68 event records)<br/>
-          Boston Licensing Board (CKAN)<br/>
-          ISD Food Establishments (CKAN)<br/>
-          Cyvl Infrastructure Platform<br/>
-          FIFA World Cup 2026 — bostonfwc26.com
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="footer-note">Prepared for Boston CIO · April 2026 · All data from public Boston CKAN datasets and City of Boston permit records.</div>
-      <div class="footer-powered">
-        Powered by <img src="../assets/cyvl_logo_white.png" alt="Cyvl" /> Cyvl
-      </div>
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="../index.html"><img src="../assets/cyvl_logo_white.png" alt="Cyvl" class="footer-logo"></a>
+    <p class="footer-tagline">Infrastructure Intelligence for Safer Communities</p>
+    <div class="footer-divider"></div>
+    <p class="footer-meta">
+      Prepared for Santiago Garces, CIO, City of Boston<br>
+      Data: Cyvl Infrastructure API · Boston Open Data (CKAN) · Vision Zero<br>
+      Boston Full (883 mi · 237,000 images) · Somerville, MA Pilot (120 mi · 34,000 images)<br>
+      City of Boston MOCAL · Boston Licensing Board (CKAN) · ISD Food Establishments (CKAN) · FIFA World Cup 2026
+    </p>
+    <div class="footer-powered">
+      <img src="../assets/cyvl_sensor.png" alt="Cyvl Sensor">
+      <span>Powered by Cyvl</span>
     </div>
   </div>
 </footer>
@@ -1878,18 +1987,31 @@ businesses.forEach(b => {
     .bindPopup(`<strong>${b.name}</strong><br/>${b.addr}`);
 });
 
-// Draw Newbury Street line
-const newburyLine = [
-  [42.3513, -71.0739], // Arlington end
-  [42.3508, -71.0756],
-  [42.3505, -71.0773],
-  [42.3502, -71.0790],
-  [42.3499, -71.0808],
-  [42.3496, -71.0825],
-  [42.3492, -71.0842],
-  [42.3488, -71.0860], // Mass Ave end
-];
-L.polyline(newburyLine, { color: '#DAFF00', weight: 4, opacity: 0.7 }).addTo(map);
+// Helper: fetch OSRM road-snapped route and draw as polyline
+function fetchRoute(waypoints, opts, targetMap) {
+  var coords = waypoints.map(function(w) { return w[1] + ',' + w[0]; }).join(';');
+  fetch('https://router.project-osrm.org/route/v1/foot/' + coords + '?overview=full&geometries=geojson')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.routes && data.routes[0]) {
+        var path = data.routes[0].geometry.coordinates.map(function(c) { return [c[1], c[0]]; });
+        L.polyline(path, opts).addTo(targetMap);
+      }
+    })
+    .catch(function() {
+      L.polyline(waypoints, opts).addTo(targetMap);
+    });
+}
+
+// Draw Newbury Street line (road-snapped via OSRM)
+fetchRoute(
+  [
+    [42.3513, -71.0739], // Arlington end
+    [42.3488, -71.0860], // Mass Ave end
+  ],
+  { color: '#DAFF00', weight: 4, opacity: 0.7 },
+  map
+);
 
 // T stop markers
 const tStops = [
@@ -1907,6 +2029,34 @@ tStops.forEach(t => {
     })
   }).addTo(map).bindPopup(`<strong>${t.name}</strong>`);
 });
+</script>
+<script>
+// ===================== HAMBURGER MENU =====================
+(function() {
+  var hamburger = document.getElementById('hamburger');
+  var navLinks = document.getElementById('navLinks');
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', function() {
+      hamburger.classList.toggle('open');
+      navLinks.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', navLinks.classList.contains('open'));
+    });
+    navLinks.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('click', function(e) {
+      if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+        hamburger.classList.remove('open');
+        navLinks.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+})();
 </script>
 </body>
 </html>
