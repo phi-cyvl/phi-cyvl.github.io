@@ -886,6 +886,167 @@
     .concern-item:last-child { margin-bottom: 0; }
     .concern-pci { font-size: 0.8rem; font-weight: 700; color: #C62828; }
     .concern-desc { font-size: 0.75rem; color: #505A56; }
+
+    /* ====== GLOBAL MOBILE FIX ====== */
+    /* Prevent horizontal overflow globally */
+    html, body { overflow-x: hidden; max-width: 100vw; word-break: break-word; overflow-wrap: break-word; }
+
+    /* Tables always scroll horizontally */
+    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+
+    /* Images always scale */
+    img { max-width: 100%; height: auto; }
+
+    @media (max-width: 768px) {
+      /* All containers respect viewport */
+      .container, .container-wide, section, [class*="container"] {
+        max-width: 100vw;
+        padding-left: 16px;
+        padding-right: 16px;
+        overflow-x: hidden;
+      }
+
+      /* Text never overflows */
+      h1, h2, h3, h4, p, span, li, td, th, a, label, div {
+        overflow-wrap: break-word;
+        word-break: break-word;
+      }
+
+      /* Hero text scales */
+      h1 { font-size: clamp(1.5rem, 6vw, 3rem) !important; }
+      h2 { font-size: clamp(1.2rem, 4vw, 2rem) !important; }
+
+      /* Hero stats wrap properly */
+      .hero-stats {
+        flex-wrap: wrap;
+        gap: 0;
+      }
+      .hero-stat {
+        flex: 1 1 140px;
+        min-width: 120px;
+      }
+
+      /* Stop card body collapses to single column */
+      .stop-card-body {
+        grid-template-columns: 1fr !important;
+        padding: 16px 16px;
+      }
+      .stop-card-header {
+        padding: 16px 16px 14px;
+        flex-wrap: wrap;
+      }
+      .cyvl-callout {
+        margin: 0 16px 16px;
+      }
+      .stop-card-footer {
+        padding: 14px 16px;
+      }
+
+      /* Segment connector — avoid inner flex overflow */
+      .segment-connector {
+        padding: 16px 16px;
+      }
+      .segment-connector-header {
+        flex-wrap: wrap;
+      }
+      .segment-metrics {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      /* Route overview two-col already collapses via existing rule, just ensure padding */
+      .route-stop-content {
+        padding-bottom: 20px;
+      }
+
+      /* Route connector pills — allow text to wrap */
+      .route-connector-pill {
+        white-space: normal;
+        word-break: break-word;
+      }
+
+      /* Assessment section */
+      .assessment-two-col {
+        grid-template-columns: 1fr !important;
+        gap: 24px;
+      }
+      .assessment-findings-col {
+        grid-template-columns: 1fr !important;
+        gap: 16px;
+      }
+      .pci-dist-meta {
+        min-width: 80px;
+        font-size: 0.65rem;
+      }
+
+      /* infra-stats grid — already 1fr 1fr, keep but smaller gap */
+      .infra-stats {
+        gap: 8px;
+      }
+
+      /* Safety badges — allow wrapping */
+      .safety-badge {
+        white-space: normal;
+        font-size: 0.75rem;
+      }
+
+      /* Action items */
+      .action-priority {
+        white-space: normal;
+        font-size: 0.6rem;
+      }
+
+      /* World Cup grid already collapses, ensure gap */
+      .worldcup-grid {
+        gap: 16px;
+      }
+      .wc-card {
+        padding: 20px 16px;
+      }
+      .grant-amount {
+        font-size: 2rem;
+      }
+
+      /* Tables */
+      table { font-size: 0.75rem; }
+      th, td { padding: 6px 8px; white-space: nowrap; }
+
+      /* Badges and chips wrap */
+      .distress-tags {
+        flex-wrap: wrap;
+      }
+      .seg-pci-chips {
+        flex-wrap: wrap;
+      }
+
+      /* Neighborhood divider label — allow wrapping */
+      .neighborhood-divider-label {
+        white-space: normal;
+        text-align: center;
+      }
+
+      /* Score dial size reduction */
+      .score-dial {
+        width: 140px;
+        height: 140px;
+      }
+      .score-dial-inner {
+        width: 108px;
+        height: 108px;
+      }
+      .score-dial-num {
+        font-size: 2rem;
+      }
+
+      /* PCI dist chart meta text */
+      .pci-dist-row {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .pci-dist-label {
+        width: 80px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2575,6 +2736,7 @@
   ];
 
   var map = L.map('route-map', {
+    center: [42.388, -71.108], zoom: 13,
     zoomControl: true,
     scrollWheelZoom: false
   });

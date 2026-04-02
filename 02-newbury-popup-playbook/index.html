@@ -592,12 +592,131 @@
     }
 
     /* ── Mobile responsive fixes ──────────────────────────────────────── */
-    html, body { overflow-x: hidden; max-width: 100vw; }
+    /* Prevent horizontal overflow globally */
+    html, body { overflow-x: hidden; max-width: 100vw; word-break: break-word; overflow-wrap: break-word; }
+
+    /* Tables always scroll horizontally */
     table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+
+    /* Images always scale */
+    img { max-width: 100%; height: auto; }
+
     @media (max-width: 768px) {
-      .container, .container-wide, [class*="container"] { max-width: 100%; padding: 0 16px; overflow-x: hidden; }
+      /* All containers respect viewport */
+      .container, .container-wide, [class*="container"] {
+        max-width: 100vw;
+        padding: 0 16px;
+        overflow-x: hidden;
+      }
+
+      /* Text never overflows */
+      h1, h2, h3, h4, p, span, li, td, th, a, label, div {
+        overflow-wrap: break-word;
+        word-break: break-word;
+      }
+
+      /* Hero text scales */
+      h1 { font-size: clamp(1.5rem, 6vw, 3rem) !important; }
+      h2 { font-size: clamp(1.2rem, 4vw, 2rem) !important; }
+
+      /* Hero stats: already flex-wrap:wrap, tighten spacing */
+      .hero-stats {
+        gap: 0;
+        padding-top: 24px;
+      }
+      .hero-stat {
+        padding: 0 20px 0 0;
+        margin-right: 20px;
+        margin-bottom: 20px;
+      }
+      .hero-stat-value { font-size: 1.8rem; }
+
+      /* Block grid already collapses at 900px */
+      .block-grid { gap: 16px; }
+      .block-card-header { padding: 16px 18px 14px; }
+      .block-card-body { padding: 16px 18px 20px; }
+      .block-badge {
+        font-size: 0.6rem;
+        padding: 3px 8px;
+      }
+
+      /* Permit layout: already collapses at 1000px */
+      .permit-layout { gap: 24px; }
+      .permit-step { gap: 14px; }
+      .permit-step-content { padding-bottom: 20px; }
+      .permit-step-header { flex-wrap: wrap; gap: 8px; }
+      .permit-step-meta { flex-wrap: wrap; }
+      .permit-tag {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        white-space: normal;
+      }
+
+      /* Cost tracker */
+      .cost-tracker { padding: 14px 16px; }
+      .cost-tracker-total { font-size: 1.6rem; }
+      .cost-line { font-size: 0.72rem; }
+
+      /* Cost cols already collapse at 700px */
+      .cost-cols { gap: 16px; }
+      .cost-total-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .cost-total-val { font-size: 1.6rem; }
+
+      /* Scenario tabs — allow wrapping */
+      .scenario-tabs {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+      .scenario-tab {
+        flex: 1;
+        text-align: center;
+        font-size: 0.75rem;
+        padding: 8px 12px;
+      }
+
+      /* WC matches grid already collapses at 700px */
+      .wc-matches-grid { gap: 8px; }
+      .wc-hero { padding: 24px 20px; }
+      .multiplier-row { flex-wrap: wrap; gap: 10px; }
+      .multiplier-badge { font-size: 1.1rem; }
+
+      /* Infra grid already collapses at 800px */
+      .infra-grid { gap: 12px; }
+      .infra-card { padding: 14px; }
+
+      /* Tables */
       table { font-size: 0.75rem; }
       th, td { padding: 6px 8px; white-space: nowrap; }
+
+      /* Business legend wrap */
+      .business-legend { gap: 8px; }
+
+      /* Anchor chips */
+      .block-anchor-chips { flex-wrap: wrap; }
+      .anchor-chip { font-size: 0.65rem; }
+
+      /* Infra detection chips */
+      .infra-detection-chips { flex-wrap: wrap; }
+      .detect-chip { font-size: 0.65rem; }
+
+      /* Pill row */
+      .pill-row { flex-wrap: wrap; }
+
+      /* Footer */
+      .footer { padding: 32px 16px; }
+
+      /* Permit body links — break long URLs */
+      .permit-contact a, .permit-contact {
+        word-break: break-all;
+        overflow-wrap: break-word;
+      }
+
+      /* Section padding reduce on mobile */
+      .section { padding: 48px 0; }
     }
   </style>
 </head>
@@ -1940,7 +2059,7 @@ function setScenario(key, btn) {
 }
 
 // ── Leaflet map ──────────────────────────────────────────────────────────
-const map = L.map('map', { zoomControl: true, scrollWheelZoom: false });
+const map = L.map('map', { center: [42.350, -71.080], zoom: 15, zoomControl: true, scrollWheelZoom: false });
 
 function refitMap() {
   var bounds = [];
