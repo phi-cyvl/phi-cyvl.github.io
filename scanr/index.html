@@ -102,13 +102,15 @@
 <section class="story" id="confmap">
   <div class="eyebrow">Real customer data · Massillon, Ohio</div>
   <h2>The confidence layer, on a real city.</h2>
-  <p>Every dot is a road segment we actually scored. Toggle what you're looking at. The <b>score</b> map looks healthy. The <b>confidence</b> map shows where that score is quietly at risk. And the <b>change</b> map, drawn from the next year's scan, shows the doubt was earned.</p>
+  <p>Every dot is a real road segment. The <b>score</b> map looks healthy. <b>Confidence</b>, built from that same scan with no ground truth, flags which scores are least likely to still be true a year later. Then compare it to <b>next year's scan</b> — our ground truth — and the flagged roads are the ones that moved.</p>
+  <p class="small">This predicts <i>change</i>, not a mistake in today's score. It can't see a surprise repave or a utility cut — no prior scan can — but it catches the deterioration already underway, which is most of what moves.</p>
   <div class="cmwrap">
     <canvas id="cmap"></canvas>
     <div class="cmui">
       <div class="cmtabs">
         <button class="cmtab on" data-mode="pci">PCI score</button>
         <button class="cmtab" data-mode="conf">Confidence</button>
+        <button class="cmtab" data-mode="gt">Next year's scan</button>
         <button class="cmtab" data-mode="chg">Where it moved</button>
       </div>
       <div class="cmlegend" id="cmlegend"></div>
@@ -315,20 +317,23 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   const rgb=(c,a)=>'rgba('+(c[0]|0)+','+(c[1]|0)+','+(c[2]|0)+','+a+')';
   const RG='linear-gradient(90deg,#e8483f,#ff9d0a,#78be3c)';
   const LEG={
-    pci:'<span>0</span><span class="ramp" style="background:'+RG+'"></span><span>100 PCI</span>',
-    conf:'<span>rescan</span><span class="ramp" style="background:'+RG+'"></span><span>verified</span>',
+    pci:'<span>0</span><span class="ramp" style="background:'+RG+'"></span><span>100 PCI · this year</span>',
+    conf:'<span>rescan</span><span class="ramp" style="background:'+RG+'"></span><span>trust</span>',
+    gt:'<span>0</span><span class="ramp" style="background:'+RG+'"></span><span>100 PCI · next year</span> &nbsp;<span class="sq" style="background:#4a4a46"></span>not re-scanned',
     chg:'<span class="sq" style="background:#e8483f"></span>moved ≥15 &nbsp;<span class="sq" style="background:#ff9d0a"></span>7–15 &nbsp;<span class="sq" style="background:#78be3c"></span>&lt;7 &nbsp;<span class="sq" style="background:#4a4a46"></span>not re-scanned yet'
   };
   const CAP={
-    pci:'PCI score, latest scan. Red is failing pavement, green is good. Source: Massillon, OH production data (2,531 segments).',
-    conf:'Self-supervised confidence for the same scores — no hand-measured ground truth. Red flags a score for QA or rescan.',
-    chg:'Change measured against the following year’s scan (1,215 re-matched segments). Stats verified from scanr/data/demo_points.json.'
+    pci:'PCI score, this year\'s scan. Red is failing pavement, green is good. Source: Massillon, OH production data (2,531 segments).',
+    conf:'Self-supervised confidence for those scores — no hand-measured ground truth. Red = least likely to still be true next year. Predicts change, not a same-scan mistake.',
+    gt:'The following year\'s actual scan — the ground truth. Grey = not re-scanned. Hold it against the confidence map: the flagged roads are where the two years disagree.',
+    chg:'This year vs next year, per segment (1,215 re-matched). Red moved most. Stats verified from scanr/data/demo_points.json.'
   };
   function stats(){ const cpct=Math.round(100*pts.filter(p=>p.c<0.5).length/pts.length);
     return {
       pci:'<b>2,531</b> segments scored. <b>1,356</b> look healthy (PCI ≥ 70). A council sees a mostly-green map and assumes the network is fine.',
-      conf:'Built from the scan you already paid for. <b>'+cpct+'%</b> of segments land in review or rescan (confidence &lt; 0.5), including roads whose score looks perfectly good.',
-      chg:'The next scan earns the doubt: <b>42.5%</b> of re-matched segments moved ≥ 15 PCI. On roads that <i>looked</i> healthy, rescanning the lowest-confidence 33% catches <b>59%</b> of the movers — versus 33% by chance.'
+      conf:'Built from the scan you already paid for. <b>'+cpct+'%</b> of segments are flagged as least likely to survive the next scan (confidence &lt; 0.5), including roads whose score looks perfectly good.',
+      gt:'What actually happened next: <b>1,215</b> segments were re-scanned. The confidence flags land on the movers — <b>AUC 0.71</b> for predicting a ≥15-point shift a year ahead.',
+      chg:'The doubt is earned: <b>42.5%</b> of re-matched segments moved ≥ 15 PCI. On roads that <i>looked</i> healthy, rescanning the lowest-confidence 33% catches <b>59%</b> of the movers — versus 33% by chance.'
     }; }
   function draw(){ const dpr=Math.min(devicePixelRatio||1,2), w=cv.clientWidth, h=cv.clientHeight;
     if(!w||!h) return;
@@ -337,6 +342,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
       for(const p of pts){ const px=ox+((p.x-LON[0])*COSL)*sc, py=oy+((LAT[1]-p.y))*sc; let c,a=0.9,r=1.7;
         if(mode==='pci') c=ramp(p.s/100);
         else if(mode==='conf') c=ramp(p.c);
+        else if(mode==='gt'){ if(p.d==null){c=DIM;a=0.22;r=1.3;} else c=ramp(Math.max(0,Math.min(100,p.s+p.d))/100); }
         else { if(p.d==null){c=DIM;a=0.22;r=1.3;} else { const m=Math.abs(p.d); c=m>=15?RED:(m>=7?YEL:GRN); a=m>=15?0.95:0.5; r=m>=15?2.3:1.4; } }
         ctx.fillStyle=rgb(c,a); ctx.beginPath(); ctx.arc(px,py,r,0,6.2832); ctx.fill(); }
       legEl.innerHTML=LEG[mode]; statEl.innerHTML=stats()[mode]; capEl.innerHTML=CAP[mode]; } }
