@@ -78,6 +78,14 @@
   .bars{margin-top:1.8em;background:rgba(8,8,10,.82);border:1px solid #24241f;border-radius:12px;padding:16px}
   #iouchart{width:100%;height:230px;display:block}
   #confchart{width:100%;height:240px;display:block}
+  /* receipts / citations */
+  .receipts{min-height:auto;background:#0d0d0c;position:relative;z-index:3;padding-top:9vh;padding-bottom:13vh}
+  .cgrp{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--chartreuse);margin:1.8em 0 .1em}
+  .cites{display:grid;gap:11px;margin-top:.6em}
+  .cite{border-left:3px solid #2a2a28;background:rgba(255,255,255,.03);border-radius:0 8px 8px 0;padding:11px 15px;font-family:var(--mono);font-size:13px;line-height:1.6;color:#dcdcdc;max-width:none}
+  .cite .q{color:#fff} .cite .q b{color:var(--chartreuse)}
+  .cite .src{color:var(--gray-m);font-size:11px;margin-top:5px}
+  .cite .src a{color:#9fb800}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
@@ -181,6 +189,37 @@
   </div>
   <div class="hint">drag to orbit · scroll to zoom</div>
   <div id="fallback">This 3D view needs WebGL. Try a desktop browser.<br>The story above explains the whole idea.</div>
+</section>
+
+<section class="story receipts" id="receipts">
+  <div class="eyebrow">Receipts · internal Cyvl submission</div>
+  <h2>Where every number comes from.</h2>
+  <p class="small">Real customer voices, real production data, cited. Internal sources are Cyvl Notion and research, linked for the internal audience.</p>
+
+  <div class="cgrp">What customers told us</div>
+  <div class="cites">
+    <div class="cite"><span class="q">"When clients don't trust the score, they don't convert." Roughly <b>half of stalled pilots</b> trace back to PCI not matching the customer's expectation.</span><div class="src">Cyvl — Pavements Scoring Accuracy, voice-of-customer review. <a href="https://app.notion.com/p/1bdb7cd9368680cb8d41edda32f58ee4">Notion</a></div></div>
+    <div class="cite"><span class="q">NYC DOT — our flagship $500K–$1M integration account — reports <b>"zero confidence"</b> in automated condition data.</span><div class="src">Cyvl — NYC DOT meeting prep, Jun 2026. <a href="https://app.notion.com/p/372b7cd936868181b0ccf3cd5ce008c5">Notion</a></div></div>
+    <div class="cite"><span class="q">Forward-looking deterioration is the <b>#1 customer request</b>. 57% would use today's Time Machine; the top critical gap named was deterioration.</span><div class="src">Cyvl — Time Machine recap / pitch. <a href="https://app.notion.com/p/33bb7cd9368680eabe4bd458bccff246">Notion</a></div></div>
+    <div class="cite"><span class="q">"<b>Atlanta want to be scanning monthly.</b>" 10 Year-2 rescans this summer, 6 pre-renewal; 10 second scans in the next 120 days, all ARR deals. Priority: usage → retention → NRR.</span><div class="src">Cyvl — Framing: Time Machine, Jul 2026. <a href="https://app.notion.com/p/3a5b7cd936868037b74efe87c9135eaa">Notion</a></div></div>
+  </div>
+
+  <div class="cgrp">Real data &amp; results</div>
+  <div class="cites">
+    <div class="cite"><span class="q">Massillon, OH: two consecutive annual production scans, <b>2,531 matched road segments</b> — the map above is that real data.</span><div class="src">Cyvl production data.</div></div>
+    <div class="cite"><span class="q">Confidence vs surprise: the lowest-confidence roads missed the deterioration prediction by <b>36 PCI</b> on average, the highest by <b>10</b> (correlation −0.45).</span><div class="src">Computed live on this page from the Massillon segments.</div></div>
+    <div class="cite"><span class="q">42.5% of re-matched segments moved ≥15 PCI between scans; low-confidence-first predicts a ≥15-point shift a year ahead at <b>AUC 0.71</b>.</span><div class="src">Cyvl analysis, Massillon pair. Honest caveat: this two-scan pair is instrument-noisy for exact magnitude, so change numbers are directional, not precise.</div></div>
+    <div class="cite"><span class="q">Treatment validation (differenced within-street to cancel drift): repaving <b>+37.5 PCI</b> [+33, +42] on ~3,300 cells; sealing <b>−4.9</b> [−7.2, −1.7] on ~2,100 cells — opposite the positive bump the current PMP awards.</span><div class="src">Cyvl deterioration-model validation (roadgnar/deterioration-modeling, private).</div></div>
+    <div class="cite"><span class="q">Swarm (simulation): trained <b>IoU 0.663</b> vs greedy 0.539 / random 0.526, seed 10000. Predictions pre-registered and hash-frozen before grading.</span><div class="src">priormap research.</div></div>
+  </div>
+
+  <div class="cgrp">Method</div>
+  <div class="cites">
+    <div class="cite"><span class="q">Confidence uses a <b>strictly proper scoring rule</b> (Brier): minimized only when the stated probability equals the true one, so it cannot be gamed. Calibration is checked with a reliability diagram.</span><div class="src">Proper scoring: Gneiting &amp; Raftery, 2007.</div></div>
+    <div class="cite"><span class="q">The forecaster is composition-first: a semi-Markov process over distress states, PCI derived via ASTM D6433, grounded in 20+ years of federal LTPP / C-LTPP data and never fit to the city it forecasts. Year-0 equals the scan exactly.</span><div class="src">Cyvl deterioration model; FHWA LTPP; ASTM D6433.</div></div>
+  </div>
+
+  <a class="back" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="position:static;display:inline-block;margin-top:2.2em">↑ back to top</a>
 </section>
 
 <script type="importmap">
