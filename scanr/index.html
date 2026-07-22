@@ -78,14 +78,9 @@
   .bars{margin-top:1.8em;background:rgba(8,8,10,.82);border:1px solid #24241f;border-radius:12px;padding:16px}
   #iouchart{width:100%;height:230px;display:block}
   #confchart{width:100%;height:240px;display:block}
-  /* receipts / citations */
-  .receipts{min-height:auto;background:#0d0d0c;position:relative;z-index:3;padding-top:9vh;padding-bottom:13vh}
-  .cgrp{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--chartreuse);margin:1.8em 0 .1em}
-  .cites{display:grid;gap:11px;margin-top:.6em}
-  .cite{border-left:3px solid #2a2a28;background:rgba(255,255,255,.03);border-radius:0 8px 8px 0;padding:11px 15px;font-family:var(--mono);font-size:13px;line-height:1.6;color:#dcdcdc;max-width:none}
-  .cite .q{color:#fff} .cite .q b{color:var(--chartreuse)}
-  .cite .src{color:var(--gray-m);font-size:11px;margin-top:5px}
-  .cite .src a{color:#9fb800}
+  /* inline source lines under the claim they back */
+  .srcline{font-family:var(--mono);font-size:11.5px;line-height:1.55;color:var(--gray-m);margin-top:.7em;max-width:60ch}
+  .srcline a{color:#9fb800;text-decoration:underline}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
@@ -103,7 +98,8 @@
 </section>
 <section class="story">
   <h2>A score you can't defend is a score you can't fund.</h2>
-  <p>A public works director takes our numbers into a council meeting. Someone asks a fair question: <i>is this still true?</i> When the only data is last year's scan, there is no good answer. Trust in the number decides whether the work gets funded.</p>
+  <p>A public works director takes our numbers into a council meeting. Someone asks a fair question: <i>is this still true?</i> When the only data is last year's scan, there is no good answer. Roughly <b>half of our stalled pilots</b> die on exactly this, and our flagship account, NYC DOT, told us plainly they have <b>"zero confidence"</b> in automated condition data.</p>
+  <p class="srcline">Sources: Cyvl voice-of-customer, <a href="https://app.notion.com/p/1bdb7cd9368680cb8d41edda32f58ee4">Pavements Scoring Accuracy</a> (≈50% of stalled pilots cite score mismatch); <a href="https://app.notion.com/p/372b7cd936868181b0ccf3cd5ce008c5">NYC DOT meeting prep, Jun 2026</a> ("zero confidence").</p>
 </section>
 <section class="story">
   <div class="eyebrow">The idea</div>
@@ -118,7 +114,8 @@
 <section class="story">
   <div class="eyebrow">What it's worth</div>
   <h2>Rescan what moved. Skip what didn't.</h2>
-  <p>Confidence decays as the world changes under a scan. That decay is a map of where to look next. Send crews to the miles that carry the uncertainty, not the whole network, for a fraction of the cost, and keep the years between full scans defensible.</p>
+  <p>Confidence decays as the world changes under a scan. That decay is a map of where to look next. Send crews to the miles that carry the uncertainty, not the whole network, for a fraction of the cost, and keep the years between full scans defensible. Forward-looking deterioration is the <b>#1 thing customers ask us for</b>, and the timing is now: <b>Atlanta wants to scan monthly</b>, with ten Year-2 rescans landing in the next 120 days, six of them pre-renewal.</p>
+  <p class="srcline">Sources: <a href="https://app.notion.com/p/33bb7cd9368680eabe4bd458bccff246">Time Machine recap</a> (deterioration = top critical gap; 57% would use it today); <a href="https://app.notion.com/p/3a5b7cd936868037b74efe87c9135eaa">Framing: Time Machine, Jul 2026</a> (Atlanta monthly; 10 second scans in 120 days, all ARR; priority usage → retention → NRR).</p>
 </section>
 <section class="story" id="confmap">
   <div class="eyebrow">Real customer data · Massillon, Ohio</div>
@@ -126,6 +123,7 @@
   <p>Every dot is a real road segment. The <b>score</b> map looks healthy. <b>Confidence</b>, built from that same scan with no ground truth, flags which scores are least likely to still be true a year later. Then compare it to <b>next year's scan</b> — our ground truth — and the flagged roads are the ones that moved.</p>
   <p class="small">This predicts <i>change</i>, not a mistake in today's score. It can't see a surprise repave or a utility cut — no prior scan can — but it catches the deterioration already underway, which is most of what moves.</p>
   <p class="small">Cyvl already ships a <b>deterioration curve</b> — the expected PCI decline for each road. Toggle <b>vs the model</b>: <span style="color:#e8483f">red</span> roads fell faster than the curve predicted (hidden failure — subsurface, trucks, utilities); <span style="color:#6eb4ff">blue</span> roads beat it (a treatment working). Confidence predicts that deviation a year before the rescan confirms it — and every rescan feeds a sharper, per-segment curve back. That loop is the product.</p>
+  <p class="srcline">The treatment signal is validated: in the Massillon pair (differenced within-street to cancel measurement drift) repaving lifted PCI <b>+37.5</b> on ~3,300 cells while sealing measured <b>−4.9</b>, the opposite of the bump the current model assumes. Source: Cyvl deterioration-model validation (<code>roadgnar/deterioration-modeling</code>, private).</p>
   <div class="cmwrap">
     <div id="cmap"></div>
     <div class="cmui">
@@ -140,8 +138,10 @@
     </div>
   </div>
   <p class="small" id="cmcaption"></p>
+  <p class="srcline">Data: Cyvl production scans, Massillon OH — 2,531 matched segments across two consecutive years. The 42.5%-moved and AUC 0.71 change figures are directional: this two-scan pair is instrument-noisy for exact magnitude (different camera set and season), so we read it as signal, not a precise number. The confidence-to-deviation relationship below is the robust result.</p>
   <div class="bars" style="margin-top:1.8em"><canvas id="confchart"></canvas></div>
   <p class="small">Lower confidence, bigger surprise. Each bar averages how far a road's next-year PCI landed from the deterioration curve's prediction, grouped by this year's confidence. The lowest-confidence roads missed the prediction by <b>36 PCI</b> on average; the highest by <b>10</b> (correlation −0.45). That is the whole thesis in one chart: the confidence score, built with no ground truth, points at the roads that will defy the model.</p>
+  <p class="srcline">Computed live in your browser from the 2,531 Massillon segments (<code>scanr/data/demo_points.json</code>), binned by confidence.</p>
 </section>
 <section class="story" id="mathsec">
   <div class="eyebrow">The math, and why you can trust it</div>
@@ -154,6 +154,7 @@
     <div style="margin-top:10px">That is why we do not use the obvious signals. "High coverage" or "the models agreed" can be <b>gamed</b>: in our own research a model chasing those grew more and more confident while getting less and less accurate. Proper scoring can't be gamed that way, so the confidence stays honest as the world changes. We check it with a <b>reliability diagram</b>: when we say 80% confident, it should be right about 80% of the time.</div>
   </div>
   <p class="small">Three independent audits feed one number: <b>cross-signal</b> (do imagery, LiDAR, and coverage agree?), <b>temporal</b> (last year's score is a prediction of this year, absent treatment), and <b>spatial</b> (a segment scored unlike all its neighbors is suspect). Low on any of them means "don't over-trust, rescan first."</p>
+  <p class="srcline">Method: the Brier score is a strictly proper scoring rule (Gneiting &amp; Raftery, 2007). The "naive confidence gets gamed while accuracy drops" result is from our own ground-truth-free training research (priormap, pre-registered). Calibration is read from a reliability diagram.</p>
 </section>
 <section class="story">
   <div class="eyebrow">A few years out</div>
@@ -162,7 +163,7 @@
   <p class="small">Honest framing: this is a <b>simulation and a research result</b>, the far edge of the vision. It does not replace our drivers today. Making it real would take a coordinated sensor fleet or drones we do not run yet. The shippable half is the confidence layer, which picks the miles; people still do the rescan.</p>
   <p class="small">Grey builds up as belief; <span style="color:#e8483f">red</span> is where the belief is currently wrong. In simulation the trained swarm reconstructs the map more accurately than a greedy or random driver:</p>
   <div class="bars"><canvas id="iouchart"></canvas></div>
-  <p class="small">Map accuracy (IoU), higher is better. Simulated result, seed 10000. Source: priormap research.</p>
+  <p class="small">Map accuracy (IoU), higher is better. Simulated result, seed 10000; predictions pre-registered and hash-frozen before grading. Source: priormap research.</p>
   <div class="cue">↓ the swarm</div>
 </section>
 </div>
@@ -189,37 +190,6 @@
   </div>
   <div class="hint">drag to orbit · scroll to zoom</div>
   <div id="fallback">This 3D view needs WebGL. Try a desktop browser.<br>The story above explains the whole idea.</div>
-</section>
-
-<section class="story receipts" id="receipts">
-  <div class="eyebrow">Receipts · internal Cyvl submission</div>
-  <h2>Where every number comes from.</h2>
-  <p class="small">Real customer voices, real production data, cited. Internal sources are Cyvl Notion and research, linked for the internal audience.</p>
-
-  <div class="cgrp">What customers told us</div>
-  <div class="cites">
-    <div class="cite"><span class="q">"When clients don't trust the score, they don't convert." Roughly <b>half of stalled pilots</b> trace back to PCI not matching the customer's expectation.</span><div class="src">Cyvl — Pavements Scoring Accuracy, voice-of-customer review. <a href="https://app.notion.com/p/1bdb7cd9368680cb8d41edda32f58ee4">Notion</a></div></div>
-    <div class="cite"><span class="q">NYC DOT — our flagship $500K–$1M integration account — reports <b>"zero confidence"</b> in automated condition data.</span><div class="src">Cyvl — NYC DOT meeting prep, Jun 2026. <a href="https://app.notion.com/p/372b7cd936868181b0ccf3cd5ce008c5">Notion</a></div></div>
-    <div class="cite"><span class="q">Forward-looking deterioration is the <b>#1 customer request</b>. 57% would use today's Time Machine; the top critical gap named was deterioration.</span><div class="src">Cyvl — Time Machine recap / pitch. <a href="https://app.notion.com/p/33bb7cd9368680eabe4bd458bccff246">Notion</a></div></div>
-    <div class="cite"><span class="q">"<b>Atlanta want to be scanning monthly.</b>" 10 Year-2 rescans this summer, 6 pre-renewal; 10 second scans in the next 120 days, all ARR deals. Priority: usage → retention → NRR.</span><div class="src">Cyvl — Framing: Time Machine, Jul 2026. <a href="https://app.notion.com/p/3a5b7cd936868037b74efe87c9135eaa">Notion</a></div></div>
-  </div>
-
-  <div class="cgrp">Real data &amp; results</div>
-  <div class="cites">
-    <div class="cite"><span class="q">Massillon, OH: two consecutive annual production scans, <b>2,531 matched road segments</b> — the map above is that real data.</span><div class="src">Cyvl production data.</div></div>
-    <div class="cite"><span class="q">Confidence vs surprise: the lowest-confidence roads missed the deterioration prediction by <b>36 PCI</b> on average, the highest by <b>10</b> (correlation −0.45).</span><div class="src">Computed live on this page from the Massillon segments.</div></div>
-    <div class="cite"><span class="q">42.5% of re-matched segments moved ≥15 PCI between scans; low-confidence-first predicts a ≥15-point shift a year ahead at <b>AUC 0.71</b>.</span><div class="src">Cyvl analysis, Massillon pair. Honest caveat: this two-scan pair is instrument-noisy for exact magnitude, so change numbers are directional, not precise.</div></div>
-    <div class="cite"><span class="q">Treatment validation (differenced within-street to cancel drift): repaving <b>+37.5 PCI</b> [+33, +42] on ~3,300 cells; sealing <b>−4.9</b> [−7.2, −1.7] on ~2,100 cells — opposite the positive bump the current PMP awards.</span><div class="src">Cyvl deterioration-model validation (roadgnar/deterioration-modeling, private).</div></div>
-    <div class="cite"><span class="q">Swarm (simulation): trained <b>IoU 0.663</b> vs greedy 0.539 / random 0.526, seed 10000. Predictions pre-registered and hash-frozen before grading.</span><div class="src">priormap research.</div></div>
-  </div>
-
-  <div class="cgrp">Method</div>
-  <div class="cites">
-    <div class="cite"><span class="q">Confidence uses a <b>strictly proper scoring rule</b> (Brier): minimized only when the stated probability equals the true one, so it cannot be gamed. Calibration is checked with a reliability diagram.</span><div class="src">Proper scoring: Gneiting &amp; Raftery, 2007.</div></div>
-    <div class="cite"><span class="q">The forecaster is composition-first: a semi-Markov process over distress states, PCI derived via ASTM D6433, grounded in 20+ years of federal LTPP / C-LTPP data and never fit to the city it forecasts. Year-0 equals the scan exactly.</span><div class="src">Cyvl deterioration model; FHWA LTPP; ASTM D6433.</div></div>
-  </div>
-
-  <a class="back" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="position:static;display:inline-block;margin-top:2.2em">↑ back to top</a>
 </section>
 
 <script type="importmap">
