@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCANR · A confidence score for every road</title>
+<meta name="description" content="Infrastructure Intelligence: a self-supervised confidence layer, and a multi-agent swarm that re-scans a changing city from a stale prior. Interactive demo.">
+<style>
+  :root{
+    --chartreuse:#daff00;--chartreuse-mid:#ecff90;--ink:#0d0d0c;--paper:#f9f9f9;--white:#fff;
+    --gray-d:#595959;--gray-m:#c2c2c2;--gray-l:#eaeaea;
+    --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;--disp:Arial,Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--ink);color:var(--white);font-family:var(--disp);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .skip{position:fixed;top:16px;right:16px;z-index:50;font-family:var(--mono);font-size:12px;font-weight:700;
+    letter-spacing:.08em;text-decoration:none;color:var(--ink);background:var(--chartreuse);padding:9px 14px;border-radius:4px}
+  .skip:focus-visible,.hublink:focus-visible{outline:3px solid #fff;outline-offset:2px}
+  .hublink{position:fixed;top:16px;left:16px;z-index:50;font-family:var(--mono);font-size:12px;font-weight:700;
+    letter-spacing:.08em;text-decoration:none;color:#e8e8e8;background:rgba(13,13,12,.72);border:1px solid #3a3a38;padding:9px 14px;border-radius:4px}
+  section.story{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:10vh 8vw;max-width:1100px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--chartreuse);margin-bottom:1.2em}
+  h1{font-size:clamp(36px,7vw,86px);font-weight:800;letter-spacing:-.022em;line-height:1.0;margin:0 0 .35em;text-wrap:balance}
+  h2{font-size:clamp(28px,5vw,58px);font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0 0 .4em;text-wrap:balance}
+  p{font-size:clamp(16px,2.1vw,23px);line-height:1.5;max-width:60ch;color:#d4d4d4}
+  p.small{font-size:clamp(14px,1.6vw,18px);color:var(--gray-m)}
+  .accent{color:var(--chartreuse)}
+  b{color:var(--white)}
+  .bands{display:flex;gap:14px;flex-wrap:wrap;margin-top:1.6em}
+  .band{font-family:var(--mono);font-size:13px;letter-spacing:.04em;padding:8px 12px;border-radius:4px;border:1px solid #2a2a28}
+  .sq{display:inline-block;width:10px;height:10px;margin-right:7px;vertical-align:middle;border-radius:2px}
+  .cue{margin-top:2.4em;font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--gray-d)}
+  /* 3D scene */
+  #scene{position:relative;height:100vh;background:#08080a}
+  #c{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .hud{position:absolute;left:20px;top:20px;z-index:10;font-family:var(--mono);color:#e8e8e8;max-width:300px}
+  .hud h3{font-family:var(--disp);font-size:20px;font-weight:800;margin:0 0 4px;color:#fff}
+  .hud .iou{font-size:34px;font-weight:800;color:var(--chartreuse);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .hud .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-m)}
+  .hud .leg{font-size:12px;line-height:1.9;margin-top:12px}
+  .ctrls{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:10;display:flex;align-items:center;gap:12px;
+    background:rgba(13,13,12,.82);border:1px solid #2a2a28;border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:12px}
+  .ctrls button{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink);background:var(--chartreuse);border:0;
+    padding:7px 12px;border-radius:4px;cursor:pointer}
+  .ctrls button.ghost{background:transparent;color:#ddd;border:1px solid #3a3a38}
+  .ctrls button.ghost.on{background:var(--chartreuse);color:var(--ink);border-color:var(--chartreuse)}
+  .ctrls input[type=range]{width:200px;accent-color:var(--chartreuse)}
+  .hint{position:absolute;right:20px;bottom:24px;z-index:10;font-family:var(--mono);font-size:11px;color:var(--gray-d)}
+  .back{position:absolute;right:20px;top:20px;z-index:10;font-family:var(--mono);font-size:12px;color:var(--gray-m);text-decoration:none}
+  #fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:8vw;color:var(--gray-m);font-family:var(--mono)}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<a class="hublink" href="../">← Hub</a>
+<a class="skip" href="#scene">Skip to the swarm →</a>
+
+<!-- ACT 0 -->
+<section class="story">
+  <div class="eyebrow">Infrastructure Intelligence</div>
+  <h1>A confidence score for every road.<br><span class="accent">No ground truth required.</span></h1>
+  <p>Cities manage billions of dollars of pavement on data that is often years out of date. The score on the map might be right. It might be stale. Today there is no way to tell which.</p>
+  <div class="cue">scroll ↓ &nbsp;·&nbsp; or skip to the 3D swarm</div>
+</section>
+
+<!-- ACT 1 -->
+<section class="story">
+  <h2>A score you can't defend is a score you can't fund.</h2>
+  <p>A public works director takes our numbers into a council meeting. Someone asks a fair question: <i>is this still true?</i> When the only data is last year's scan, there is no good answer. Trust in the number decides whether the work gets funded.</p>
+</section>
+
+<!-- ACT 2 -->
+<section class="story">
+  <div class="eyebrow">The idea</div>
+  <h2>What if every score carried its own confidence?</h2>
+  <p>Built from the scan you already paid for. No new fieldwork. No hand-measured ground truth. Each score is checked against the evidence beneath it and against how long ago the road was driven.</p>
+  <div class="bands">
+    <span class="band"><span class="sq" style="background:#69713d"></span>Verified · evidence backs the score</span>
+    <span class="band"><span class="sq" style="background:#ff9d0a"></span>Review · signals are mixed</span>
+    <span class="band"><span class="sq" style="background:#e8483f"></span>Rescan · evidence disagrees, or the scan is stale</span>
+  </div>
+</section>
+
+<!-- ACT 3 -->
+<section class="story">
+  <div class="eyebrow">What it's worth</div>
+  <h2>Rescan what moved. Skip what didn't.</h2>
+  <p>Confidence decays as the world changes under a scan. That decay is a map of where to look next. Send crews to the miles that carry the uncertainty, not the whole network, for a fraction of the cost, and keep the years between full scans defensible.</p>
+</section>
+
+<!-- ACT 4 -->
+<section class="story">
+  <div class="eyebrow">A few years out</div>
+  <h2>Now let the rescanning drive itself.</h2>
+  <p>The same idea, taken to its limit: a team of agents that starts from your last scan as a <b>prior</b> and re-checks exactly where the map has gone stale. Trained with no ground truth. Watch it rebuild a changing city below.</p>
+  <p class="small">Simulation. Fixed towers hold the frame; mobile scanners choose where to look next. Grey builds up as belief; <span style="color:#e8483f">red</span> is where the belief is currently wrong.</p>
+  <div class="cue">↓ the swarm</div>
+</section>
+
+<!-- 3D SCENE -->
+<section id="scene">
+  <canvas id="c"></canvas>
+  <div class="hud">
+    <h3 id="polName">Reference policy</h3>
+    <div class="lbl">map accuracy (IoU)</div>
+    <div class="iou" id="iou">0.00</div>
+    <div class="leg">
+      <span class="sq" style="background:#3a3a3a"></span>free &nbsp; <span class="sq" style="background:var(--chartreuse)"></span>occupied<br>
+      <span class="sq" style="background:#e8483f"></span>currently wrong &nbsp; <span class="sq" style="background:#69a0ff"></span>scanner &nbsp; <span class="sq" style="background:#fff"></span>tower
+    </div>
+  </div>
+  <a class="back" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">↑ the story</a>
+  <div class="ctrls">
+    <button id="play">❚❚</button>
+    <input type="range" id="scrub" min="0" max="15" value="0" step="1">
+    <span id="step" style="color:#c2c2c2">t 0</span>
+    <span style="color:#3a3a38">|</span>
+    <button class="ghost on" data-pol="greedy">greedy</button>
+    <button class="ghost" data-pol="random">random</button>
+    <button class="ghost" data-pol="trained">trained</button>
+  </div>
+  <div class="hint">drag to orbit · scroll to zoom · right-drag to pan</div>
+  <div id="fallback">This 3D view needs WebGL. Try a desktop browser.<br>The story above still explains the whole idea.</div>
+</section>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const canvas = document.getElementById('c');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({canvas, antialias:true}); }
+catch(e){ document.getElementById('fallback').style.display='flex'; }
+
+if (renderer){
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x08080a);
+  scene.fog = new THREE.Fog(0x08080a, 60, 160);
+  const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 1000);
+  camera.position.set(38, 40, 52);
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true; controls.dampingFactor = .08;
+  controls.maxPolarAngle = Math.PI*0.49; controls.target.set(0,0,0);
+
+  scene.add(new THREE.AmbientLight(0xffffff, .55));
+  const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(30,60,20); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xdaff00, .35); rim.position.set(-30,20,-30); scene.add(rim);
+
+  // grid params filled after data loads
+  let W=48,H=48,cell=1;
+  const COL_FREE=new THREE.Color(0x2b2b2e), COL_OCC=new THREE.Color(0xdaff00), COL_WRONG=new THREE.Color(0xe8483f);
+  const box = new THREE.BoxGeometry(0.92,1,0.92);
+  const mat = new THREE.MeshLambertMaterial({vertexColors:true});
+  let cells;              // InstancedMesh
+  const dummy = new THREE.Object3D();
+
+  // ground plate
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(52,0.4,52), new THREE.MeshLambertMaterial({color:0x121214}));
+  plate.position.y=-0.4; scene.add(plate);
+
+  // agents
+  const towerGeo=new THREE.CylinderGeometry(.55,.55,6,10), towerMat=new THREE.MeshLambertMaterial({color:0xffffff});
+  const mobGeo=new THREE.ConeGeometry(.7,1.6,8), mobMat=new THREE.MeshLambertMaterial({color:0x69a0ff});
+  const agents={}; // name -> mesh
+
+  let EP=null, ep=null, T=0, t=0, playing=true, clock=new THREE.Clock(), acc=0;
+  const STEP_SECS=0.7;
+  const iouEl=document.getElementById('iou'), stepEl=document.getElementById('step'),
+        scrub=document.getElementById('scrub'), polName=document.getElementById('polName');
+
+  function gx(x){ return x - W/2 + 0.5; }
+  function gz(y){ return y - H/2 + 0.5; }
+
+  function buildGrid(){
+    if(cells){ scene.remove(cells); cells.dispose&&cells.dispose(); }
+    cells = new THREE.InstancedMesh(box, mat, W*H);
+    cells.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    scene.add(cells);
+  }
+
+  function frame(){
+    const gt=ep.gt[t], bel=ep.belief[t];
+    for(let r=0;r<H;r++)for(let c=0;c<W;c++){
+      const i=r*W+c, p=bel[i]/100, occ=p>=0.5?1:0, wrong=(occ!==gt[i]);
+      const h=Math.max(0.12, p*5.0);
+      dummy.position.set(gx(c), h/2, gz(r)); dummy.scale.set(1,h,1); dummy.updateMatrix();
+      cells.setMatrixAt(i, dummy.matrix);
+      let col = wrong ? COL_WRONG : (occ ? COL_OCC : COL_FREE);
+      if(!wrong && occ){ col = COL_OCC.clone().multiplyScalar(0.35+0.65*p); }
+      cells.setColorAt(i, col);
+    }
+    cells.instanceMatrix.needsUpdate=true; if(cells.instanceColor) cells.instanceColor.needsUpdate=true;
+    const poses=ep.poses[t]||{};
+    for(const name in poses){
+      const [x,y]=poses[name]; let m=agents[name];
+      if(!m){ const tower=name.startsWith('tower'); m=new THREE.Mesh(tower?towerGeo:mobGeo, tower?towerMat:mobMat); m.userData.tower=tower; scene.add(m); agents[name]=m; }
+      const tower=m.userData.tower;
+      m.position.set(gx(x), tower?3:1.2, gz(y));
+    }
+    iouEl.textContent=(ep.ious[t]??0).toFixed(3);
+    stepEl.textContent='t '+t; scrub.value=t;
+  }
+
+  async function load(pol){
+    try{
+      const r=await fetch('data/episode_'+pol+'.json');
+      if(!r.ok) throw new Error('missing');
+      ep=await r.json(); W=ep.W; H=ep.H; T=ep.T; t=0;
+      scrub.max=T-1; buildGrid();
+      // reset agents (roster identical across policies)
+      polName.textContent = pol==='trained' ? 'Trained (audit-reward)' : pol.charAt(0).toUpperCase()+pol.slice(1)+' policy';
+      frame();
+      return true;
+    }catch(e){
+      polName.textContent = pol==='trained' ? 'Trained render in progress' : 'Unavailable';
+      return false;
+    }
+  }
+
+  // controls
+  document.getElementById('play').onclick=function(){ playing=!playing; this.textContent=playing?'❚❚':'▶'; };
+  scrub.oninput=function(){ playing=false; document.getElementById('play').textContent='▶'; t=+this.value; if(ep)frame(); };
+  document.querySelectorAll('.ctrls [data-pol]').forEach(b=>b.onclick=async function(){
+    document.querySelectorAll('.ctrls [data-pol]').forEach(x=>x.classList.remove('on'));
+    this.classList.add('on'); playing=true; document.getElementById('play').textContent='❚❚';
+    await load(this.dataset.pol);
+  });
+
+  function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; if(canvas.width!==w||canvas.height!==h){ renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); } }
+  renderer.setAnimationLoop(()=>{
+    resize(); controls.update();
+    if(ep){ acc+=clock.getDelta(); if(playing && acc>=STEP_SECS){ acc=0; t=(t+1)%T; frame(); } }
+    renderer.render(scene,camera);
+  });
+
+  load('greedy');
+}
+</script>
+</body>
+</html>
