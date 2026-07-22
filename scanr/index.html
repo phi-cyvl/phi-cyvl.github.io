@@ -77,6 +77,7 @@
   .mathbox b{color:var(--chartreuse)} .mathbox .k{color:#fff;font-weight:700}
   .bars{margin-top:1.8em;background:rgba(8,8,10,.82);border:1px solid #24241f;border-radius:12px;padding:16px}
   #iouchart{width:100%;height:230px;display:block}
+  #confchart{width:100%;height:240px;display:block}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
@@ -84,7 +85,6 @@
 <canvas id="bg"></canvas>
 <div id="bgtint"></div>
 <a class="hublink" href="../">← Hub</a>
-<a class="skip" href="#scene">Skip to the swarm →</a>
 
 <div class="story-wrap">
 <section class="story">
@@ -132,6 +132,8 @@
     </div>
   </div>
   <p class="small" id="cmcaption"></p>
+  <div class="bars" style="margin-top:1.8em"><canvas id="confchart"></canvas></div>
+  <p class="small">Lower confidence, bigger surprise. Each bar averages how far a road's next-year PCI landed from the deterioration curve's prediction, grouped by this year's confidence. The lowest-confidence roads missed the prediction by <b>36 PCI</b> on average; the highest by <b>10</b> (correlation −0.45). That is the whole thesis in one chart: the confidence score, built with no ground truth, points at the roads that will defy the model.</p>
 </section>
 <section class="story" id="mathsec">
   <div class="eyebrow">The math, and why you can trust it</div>
@@ -148,7 +150,7 @@
 <section class="story">
   <div class="eyebrow">A few years out</div>
   <h2>Now let the rescanning drive itself.</h2>
-  <p>A swarm trained with <b>no ground truth</b> to re-scan exactly where the map has gone stale. On the left is the ground truth, the real map as it changes. On the right, the trained model rebuilds it from a stale prior. Cars are mobile scanners; poles are fixed traffic-camera sensors.</p>
+  <p>A swarm trained with <b>no ground truth</b> to re-scan exactly where the map has gone stale. <b>Left:</b> the ground truth, the real map as it changes. <b>Middle:</b> what the swarm thinks it sees, its belief, with the agents at work. <b>Right:</b> that belief graded against reality, red where it is still wrong. Cars are mobile scanners; poles are fixed traffic-camera sensors.</p>
   <p class="small">Honest framing: this is a <b>simulation and a research result</b>, the far edge of the vision. It does not replace our drivers today. Making it real would take a coordinated sensor fleet or drones we do not run yet. The shippable half is the confidence layer, which picks the miles; people still do the rescan.</p>
   <p class="small">Grey builds up as belief; <span style="color:#e8483f">red</span> is where the belief is currently wrong. In simulation the trained swarm reconstructs the map more accurately than a greedy or random driver:</p>
   <div class="bars"><canvas id="iouchart"></canvas></div>
@@ -160,13 +162,13 @@
 <section id="scene">
   <canvas id="c"></canvas>
   <div class="hud">
-    <div class="lbl">ground truth vs trained model · map accuracy (IoU)</div>
+    <div class="lbl">reality · belief · graded — map accuracy (IoU)</div>
     <div class="row3" id="pols"></div>
   </div>
   <div class="leg">
     <span class="sq" style="background:var(--chartreuse)"></span>occupied &nbsp;
     <span class="sq" style="background:#30302f"></span>free &nbsp;
-    <span class="sq" style="background:#e8483f"></span>trained belief currently wrong<br>
+    <span class="sq" style="background:#e8483f"></span>belief still wrong (graded panel)<br>
     <span class="sq" style="background:#69a0ff"></span>mobile scanner (car) &nbsp;
     <span class="sq" style="background:#fff"></span>fixed sensor (camera) &nbsp;
     <span class="sq" style="background:#daff00;opacity:.5"></span>vision cone
@@ -233,7 +235,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   R.setPixelRatio(Math.min(devicePixelRatio,2));
   const sc=new THREE.Scene(); sc.background=new THREE.Color(0x08080a); sc.fog=new THREE.Fog(0x08080a,170,430);
   // ONE camera + ONE OrbitControls for the whole scene → orbiting moves both panels together (orientation stays synced)
-  const cam=new THREE.PerspectiveCamera(54,1,0.1,2000); cam.position.set(0,74,158);
+  const cam=new THREE.PerspectiveCamera(54,1,0.1,2000); cam.position.set(0,88,196);
   const controls=new OrbitControls(cam,canvas); controls.enableDamping=true; controls.dampingFactor=.08; controls.maxPolarAngle=Math.PI*0.49; controls.target.set(0,4,0);
   sc.add(new THREE.AmbientLight(0xffffff,.62));
   const key=new THREE.DirectionalLight(0xffffff,1.15); key.position.set(40,90,30); sc.add(key);
@@ -243,7 +245,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   const CELL=1.4;
   const box=new THREE.BoxGeometry(CELL*0.92,1,CELL*0.92);
   const dummy=new THREE.Object3D(), tcol=new THREE.Color();
-  let ep=null, gtGrp=null, trGrp=null, T=15, tf=0, playing=true, OFF=44;
+  let ep=null, gtGrp=null, belGrp=null, errGrp=null, T=15, tf=0, playing=true, OFF=48;
   const cl=new THREE.Clock();
   const scrub=document.getElementById('scrub'), stepEl=document.getElementById('step'), polsEl=document.getElementById('pols');
 
@@ -269,11 +271,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   const gx=(c,W)=>(c-W/2+0.5)*CELL, gz=(r,H)=>(r-H/2+0.5)*CELL;
   const orth=(A,B,a)=>a<0.5?[A[0]+(B[0]-A[0])*a*2,A[1]]:[B[0],A[1]+(B[1]-A[1])*(a-0.5)*2];
 
-  function build(){ const W=ep.W,H=ep.H; OFF=W*CELL*0.62+6;
+  function build(){ const W=ep.W,H=ep.H; OFF=W*CELL+8; // 3 panels at -OFF, 0, +OFF; identical mapping keeps them oriented together
     gtGrp=new THREE.Group(); const gc=makeCells(W,H); gtGrp.add(gc,makePlate(W,H)); gtGrp.userData={cells:gc}; gtGrp.position.x=-OFF; sc.add(gtGrp);
-    trGrp=new THREE.Group(); const tc=makeCells(W,H); trGrp.add(tc,makePlate(W,H));
-    const agents={}; for(const nm in (ep.poses[0]||{})){ const tw=nm.startsWith('tower'); const m=tw?makeSensor():makeCar(); m.userData.tw=tw; trGrp.add(m); agents[nm]=m; }
-    trGrp.userData={cells:tc,agents}; trGrp.position.x=OFF; sc.add(trGrp);
+    belGrp=new THREE.Group(); const bc=makeCells(W,H); belGrp.add(bc,makePlate(W,H));
+    const agents={}; for(const nm in (ep.poses[0]||{})){ const tw=nm.startsWith('tower'); const m=tw?makeSensor():makeCar(); m.userData.tw=tw; belGrp.add(m); agents[nm]=m; }
+    belGrp.userData={cells:bc,agents}; belGrp.position.x=0; sc.add(belGrp);
+    errGrp=new THREE.Group(); const ec=makeCells(W,H); errGrp.add(ec,makePlate(W,H)); errGrp.userData={cells:ec}; errGrp.position.x=OFF; sc.add(errGrp);
   }
 
   function renderGT(tfrac){ if(!gtGrp)return; const {cells}=gtGrp.userData, W=ep.W,H=ep.H, gt=ep.gt[Math.floor(tfrac)%T];
@@ -282,25 +285,27 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
       cells.setColorAt(i, occ?COL_OCC:COL_FREE); }
     cells.instanceMatrix.needsUpdate=true; if(cells.instanceColor)cells.instanceColor.needsUpdate=true; }
 
-  function renderTrained(tfrac){ if(!trGrp)return; const {cells,agents}=trGrp.userData, W=ep.W,H=ep.H;
+  // belief panel: what the agent thinks it sees. red=false → pure belief (perception); red=true → graded against truth (accuracy). agents only on the panel that has them.
+  function renderBeliefPanel(grp,tfrac,red){ if(!grp)return; const {cells,agents}=grp.userData, W=ep.W,H=ep.H;
     const i0=Math.floor(tfrac)%T,i1=(i0+1)%T,a=tfrac-Math.floor(tfrac),b0=ep.belief[i0],b1=ep.belief[i1],gt=ep.gt[i0];
     for(let r=0;r<H;r++)for(let c=0;c<W;c++){ const i=r*W+c,p=(b0[i]+(b1[i]-b0[i])*a)/100,occ=p>=0.5?1:0,wrong=occ!==gt[i],h=Math.max(0.14,p*6);
       dummy.position.set(gx(c,W),h/2,gz(r,H)); dummy.scale.set(1,h,1); dummy.updateMatrix(); cells.setMatrixAt(i,dummy.matrix);
-      if(wrong)tcol.copy(COL_WRONG); else if(occ)tcol.copy(COL_OCC).multiplyScalar(0.4+0.6*p); else tcol.copy(COL_FREE);
+      if(red&&wrong)tcol.copy(COL_WRONG); else if(occ)tcol.copy(COL_OCC).multiplyScalar(0.4+0.6*p); else tcol.copy(COL_FREE);
       cells.setColorAt(i,tcol); }
     cells.instanceMatrix.needsUpdate=true; if(cells.instanceColor)cells.instanceColor.needsUpdate=true;
-    const p0=ep.poses[i0]||{},p1=ep.poses[i1]||{};
-    for(const nm in agents){ const A=p0[nm],B=p1[nm]||A,m=agents[nm]; if(!A)continue;
-      const [x,y]=orth(A,B,a); m.position.set(gx(x,W),0,gz(y,H));
-      if(!m.userData.tw){ const dx=B[0]-A[0],dy=B[1]-A[1]; let ang=m.userData.ang; // orthogonal only: face the active leg
-        if(a<0.5){ if(Math.abs(dx)>0.01) ang=dx>0?Math.PI/2:-Math.PI/2; }
-        else { if(Math.abs(dy)>0.01) ang=dy>0?0:Math.PI; }
-        if(ang===undefined) ang=Math.abs(dx)>=Math.abs(dy)?(dx>0?Math.PI/2:-Math.PI/2):(dy>0?0:Math.PI);
-        m.rotation.y=ang; m.userData.ang=ang; } } }
+    if(agents){ const p0=ep.poses[i0]||{},p1=ep.poses[i1]||{};
+      for(const nm in agents){ const A=p0[nm],B=p1[nm]||A,m=agents[nm]; if(!A)continue;
+        const [x,y]=orth(A,B,a); m.position.set(gx(x,W),0,gz(y,H));
+        if(!m.userData.tw){ const dx=B[0]-A[0],dy=B[1]-A[1]; let ang=m.userData.ang; // orthogonal only: face the active leg
+          if(a<0.5){ if(Math.abs(dx)>0.01) ang=dx>0?Math.PI/2:-Math.PI/2; }
+          else { if(Math.abs(dy)>0.01) ang=dy>0?0:Math.PI; }
+          if(ang===undefined) ang=Math.abs(dx)>=Math.abs(dy)?(dx>0?Math.PI/2:-Math.PI/2):(dy>0?0:Math.PI);
+          m.rotation.y=ang; m.userData.ang=ang; } } } }
 
   function buildHUD(){ polsEl.innerHTML=
-    '<div class="pol"><div class="nm">Ground truth</div><div class="v" style="font-size:13px;color:#daff00">the real map</div></div>'+
-    '<div class="pol center"><div class="nm">Trained (audit)</div><div class="v" id="iou-tr">–</div></div>'; }
+    '<div class="pol"><div class="nm">Ground truth</div><div class="v" style="font-size:13px;color:#daff00">reality</div></div>'+
+    '<div class="pol center"><div class="nm">What the agent sees</div><div class="v" style="font-size:13px;color:#daff00">belief</div></div>'+
+    '<div class="pol"><div class="nm">Trained (audit)</div><div class="v" id="iou-tr">–</div></div>'; }
 
   document.getElementById('play').onclick=function(){ playing=!playing; this.textContent=playing?'❚❚':'▶'; };
   scrub.oninput=function(){ playing=false; document.getElementById('play').textContent='▶'; tf=(+this.value/150)*T; };
@@ -312,10 +317,41 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   R.setAnimationLoop(()=>{
     resize(); controls.update();
     const dt=cl.getDelta(); if(playing){ tf+=Math.min(dt,0.1)/0.7; if(tf>=T)tf-=T; } // clamp dt so a stalled tab can't jump the clock
-    try{ if(ep){ renderGT(tf); renderTrained(tf); const el=document.getElementById('iou-tr'); if(el){ const i0=Math.floor(tf)%T,i1=(i0+1)%T,a=tf-Math.floor(tf); el.textContent=(ep.ious[i0]+(ep.ious[i1]-ep.ious[i0])*a).toFixed(3);} } }catch(err){}
+    try{ if(ep){ renderGT(tf); renderBeliefPanel(belGrp,tf,false); renderBeliefPanel(errGrp,tf,true); const el=document.getElementById('iou-tr'); if(el){ const i0=Math.floor(tf)%T,i1=(i0+1)%T,a=tf-Math.floor(tf); el.textContent=(ep.ious[i0]+(ep.ious[i1]-ep.ious[i0])*a).toFixed(3);} } }catch(err){}
     stepEl.textContent='t '+(Math.floor(tf)%T); scrub.value=Math.round(tf/T*150);
     R.render(sc,cam);
   });
+})();
+
+/* ---------- confidence vs surprise: does low confidence predict big deviation from the curve? ---------- */
+(function(){
+  const cv=document.getElementById('confchart'); if(!cv) return; const ctx=cv.getContext('2d');
+  const RES=[[0,50,4],[50,70,3],[70,85,2],[85,100,1]];
+  const rate=p=>{ for(const [l,h,r] of RES) if(l<p&&p<=h) return r; return p<=0?4:1; };
+  const det=(p,y)=>{ let t=y; while(t>0&&p>0){ const r=rate(p); let fl=0; for(const [l,h] of RES) if(l<p&&p<=h){fl=l;break;} const tb=(p-fl)/r; if(tb>=t){p-=r*t;t=0;} else {p=fl;t-=tb;} } return Math.max(0,Math.min(100,p)); };
+  const mix=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];
+  const ramp=v=>v<0.5?mix([232,72,63],[255,157,10],v*2):mix([255,157,10],[120,190,60],(v-0.5)*2);
+  const hex=c=>'#'+c.map(x=>('0'+((x|0)&255).toString(16)).slice(-2)).join('');
+  let bars=null;
+  fetch('data/demo_points.json').then(r=>r.json()).then(d=>{
+    const dd=d.filter(p=>typeof p.d==='number').map(p=>({c:p.c,a:Math.abs(Math.max(0,Math.min(100,p.s+p.d))-det(p.s,1))}));
+    const B=[[0,.2],[.2,.4],[.4,.6],[.6,.8],[.8,1.01]];
+    bars=B.map(([lo,hi])=>{ const g=dd.filter(p=>p.c>=lo&&p.c<hi); return {lo,hi,mid:(lo+Math.min(hi,1))/2,m:g.length?g.reduce((s,p)=>s+p.a,0)/g.length:0}; });
+    draw();
+  }).catch(()=>{});
+  function draw(){ if(!bars)return; const dpr=Math.min(devicePixelRatio||1,2),w=cv.clientWidth,h=cv.clientHeight; if(!w||!h)return;
+    cv.width=w*dpr;cv.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+    const padT=18,padB=44,gh=h-padT-padB,MAX=40,n=bars.length,bw=Math.min(120,w/n*0.66),gap=(w-bw*n)/(n+1);
+    ctx.textAlign='center';
+    bars.forEach((b,i)=>{ const x=gap*(i+1)+bw*i,bh=(b.m/MAX)*gh,y=padT+gh-bh;
+      ctx.fillStyle=hex(ramp(b.mid)); ctx.fillRect(x,y,bw,bh);
+      ctx.fillStyle='#fff'; ctx.font='700 13px ui-monospace,Menlo,monospace'; ctx.fillText(b.m.toFixed(1),x+bw/2,y-7);
+      ctx.fillStyle='#cfcfcf'; ctx.font='11px ui-monospace,Menlo,monospace'; ctx.fillText((b.lo*100|0)+'–'+(Math.min(b.hi,1)*100|0),x+bw/2,padT+gh+16); });
+    ctx.fillStyle='#8a8a86'; ctx.font='11px ui-monospace,Menlo,monospace';
+    ctx.fillText('confidence percentile (low → high)   ·   bar height = avg PCI deviation from the prediction',w/2,padT+gh+34);
+  }
+  addEventListener('resize',draw);
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) draw(); }),{threshold:0.2}); io.observe(cv);
 })();
 
 /* ---------- IoU bar chart: trained vs baselines (simulated result) ---------- */
