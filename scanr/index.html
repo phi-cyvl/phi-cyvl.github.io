@@ -120,10 +120,8 @@
 <section class="story" id="confmap">
   <div class="eyebrow">Real customer data · Massillon, Ohio</div>
   <h2>The confidence layer, on a real city.</h2>
-  <p>Every dot is a real road segment. The <b>score</b> map looks healthy. <b>Confidence</b>, built from that same scan with no ground truth, flags which scores are least likely to still be true a year later. Then compare it to <b>next year's scan</b> — our ground truth — and the flagged roads are the ones that moved.</p>
-  <p class="small">This predicts <i>change</i>, not a mistake in today's score. It can't see a surprise repave or a utility cut — no prior scan can — but it catches the deterioration already underway, which is most of what moves.</p>
-  <p class="small">Cyvl already ships a <b>deterioration curve</b> — the expected PCI decline for each road. Toggle <b>vs the model</b>: <span style="color:#e8483f">red</span> roads fell faster than the curve predicted (hidden failure — subsurface, trucks, utilities); <span style="color:#6eb4ff">blue</span> roads beat it (a treatment working). Confidence predicts that deviation a year before the rescan confirms it — and every rescan feeds a sharper, per-segment curve back. That loop is the product.</p>
-  <p class="srcline">The treatment signal is validated: in the Massillon pair (differenced within-street to cancel measurement drift) repaving lifted PCI <b>+37.5</b> on ~3,300 cells while sealing measured <b>−4.9</b>, the opposite of the bump the current model assumes. Source: Cyvl deterioration-model validation (<code>roadgnar/deterioration-modeling</code>, private).</p>
+  <p>Every dot is a real road segment we scored. <b>Confidence</b> is built from that scan alone, no ground truth. Toggle the maps: the score looks healthy, confidence flags what's least likely to still be true, and next year's scan shows the flagged roads are the ones that moved.</p>
+  <p class="small"><b>vs the model:</b> <span style="color:#e8483f">red</span> = fell faster than Cyvl's deterioration curve predicted (hidden failure); <span style="color:#6eb4ff">blue</span> = beat it (a treatment working). Confidence predicts that deviation before the rescan confirms it.</p>
   <div class="cmwrap">
     <div id="cmap"></div>
     <div class="cmui">
@@ -138,32 +136,30 @@
     </div>
   </div>
   <p class="small" id="cmcaption"></p>
-  <p class="srcline">Data: Cyvl production scans, Massillon OH — 2,531 matched segments across two consecutive years. The 42.5%-moved and AUC 0.71 change figures are directional: this two-scan pair is instrument-noisy for exact magnitude (different camera set and season), so we read it as signal, not a precise number. The confidence-to-deviation relationship below is the robust result.</p>
+  <p class="srcline">Massillon, OH — 2,531 segments, two consecutive years. Change magnitudes (42.5% moved; AUC 0.71) are directional — this scan pair is instrument-noisy. The confidence→deviation link below is the robust result. Treatment check: repave +37.5, seal −4.9 (within-street differenced).</p>
   <div class="bars" style="margin-top:1.8em"><canvas id="confchart"></canvas></div>
-  <p class="small">Lower confidence, bigger surprise. Each bar averages how far a road's next-year PCI landed from the deterioration curve's prediction, grouped by this year's confidence. The lowest-confidence roads missed the prediction by <b>36 PCI</b> on average; the highest by <b>10</b> (correlation −0.45). That is the whole thesis in one chart: the confidence score, built with no ground truth, points at the roads that will defy the model.</p>
-  <p class="srcline">Computed live in your browser from the 2,531 Massillon segments (<code>scanr/data/demo_points.json</code>), binned by confidence.</p>
+  <p class="small"><b>Lower confidence, bigger surprise.</b> Each bar: a road's average miss from the prediction, grouped by confidence. Lowest-confidence roads missed by <b>36 PCI</b>, highest by <b>10</b> (corr −0.45). The no-ground-truth score points at the roads that defy the model.</p>
+  <p class="srcline">Computed live from the 2,531 segments (demo_points.json).</p>
 </section>
 <section class="story" id="mathsec">
-  <div class="eyebrow">The math, and why you can trust it</div>
-  <h2>Confidence you can't fake.</h2>
-  <p>The score can't grade its own homework, so we make it predict something it will be checked against, then score that prediction with a rule that only rewards honesty.</p>
+  <div class="eyebrow">How the confidence is computed</div>
+  <h2>Two questions, asked of every score.</h2>
+  <p>A score can't grade its own homework. So each one is checked against evidence it never sees at scoring time — no ground truth, no peek at next year.</p>
   <div class="mathbox">
-    <div>Each score is really a set of predictions from independent evidence: the imagery distress read, the LiDAR, the coverage, last year's condition, and the neighbors. We hold one out, predict it from the rest, and grade the prediction with a <b>strictly proper scoring rule</b> (the Brier score):</div>
-    <div class="f">confidence loss = ( p − o )²&nbsp;&nbsp;averaged over held-out checks</div>
-    <div><span class="k">p</span> = the score's predicted probability, <span class="k">o</span> = what the evidence actually showed (1 or 0). The one mathematical fact that makes this trustworthy: a proper scoring rule is minimized <b>only</b> when p equals the true probability. You cannot lower your loss by sounding more sure than you are. Over-confidence and under-confidence both get punished.</div>
-    <div style="margin-top:10px">That is why we do not use the obvious signals. "High coverage" or "the models agreed" can be <b>gamed</b>: in our own research a model chasing those grew more and more confident while getting less and less accurate. Proper scoring can't be gamed that way, so the confidence stays honest as the world changes. We check it with a <b>reliability diagram</b>: when we say 80% confident, it should be right about 80% of the time.</div>
+    <div><b>1. Does it match the road under it?</b> Compare the score to the distress the sensors actually measured on that segment. A high score sitting on heavy cracking is a disagreement.</div>
+    <div><b>2. Does it match its neighbors?</b> Compare the score to nearby segments on the same street. A lone outlier, or a segment with too little coverage, is suspect.</div>
+    <div style="margin-top:8px">Big disagreement on either one → low confidence → rescan first. The two checks combine into one 0–1 score per segment. That is exactly what colors the map above.</div>
   </div>
-  <p class="small">Three independent audits feed one number: <b>cross-signal</b> (do imagery, LiDAR, and coverage agree?), <b>temporal</b> (last year's score is a prediction of this year, absent treatment), and <b>spatial</b> (a segment scored unlike all its neighbors is suspect). Low on any of them means "don't over-trust, rescan first."</p>
-  <p class="srcline">Method: the Brier score is a strictly proper scoring rule (Gneiting &amp; Raftery, 2007). The "naive confidence gets gamed while accuracy drops" result is from our own ground-truth-free training research (priormap, pre-registered). Calibration is read from a reliability diagram.</p>
+  <p class="small">This is a self-supervised <i>proxy</i>: honest, cheap, and computed from the one scan alone. The fuller version we're building scores each prediction with a <b>strictly proper rule</b> (the Brier score, which can't be lowered by sounding over-sure) and adds a check against last year — the same idea behind our ground-truth-free research.</p>
+  <p class="srcline">Demo method: spatial-consistency + score-vs-distress agreement per segment (<code>litmus-demo/confidence_demo.py</code>). Proper-scoring foundation: Gneiting &amp; Raftery 2007; priormap research (pre-registered).</p>
 </section>
 <section class="story">
-  <div class="eyebrow">A few years out</div>
-  <h2>Now let the rescanning drive itself.</h2>
-  <p>A swarm trained with <b>no ground truth</b> to re-scan exactly where the map has gone stale. <b>Left:</b> the ground truth, the real map as it changes. <b>Middle:</b> what the swarm thinks it sees, its belief, with the agents at work. <b>Right:</b> that belief graded against reality, red where it is still wrong. Cars are mobile scanners; poles are fixed traffic-camera sensors.</p>
-  <p class="small">Honest framing: this is a <b>simulation and a research result</b>, the far edge of the vision. It does not replace our drivers today. Making it real would take a coordinated sensor fleet or drones we do not run yet. The shippable half is the confidence layer, which picks the miles; people still do the rescan.</p>
-  <p class="small">Grey builds up as belief; <span style="color:#e8483f">red</span> is where the belief is currently wrong. In simulation the trained swarm reconstructs the map more accurately than a greedy or random driver:</p>
+  <div class="eyebrow">A few years out · the vision</div>
+  <h2>Let the rescanning drive itself.</h2>
+  <p>A swarm trained with <b>no ground truth</b> to re-scan where the map has gone stale. <b>Left:</b> the real city, changing. <b>Middle:</b> what the swarm believes, agents at work. <b>Right:</b> that belief graded, <span style="color:#e8483f">red</span> where wrong.</p>
+  <p class="small">The world keeps changing, so the goal isn't a perfect map — it's staying accurate as it shifts. The trained swarm holds a more accurate map than a greedy or random driver:</p>
   <div class="bars"><canvas id="iouchart"></canvas></div>
-  <p class="small">Map accuracy (IoU), higher is better. Simulated result, seed 10000; predictions pre-registered and hash-frozen before grading. Source: priormap research.</p>
+  <p class="small">Map accuracy (IoU) of a changing city, higher is better. Simulation, seed 10000, pre-registered. A research result and the far edge of the vision — not a driver replacement today. The shippable half is the confidence layer above.</p>
   <div class="cue">↓ the swarm</div>
 </section>
 </div>
@@ -171,7 +167,7 @@
 <section id="scene">
   <canvas id="c"></canvas>
   <div class="hud">
-    <div class="lbl">reality · belief · graded — map accuracy (IoU)</div>
+    <div class="lbl">reality · belief · graded — live IoU (the city keeps changing)</div>
     <div class="row3" id="pols"></div>
   </div>
   <div class="leg">
