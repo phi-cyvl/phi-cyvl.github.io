@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SCANR · A confidence score for every road</title>
 <meta name="description" content="Infrastructure Intelligence: a self-supervised confidence layer, and a multi-agent swarm that re-scans a changing city from a stale prior. Interactive demo.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root{--chartreuse:#daff00;--ink:#0d0d0c;--paper:#f9f9f9;--white:#fff;--gray-d:#595959;--gray-m:#c2c2c2;
     --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;--disp:Arial,Helvetica,sans-serif;}
@@ -64,6 +66,17 @@
   .cmstat{flex:1;min-width:260px;font-family:var(--mono);font-size:12px;line-height:1.6;color:#e6e6e6}
   .cmstat b{color:var(--chartreuse)}
   #fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:8vw;color:var(--gray-m);font-family:var(--mono)}
+  /* leaflet basemap under the confidence dots */
+  .leaflet-container{background:#0b0b0d;font-family:var(--mono)}
+  .leaflet-control-attribution{font-size:9px;background:rgba(13,13,12,.72);color:#8a8a8a}
+  .leaflet-control-attribution a{color:#aaa}
+  .leaflet-bar a{background:#1a1a18;color:#ddd;border-color:#333}
+  /* math explainer + iou bar chart */
+  .mathbox{margin-top:1.4em;background:rgba(8,8,10,.72);border:1px solid #24241f;border-left:3px solid var(--chartreuse);border-radius:8px;padding:16px 18px;font-family:var(--mono);font-size:14px;color:#dcdcdc;line-height:1.7;max-width:none}
+  .mathbox .f{font-size:15px;color:#fff;background:#000;padding:9px 13px;border-radius:6px;display:inline-block;margin:6px 0}
+  .mathbox b{color:var(--chartreuse)} .mathbox .k{color:#fff;font-weight:700}
+  .bars{margin-top:1.8em;background:rgba(8,8,10,.82);border:1px solid #24241f;border-radius:12px;padding:16px}
+  #iouchart{width:100%;height:230px;display:block}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
@@ -106,7 +119,7 @@
   <p class="small">This predicts <i>change</i>, not a mistake in today's score. It can't see a surprise repave or a utility cut — no prior scan can — but it catches the deterioration already underway, which is most of what moves.</p>
   <p class="small">Cyvl already ships a <b>deterioration curve</b> — the expected PCI decline for each road. Toggle <b>vs the model</b>: <span style="color:#e8483f">red</span> roads fell faster than the curve predicted (hidden failure — subsurface, trucks, utilities); <span style="color:#6eb4ff">blue</span> roads beat it (a treatment working). Confidence predicts that deviation a year before the rescan confirms it — and every rescan feeds a sharper, per-segment curve back. That loop is the product.</p>
   <div class="cmwrap">
-    <canvas id="cmap"></canvas>
+    <div id="cmap"></div>
     <div class="cmui">
       <div class="cmtabs">
         <button class="cmtab on" data-mode="pci">PCI score</button>
@@ -120,27 +133,40 @@
   </div>
   <p class="small" id="cmcaption"></p>
 </section>
+<section class="story" id="mathsec">
+  <div class="eyebrow">The math, and why you can trust it</div>
+  <h2>Confidence you can't fake.</h2>
+  <p>The score can't grade its own homework, so we make it predict something it will be checked against, then score that prediction with a rule that only rewards honesty.</p>
+  <div class="mathbox">
+    <div>Each score is really a set of predictions from independent evidence: the imagery distress read, the LiDAR, the coverage, last year's condition, and the neighbors. We hold one out, predict it from the rest, and grade the prediction with a <b>strictly proper scoring rule</b> (the Brier score):</div>
+    <div class="f">confidence loss = ( p − o )²&nbsp;&nbsp;averaged over held-out checks</div>
+    <div><span class="k">p</span> = the score's predicted probability, <span class="k">o</span> = what the evidence actually showed (1 or 0). The one mathematical fact that makes this trustworthy: a proper scoring rule is minimized <b>only</b> when p equals the true probability. You cannot lower your loss by sounding more sure than you are. Over-confidence and under-confidence both get punished.</div>
+    <div style="margin-top:10px">That is why we do not use the obvious signals. "High coverage" or "the models agreed" can be <b>gamed</b>: in our own research a model chasing those grew more and more confident while getting less and less accurate. Proper scoring can't be gamed that way, so the confidence stays honest as the world changes. We check it with a <b>reliability diagram</b>: when we say 80% confident, it should be right about 80% of the time.</div>
+  </div>
+  <p class="small">Three independent audits feed one number: <b>cross-signal</b> (do imagery, LiDAR, and coverage agree?), <b>temporal</b> (last year's score is a prediction of this year, absent treatment), and <b>spatial</b> (a segment scored unlike all its neighbors is suspect). Low on any of them means "don't over-trust, rescan first."</p>
+</section>
 <section class="story">
   <div class="eyebrow">A few years out</div>
   <h2>Now let the rescanning drive itself.</h2>
-  <p>Three ways to run the same city. A random driver. A greedy heuristic. And a swarm trained with <b>no ground truth</b> to re-scan exactly where the map has gone stale. Cars are mobile scanners; poles are fixed traffic-camera sensors. Watch all three, and put any one in the center.</p>
-  <p class="small">Grey builds up as belief; <span style="color:#e8483f">red</span> is where the belief is currently wrong. Higher IoU = a more accurate map.</p>
+  <p>A swarm trained with <b>no ground truth</b> to re-scan exactly where the map has gone stale. On the left is the ground truth, the real map as it changes. On the right, the trained model rebuilds it from a stale prior. Cars are mobile scanners; poles are fixed traffic-camera sensors.</p>
+  <p class="small">Honest framing: this is a <b>simulation and a research result</b>, the far edge of the vision. It does not replace our drivers today. Making it real would take a coordinated sensor fleet or drones we do not run yet. The shippable half is the confidence layer, which picks the miles; people still do the rescan.</p>
+  <p class="small">Grey builds up as belief; <span style="color:#e8483f">red</span> is where the belief is currently wrong. In simulation the trained swarm reconstructs the map more accurately than a greedy or random driver:</p>
+  <div class="bars"><canvas id="iouchart"></canvas></div>
+  <p class="small">Map accuracy (IoU), higher is better. Simulated result, seed 10000. Source: priormap research.</p>
   <div class="cue">↓ the swarm</div>
 </section>
 </div>
 
 <section id="scene">
   <canvas id="c"></canvas>
-  <button class="carrow left" id="prev" aria-label="previous model">◀</button>
-  <button class="carrow right" id="next" aria-label="next model">▶</button>
   <div class="hud">
-    <div class="lbl">map accuracy (IoU) · tap a model or use ◀ ▶</div>
+    <div class="lbl">ground truth vs trained model · map accuracy (IoU)</div>
     <div class="row3" id="pols"></div>
   </div>
   <div class="leg">
     <span class="sq" style="background:var(--chartreuse)"></span>occupied &nbsp;
     <span class="sq" style="background:#30302f"></span>free &nbsp;
-    <span class="sq" style="background:#e8483f"></span>currently wrong<br>
+    <span class="sq" style="background:#e8483f"></span>trained belief currently wrong<br>
     <span class="sq" style="background:#69a0ff"></span>mobile scanner (car) &nbsp;
     <span class="sq" style="background:#fff"></span>fixed sensor (camera) &nbsp;
     <span class="sq" style="background:#daff00;opacity:.5"></span>vision cone
@@ -151,7 +177,7 @@
     <input type="range" id="scrub" min="0" max="150" value="0">
     <span id="step" style="color:#c2c2c2">t 0</span>
   </div>
-  <div class="hint">drag to orbit · scroll to zoom · ◀ ▶ / arrow keys to swipe models</div>
+  <div class="hint">drag to orbit · scroll to zoom</div>
   <div id="fallback">This 3D view needs WebGL. Try a desktop browser.<br>The story above explains the whole idea.</div>
 </section>
 
@@ -200,27 +226,26 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   });
 })();
 
-/* ---------- episode: 3 worlds side by side, center-focus, cars + camera sensors + cones ---------- */
+/* ---------- episode: ground truth (left) vs trained model (right), one shared camera ---------- */
 (function(){
   const canvas=document.getElementById('c'); let R;
   try{ R=new THREE.WebGLRenderer({canvas,antialias:true}); }catch(e){ document.getElementById('fallback').style.display='flex'; return; }
   R.setPixelRatio(Math.min(devicePixelRatio,2));
-  const sc=new THREE.Scene(); sc.background=new THREE.Color(0x08080a); sc.fog=new THREE.Fog(0x08080a,140,360);
-  const cam=new THREE.PerspectiveCamera(52,1,0.1,2000); cam.position.set(0,70,150);
+  const sc=new THREE.Scene(); sc.background=new THREE.Color(0x08080a); sc.fog=new THREE.Fog(0x08080a,170,430);
+  // ONE camera + ONE OrbitControls for the whole scene → orbiting moves both panels together (orientation stays synced)
+  const cam=new THREE.PerspectiveCamera(54,1,0.1,2000); cam.position.set(0,74,158);
   const controls=new OrbitControls(cam,canvas); controls.enableDamping=true; controls.dampingFactor=.08; controls.maxPolarAngle=Math.PI*0.49; controls.target.set(0,4,0);
   sc.add(new THREE.AmbientLight(0xffffff,.62));
   const key=new THREE.DirectionalLight(0xffffff,1.15); key.position.set(40,90,30); sc.add(key);
   const rim=new THREE.DirectionalLight(0xdaff00,.4); rim.position.set(-40,40,-40); sc.add(rim);
 
-  const POLS=['greedy','trained','random'], NAMES={greedy:'Greedy',trained:'Trained (audit)',random:'Random'};
   const COL_FREE=new THREE.Color(0x30302f),COL_OCC=new THREE.Color(0xdaff00),COL_WRONG=new THREE.Color(0xe8483f);
-  const CELL=1.4, SPAN=64; // scaled up; grids centered, slots at -SPAN,0,+SPAN
+  const CELL=1.4;
   const box=new THREE.BoxGeometry(CELL*0.92,1,CELL*0.92);
   const dummy=new THREE.Object3D(), tcol=new THREE.Color();
-  const eps={}, worlds={}; let idx=1, T=15, tf=0, playing=true; // idx into POLS = centered model
+  let ep=null, gtGrp=null, trGrp=null, T=15, tf=0, playing=true, OFF=44;
   const cl=new THREE.Clock();
   const scrub=document.getElementById('scrub'), stepEl=document.getElementById('step'), polsEl=document.getElementById('pols');
-  const prevB=document.getElementById('prev'), nextB=document.getElementById('next');
 
   function makeCar(){ const g=new THREE.Group();
     const body=new THREE.Mesh(new THREE.BoxGeometry(1.1,0.5,2.0),new THREE.MeshLambertMaterial({color:0x69a0ff,emissive:0x0a1630}));
@@ -238,20 +263,26 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     cone.position.set(1.5,0.5,0); cone.rotation.z=0.35; g.add(cone); // splays down/out
     return g; }
 
-  function buildWorld(pol,ep){
-    const grp=new THREE.Group(); const W=ep.W,H=ep.H;
-    const cells=new THREE.InstancedMesh(box,new THREE.MeshLambertMaterial({color:0xffffff}),W*H);
-    cells.instanceMatrix.setUsage(THREE.DynamicDrawUsage); grp.add(cells);
-    const plate=new THREE.Mesh(new THREE.BoxGeometry(W*CELL+3,0.5,H*CELL+3),new THREE.MeshLambertMaterial({color:0x121214})); plate.position.y=-0.35; grp.add(plate);
-    const agents={};
-    for(const nm in (ep.poses[0]||{})){ const tw=nm.startsWith('tower'); const m=tw?makeSensor():makeCar(); m.userData.tw=tw; grp.add(m); agents[nm]=m; }
-    grp.userData={cells,agents,W,H,ep}; sc.add(grp); worlds[pol]=grp;
-  }
+  const makeCells=(W,H)=>{ const c=new THREE.InstancedMesh(box,new THREE.MeshLambertMaterial({color:0xffffff}),W*H); c.instanceMatrix.setUsage(THREE.DynamicDrawUsage); return c; };
+  const makePlate=(W,H)=>{ const p=new THREE.Mesh(new THREE.BoxGeometry(W*CELL+3,0.5,H*CELL+3),new THREE.MeshLambertMaterial({color:0x121214})); p.position.y=-0.35; return p; };
+  // identical grid mapping for BOTH panels → cell (r,c) sits at the same local spot; panels differ only by x-offset (no rotation) so they stay oriented together
   const gx=(c,W)=>(c-W/2+0.5)*CELL, gz=(r,H)=>(r-H/2+0.5)*CELL;
-  function orth(A,B,a){ return a<0.5?[A[0]+(B[0]-A[0])*a*2,A[1]]:[B[0],A[1]+(B[1]-A[1])*(a-0.5)*2]; }
+  const orth=(A,B,a)=>a<0.5?[A[0]+(B[0]-A[0])*a*2,A[1]]:[B[0],A[1]+(B[1]-A[1])*(a-0.5)*2];
 
-  function renderWorld(pol,tfrac){
-    const grp=worlds[pol]; if(!grp)return; const {cells,agents,W,H,ep}=grp.userData;
+  function build(){ const W=ep.W,H=ep.H; OFF=W*CELL*0.62+6;
+    gtGrp=new THREE.Group(); const gc=makeCells(W,H); gtGrp.add(gc,makePlate(W,H)); gtGrp.userData={cells:gc}; gtGrp.position.x=-OFF; sc.add(gtGrp);
+    trGrp=new THREE.Group(); const tc=makeCells(W,H); trGrp.add(tc,makePlate(W,H));
+    const agents={}; for(const nm in (ep.poses[0]||{})){ const tw=nm.startsWith('tower'); const m=tw?makeSensor():makeCar(); m.userData.tw=tw; trGrp.add(m); agents[nm]=m; }
+    trGrp.userData={cells:tc,agents}; trGrp.position.x=OFF; sc.add(trGrp);
+  }
+
+  function renderGT(tfrac){ if(!gtGrp)return; const {cells}=gtGrp.userData, W=ep.W,H=ep.H, gt=ep.gt[Math.floor(tfrac)%T];
+    for(let r=0;r<H;r++)for(let c=0;c<W;c++){ const i=r*W+c, occ=gt[i], h=occ?6:0.14;
+      dummy.position.set(gx(c,W),h/2,gz(r,H)); dummy.scale.set(1,h,1); dummy.updateMatrix(); cells.setMatrixAt(i,dummy.matrix);
+      cells.setColorAt(i, occ?COL_OCC:COL_FREE); }
+    cells.instanceMatrix.needsUpdate=true; if(cells.instanceColor)cells.instanceColor.needsUpdate=true; }
+
+  function renderTrained(tfrac){ if(!trGrp)return; const {cells,agents}=trGrp.userData, W=ep.W,H=ep.H;
     const i0=Math.floor(tfrac)%T,i1=(i0+1)%T,a=tfrac-Math.floor(tfrac),b0=ep.belief[i0],b1=ep.belief[i1],gt=ep.gt[i0];
     for(let r=0;r<H;r++)for(let c=0;c<W;c++){ const i=r*W+c,p=(b0[i]+(b1[i]-b0[i])*a)/100,occ=p>=0.5?1:0,wrong=occ!==gt[i],h=Math.max(0.14,p*6);
       dummy.position.set(gx(c,W),h/2,gz(r,H)); dummy.scale.set(1,h,1); dummy.updateMatrix(); cells.setMatrixAt(i,dummy.matrix);
@@ -265,57 +296,54 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         if(a<0.5){ if(Math.abs(dx)>0.01) ang=dx>0?Math.PI/2:-Math.PI/2; }
         else { if(Math.abs(dy)>0.01) ang=dy>0?0:Math.PI; }
         if(ang===undefined) ang=Math.abs(dx)>=Math.abs(dy)?(dx>0?Math.PI/2:-Math.PI/2):(dy>0?0:Math.PI);
-        m.rotation.y=ang; m.userData.ang=ang; } }
-  }
+        m.rotation.y=ang; m.userData.ang=ang; } } }
 
-  // carousel: fixed strip [greedy,trained,random]; slide the whole strip so POLS[idx] sits at center
-  function layout(){ POLS.forEach((p,k)=>{ const g=worlds[p]; if(!g)return;
-      const off=k-idx, ctr=off===0;
-      const tx=off*SPAN, tz=ctr?0:-SPAN*0.34, ts=ctr?1.0:0.6;
-      g.position.x += (tx-g.position.x)*0.12;
-      g.position.z += (tz-g.position.z)*0.12;
-      const s=g.scale.x+(ts-g.scale.x)*0.12; g.scale.setScalar(s); }); }
-
-  function markHUD(){ polsEl.querySelectorAll('.pol').forEach(d=>d.classList.toggle('center',d.dataset.pol===POLS[idx])); }
-  function setIdx(i){ idx=Math.max(0,Math.min(POLS.length-1,i)); markHUD(); prevB.disabled=idx===0; nextB.disabled=idx===POLS.length-1; }
-  function buildHUD(){ polsEl.innerHTML=''; POLS.forEach((p,k)=>{ const d=document.createElement('div'); d.className='pol'; d.dataset.pol=p;
-    d.innerHTML='<div class="nm">'+NAMES[p]+'</div><div class="v" id="iou-'+p+'">–</div>'; d.onclick=()=>setIdx(k); polsEl.appendChild(d); }); setIdx(idx); }
-
-  async function loadAll(){ for(const p of POLS){ try{ const r=await fetch('data/episode_'+p+'.json'); if(r.ok){ eps[p]=await r.json(); T=eps[p].T; buildWorld(p,eps[p]); } }catch(e){} } buildHUD(); }
+  function buildHUD(){ polsEl.innerHTML=
+    '<div class="pol"><div class="nm">Ground truth</div><div class="v" style="font-size:13px;color:#daff00">the real map</div></div>'+
+    '<div class="pol center"><div class="nm">Trained (audit)</div><div class="v" id="iou-tr">–</div></div>'; }
 
   document.getElementById('play').onclick=function(){ playing=!playing; this.textContent=playing?'❚❚':'▶'; };
   scrub.oninput=function(){ playing=false; document.getElementById('play').textContent='▶'; tf=(+this.value/150)*T; };
-  prevB.onclick=()=>setIdx(idx-1); nextB.onclick=()=>setIdx(idx+1);
-  addEventListener('keydown',e=>{ if(e.key==='ArrowLeft')setIdx(idx-1); else if(e.key==='ArrowRight')setIdx(idx+1); });
-  // horizontal flick swipes models; slow/vertical drags stay with OrbitControls
-  let sx=0,sy=0,st=0;
-  canvas.addEventListener('pointerdown',e=>{sx=e.clientX;sy=e.clientY;st=performance.now();});
-  canvas.addEventListener('pointerup',e=>{ const dx=e.clientX-sx,dy=e.clientY-sy,dt=performance.now()-st;
-    if(dt<520&&Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.8) setIdx(idx+(dx<0?1:-1)); });
+
+  fetch('data/episode_trained.json').then(r=>r.json()).then(d=>{ ep=d; T=ep.T; build(); buildHUD(); })
+    .catch(()=>{ document.getElementById('fallback').style.display='flex'; });
 
   function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; if(canvas.width!==w||canvas.height!==h){R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();} }
   R.setAnimationLoop(()=>{
     resize(); controls.update();
     const dt=cl.getDelta(); if(playing){ tf+=Math.min(dt,0.1)/0.7; if(tf>=T)tf-=T; } // clamp dt so a stalled tab can't jump the clock
-    try{ POLS.forEach(p=>{ if(worlds[p]){ renderWorld(p,tf); const el=document.getElementById('iou-'+p); if(el&&eps[p]){ const i0=Math.floor(tf)%T,i1=(i0+1)%T,a=tf-Math.floor(tf); el.textContent=(eps[p].ious[i0]+(eps[p].ious[i1]-eps[p].ious[i0])*a).toFixed(3);} } }); }catch(err){}
-    layout(); stepEl.textContent='t '+(Math.floor(tf)%T); scrub.value=Math.round(tf/T*150);
+    try{ if(ep){ renderGT(tf); renderTrained(tf); const el=document.getElementById('iou-tr'); if(el){ const i0=Math.floor(tf)%T,i1=(i0+1)%T,a=tf-Math.floor(tf); el.textContent=(ep.ious[i0]+(ep.ious[i1]-ep.ious[i0])*a).toFixed(3);} } }catch(err){}
+    stepEl.textContent='t '+(Math.floor(tf)%T); scrub.value=Math.round(tf/T*150);
     R.render(sc,cam);
   });
-  loadAll();
 })();
 
-/* ---------- confidence layer on real Massillon customer data (2D geo map) ---------- */
+/* ---------- IoU bar chart: trained vs baselines (simulated result) ---------- */
 (function(){
-  const cv=document.getElementById('cmap'); if(!cv) return;
-  const ctx=cv.getContext('2d');
+  const cv=document.getElementById('iouchart'); if(!cv) return; const ctx=cv.getContext('2d');
+  const data=[['Trained (audit)',0.663,'#daff00'],['Greedy',0.539,'#8a8a86'],['Random',0.526,'#5a5a56']];
+  function draw(){ const dpr=Math.min(devicePixelRatio||1,2), w=cv.clientWidth, h=cv.clientHeight; if(!w||!h) return;
+    cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
+    const padT=16,padB=34, gh=h-padT-padB, MAX=0.72, n=data.length, bw=Math.min(140,w/n*0.55), gap=(w-bw*n)/(n+1);
+    ctx.font='700 13px ui-monospace,Menlo,monospace'; ctx.textAlign='center';
+    data.forEach((d,i)=>{ const x=gap*(i+1)+bw*i, bh=(d[1]/MAX)*gh, y=padT+gh-bh;
+      ctx.fillStyle=d[2]; ctx.fillRect(x,y,bw,bh);
+      ctx.fillStyle='#fff'; ctx.fillText(d[1].toFixed(3),x+bw/2,y-7);
+      ctx.fillStyle='#cfcfcf'; ctx.font='12px ui-monospace,Menlo,monospace'; ctx.fillText(d[0],x+bw/2,padT+gh+18);
+      ctx.font='700 13px ui-monospace,Menlo,monospace'; }); }
+  draw(); addEventListener('resize',draw);
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) draw(); }),{threshold:0.2}); io.observe(cv);
+})();
+
+/* ---------- confidence layer on real Massillon customer data (Leaflet map on a street basemap) ---------- */
+(function(){
+  const el=document.getElementById('cmap'); if(!el||typeof L==='undefined'){ if(el) el.innerHTML='<div style="padding:20px;color:#888;font-family:monospace">map basemap failed to load</div>'; return; }
   const legEl=document.getElementById('cmlegend'), statEl=document.getElementById('cmstat'), capEl=document.getElementById('cmcaption');
-  let pts=[], mode='pci';
-  const LON=[-81.602,-81.477], LAT=[40.725,40.825], COSL=Math.cos(40.775*Math.PI/180);
-  const W0=(LON[1]-LON[0])*COSL, H0=(LAT[1]-LAT[0]);
+  let pts=[], markers=[], mode='pci', map=null;
   const RED=[232,72,63],YEL=[255,157,10],GRN=[120,190,60],DIM=[74,74,70],TRT=[110,180,255];
   const mix=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];
   const ramp=v=>v<0.5?mix(RED,YEL,v*2):mix(YEL,GRN,(v-0.5)*2);
-  const rgb=(c,a)=>'rgba('+(c[0]|0)+','+(c[1]|0)+','+(c[2]|0)+','+a+')';
+  const hex=c=>'#'+[c[0],c[1],c[2]].map(x=>('0'+((x|0)&255).toString(16)).slice(-2)).join('');
   const RG='linear-gradient(90deg,#e8483f,#ff9d0a,#78be3c)';
   const LEG={
     pci:'<span>0</span><span class="ramp" style="background:'+RG+'"></span><span>100 PCI · this year</span>',
@@ -324,7 +352,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     model:'<span class="sq" style="background:#e8483f"></span>fell faster than the model &nbsp;<span class="sq" style="background:#7a7a74"></span>on the curve &nbsp;<span class="sq" style="background:#6eb4ff"></span>beat the model (treated) &nbsp;<span class="sq" style="background:#4a4a46"></span>not re-scanned'
   };
   const CAP={
-    pci:'PCI score, this year\'s scan. Red is failing pavement, green is good. Source: Massillon, OH production data (2,531 segments).',
+    pci:'PCI score, this year\'s scan, on the real Massillon street grid. Red is failing pavement, green is good. Source: Massillon, OH production data (2,531 segments).',
     conf:'Self-supervised confidence for those scores — no hand-measured ground truth. Red = least likely to still be true next year. Predicts change, not a same-scan mistake.',
     gt:'The following year\'s actual scan — the ground truth. Grey = not re-scanned. Hold it against the confidence map: the flagged roads are where the two years disagree.',
     model:'Actual next-year PCI minus Cyvl\'s shipped deterioration curve (piecewise-linear, Residential rates). Measured after the rescan — the retrospective twin of the forward Confidence layer.'
@@ -336,33 +364,34 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
       gt:'What actually happened next: <b>1,215</b> segments were re-scanned. The confidence flags land on the movers — <b>AUC 0.71</b> for predicting a ≥15-point shift a year ahead.',
       model:'Against Cyvl\'s shipped deterioration curve: <b>37%</b> of segments fell faster than the model predicted — the hidden-failure signal (subsurface, trucks, utilities). <b>33%</b> beat the model — visible treatment activity. Confidence flags these a year before the rescan confirms them.'
     }; }
-  function draw(){ const dpr=Math.min(devicePixelRatio||1,2), w=cv.clientWidth, h=cv.clientHeight;
-    if(!w||!h) return;
-    cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
-    if(pts.length){ const pad=16, sc=Math.min((w-2*pad)/W0,(h-2*pad)/H0), ox=(w-W0*sc)/2, oy=(h-H0*sc)/2;
-      for(const p of pts){ const px=ox+((p.x-LON[0])*COSL)*sc, py=oy+((LAT[1]-p.y))*sc; let c,a=0.9,r=1.7;
-        if(mode==='pci') c=ramp(p.s/100);
-        else if(mode==='conf') c=ramp(p.c);
-        else if(mode==='gt'){ if(p.d==null){c=DIM;a=0.22;r=1.3;} else c=ramp(Math.max(0,Math.min(100,p.s+p.d))/100); }
-        else { // vs the model: actual next-year PCI minus the shipped deterioration curve's expectation
-          if(p.d==null||p._res==null){c=DIM;a=0.2;r=1.3;}
-          else if(p._res<-5){c=RED;a=0.95;r=2.4;}            // fell faster than the model → hidden failure
-          else if(p._res>8){c=TRT;a=0.85;r=2.0;}             // beat the model → treatment worked
-          else {c=[122,122,116];a=0.5;r=1.4;} }              // aged on the curve
-        ctx.fillStyle=rgb(c,a); ctx.beginPath(); ctx.arc(px,py,r,0,6.2832); ctx.fill(); }
-      legEl.innerHTML=LEG[mode]; statEl.innerHTML=stats()[mode]; capEl.innerHTML=CAP[mode]; } }
-  function setMode(m){ mode=m; document.querySelectorAll('.cmtab').forEach(b=>b.classList.toggle('on',b.dataset.mode===m)); draw(); }
-  document.querySelectorAll('.cmtab').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
-  // Cyvl's shipped PMP deterioration curve (piecewise-linear, Residential rate table;
-  // apps/pmp-backend/src/app/deterioration). Expected 1-yr PCI, then residual = actual - expected.
+  // Cyvl's shipped PMP deterioration curve (piecewise-linear, Residential rate table; apps/pmp-backend/src/app/deterioration)
   const RES=[[0,50,4.0],[50,70,3.0],[70,85,2.0],[85,100,1.0]];
   function rate(pci){ for(const [l,h,r] of RES) if(l<pci&&pci<=h) return r; return pci<=0?4.0:1.0; }
   function deteriorate(pci,yrs){ let t=yrs; while(t>0&&pci>0){ const r=rate(pci); let fl=0; for(const [l,h] of RES) if(l<pci&&pci<=h){fl=l;break;} const ttb=(pci-fl)/r; if(ttb>=t){pci-=r*t;t=0;} else {pci=fl;t-=ttb;} } return Math.max(0,Math.min(100,pci)); }
+  function styleOf(p){ let c,a=0.9,r=4;
+    if(mode==='pci') c=ramp(p.s/100);
+    else if(mode==='conf') c=ramp(p.c);
+    else if(mode==='gt'){ if(p.d==null){c=DIM;a=0.28;r=3;} else c=ramp(Math.max(0,Math.min(100,p.s+p.d))/100); }
+    else { if(p.d==null||p._res==null){c=DIM;a=0.25;r=3;}
+      else if(p._res<-5){c=RED;a=0.95;r=5.5;}
+      else if(p._res>8){c=TRT;a=0.9;r=4.5;}
+      else {c=[122,122,116];a=0.6;r=3;} }
+    return {fillColor:hex(c),fillOpacity:a,radius:r}; }
+  function restyle(){ for(let i=0;i<markers.length;i++){ const s=styleOf(pts[i]); markers[i].setStyle({fillColor:s.fillColor,fillOpacity:s.fillOpacity}); markers[i].setRadius(s.radius); }
+    legEl.innerHTML=LEG[mode]; statEl.innerHTML=stats()[mode]; capEl.innerHTML=CAP[mode]; }
+  function setMode(m){ mode=m; document.querySelectorAll('.cmtab').forEach(b=>b.classList.toggle('on',b.dataset.mode===m)); restyle(); }
+  document.querySelectorAll('.cmtab').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+
   fetch('data/demo_points.json').then(r=>r.json()).then(d=>{ pts=d;
-      for(const p of pts){ if(typeof p.d==='number'){ p._exp=deteriorate(p.s,1); p._res=Math.max(0,Math.min(100,p.s+p.d))-p._exp; } }
-      draw(); }).catch(()=>{ statEl.textContent='Could not load demo data.'; });
-  addEventListener('resize',()=>{ if(pts.length) draw(); });
-  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) draw(); }),{threshold:0.12});
+    for(const p of pts){ if(typeof p.d==='number'){ p._exp=deteriorate(p.s,1); p._res=Math.max(0,Math.min(100,p.s+p.d))-p._exp; } }
+    map=L.map(el,{preferCanvas:true,scrollWheelZoom:false,zoomSnap:0.25}).setView([40.792,-81.523],13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20,attribution:'© OpenStreetMap contributors © CARTO'}).addTo(map);
+    const rnd=L.canvas({padding:0.5}); const b=[];
+    for(const p of pts){ const m=L.circleMarker([p.y,p.x],{renderer:rnd,radius:4,stroke:false,fillOpacity:0.9}); m.addTo(map); markers.push(m); b.push([p.y,p.x]); }
+    if(b.length) map.fitBounds(b,{padding:[24,24]});
+    restyle();
+  }).catch(()=>{ statEl.textContent='Could not load demo data.'; });
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting&&map) map.invalidateSize(); }),{threshold:0.12});
   io.observe(document.getElementById('confmap'));
 })();
 </script>
