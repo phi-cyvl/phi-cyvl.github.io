@@ -99,7 +99,7 @@
 </section>
 <section class="story">
   <h2>A score you can't defend is a score you can't fund.</h2>
-  <p>A public works director takes our numbers into a council meeting. Someone asks a fair question: <i>is this still true?</i> When the only data is last year's scan, there is no good answer. Roughly <b>half of our stalled pilots</b> die on exactly this, and our flagship account, NYC DOT, told us plainly they have <b>"zero confidence"</b> in automated condition data.</p>
+  <p>A public works director takes our numbers into a council meeting. Someone asks a fair question: <i>is this still true?</i> When the only data is last year's scan, there is no good answer. Of the pilots that stall, <b>roughly half stall on exactly this</b>, and our flagship account, NYC DOT, told us plainly they have <b>"zero confidence"</b> in automated condition data.</p>
   <p class="srcline">Sources: Cyvl voice-of-customer, <a href="https://app.notion.com/p/1bdb7cd9368680cb8d41edda32f58ee4">Pavements Scoring Accuracy</a> (≈50% of stalled pilots cite score mismatch); <a href="https://app.notion.com/p/372b7cd936868181b0ccf3cd5ce008c5">NYC DOT meeting prep, Jun 2026</a> ("zero confidence").</p>
 </section>
 <section class="story">
@@ -115,7 +115,7 @@
 <section class="story">
   <div class="eyebrow">What it's worth</div>
   <h2>Rescan what moved. Skip what didn't.</h2>
-  <p>Confidence decays as the world changes under a scan. That decay is a map of where to look next. Send crews to the miles that carry the uncertainty, not the whole network, for a fraction of the cost, and keep the years between full scans defensible. Forward-looking deterioration is the <b>#1 thing customers ask us for</b>, and the timing is now: <b>Atlanta wants to scan monthly</b>, with ten Year-2 rescans landing in the next 120 days, six of them pre-renewal.</p>
+  <p>Confidence decays as the world changes under a scan. That decay is a map of where to look next. Send crews to the miles that carry the uncertainty, not the whole network — in Massillon that means driving the flagged share of <b>225 centerline-miles</b>, worst-confidence first, instead of all of them — and keep the years between full scans defensible. Forward-looking deterioration is the <b>#1 thing customers ask us for</b> — it's the data spine of the <b>Time&nbsp;Machine</b> framing — and the timing is now: <b>Atlanta wants to scan monthly</b>, with ten Year-2 rescans landing in the next 120 days, six of them pre-renewal.</p>
   <p class="srcline">Sources: <a href="https://app.notion.com/p/33bb7cd9368680eabe4bd458bccff246">Time Machine recap</a> (deterioration = top critical gap; 57% would use it today); <a href="https://app.notion.com/p/3a5b7cd936868037b74efe87c9135eaa">Framing: Time Machine, Jul 2026</a> (Atlanta monthly; 10 second scans in 120 days, all ARR; priority usage → retention → NRR).</p>
 </section>
 <section class="story" id="confmap">
@@ -137,30 +137,32 @@
     </div>
   </div>
   <p class="small" id="cmcaption"></p>
-  <p class="srcline">Massillon, OH — 2,531 segments, two consecutive years. Change magnitudes (42.5% moved; AUC 0.71) are directional — this scan pair is instrument-noisy. The confidence→deviation link below is the robust result. Treatment check: repave +37.5, seal −4.9 (within-street differenced).</p>
+  <p class="srcline">Massillon, OH — 2,531 segments, two consecutive years. Change magnitudes (42.5% moved) are directional — this scan pair is instrument-noisy. Mover-flagging AUC: 0.71 cross-model (v2 reprocess); this layer's own pipeline scores 0.656. The confidence→deviation link below is the robust result. Treatment check (within-street differenced): repave +37.5 over the curve; crack seal −4.9 ≈ on-curve — seal slows future decline rather than raising today's score, so a near-zero residual is the expected signature.</p>
   <div class="bars" style="margin-top:1.8em"><canvas id="confchart"></canvas></div>
-  <p class="small"><b>Lower confidence, bigger surprise.</b> Each bar: a road's average miss from the prediction, grouped by confidence. Lowest-confidence roads missed by <b>36 PCI</b>, highest by <b>10</b> (corr −0.45). The no-ground-truth score points at the roads that defy the model.</p>
+  <p class="small"><b>Lower confidence, bigger surprise.</b> Each bar: a road's average miss from the prediction, grouped by confidence. Lowest-confidence roads missed by <b>36 PCI</b>, highest by <b>10</b> (corr <span id="confcorr">−0.45</span>). The no-ground-truth score points at the roads that defy the model.</p>
   <p class="srcline">Computed live from the 2,531 segments (demo_points.json).</p>
   <div class="bars" style="margin-top:1.4em"><canvas id="relchart"></canvas></div>
-  <p class="small"><b>And it's calibrated.</b> When the layer says a score is X% likely to hold, about X% actually did — the dots track the dotted line. This is the proper-scoring check, and it needed <b>no ground truth</b> to build the score; next year's scan only grades it here.</p>
-  <p class="srcline">Reliability diagram, computed live from demo_points.json; Brier skill +0.07 over base rate. The score itself is the self-supervised proxy; this is its calibration.</p>
+  <p class="small"><b>And it's calibrated.</b> When the layer says a score is X% likely to hold, about X% actually did — the dots track the dotted line. The plot shows calibration; the strictly-proper grade behind it is the <b>Brier skill, +0.07 over base rate</b>. And it needed <b>no ground truth</b> to build the score — next year's scan only grades it here.</p>
+  <p class="srcline">Reliability diagram, computed live from demo_points.json. The score itself is the self-supervised proxy; the diagram is its calibration, graded by the Brier score (the grading step, not the construction step).</p>
+  <div class="cue">↓ the math — then a swarm learns to do the rescanning itself</div>
 </section>
 <section class="story" id="mathsec">
   <div class="eyebrow">How the confidence is computed</div>
-  <h2>Two questions, asked of every score.</h2>
+  <h2>Two checks, no answer key.</h2>
   <p>A score can't grade its own homework. So each one is checked against evidence it never sees at scoring time — no ground truth, no peek at next year.</p>
   <div class="mathbox">
     <div><b>1. Does it match the road under it?</b> Compare the score to the distress the sensors actually measured on that segment. A high score sitting on heavy cracking is a disagreement.</div>
     <div><b>2. Does it match its neighbors?</b> Compare the score to nearby segments on the same street. A lone outlier, or a segment with too little coverage, is suspect.</div>
-    <div style="margin-top:8px">Big disagreement on either one → low confidence → rescan first. The two checks combine into one 0–1 score per segment. That is exactly what colors the map above.</div>
+    <div class="f">confidence&nbsp;=&nbsp;½·exp(−Δ<sub>road</sub>/τ₁)&nbsp;+&nbsp;½·exp(−Δ<sub>street</sub>/τ₂)</div>
+    <div>Δ<sub>road</sub> = score-vs-distress residual (quantile-binned), Δ<sub>street</sub> = deviation from same-street neighbors within 300&nbsp;m plus an isolation penalty; each mapped into [0,1] by an exponential kernel, equal weights. Big disagreement on either → low confidence → rescan first. That one 0–1 number is exactly what colors the map above.</div>
   </div>
-  <p class="small">This is a self-supervised <i>proxy</i>: honest, cheap, and computed from the one scan alone. The fuller version we're building scores each prediction with a <b>strictly proper rule</b> (the Brier score, which can't be lowered by sounding over-sure) and adds a check against last year — the same idea behind our ground-truth-free research.</p>
+  <p class="small">This is a self-supervised <i>proxy</i>: honest, cheap, and computed from the one scan alone. The fuller version we're building grades every score with a stricter, bluff-proof test — a <b>strictly proper rule</b> (the Brier score, which mathematically can't be improved by sounding over-sure) — and adds a check against last year. Same idea as our ground-truth-free research.</p>
   <p class="srcline">Demo method: spatial-consistency + score-vs-distress agreement per segment (<code>litmus-demo/confidence_demo.py</code>). Proper-scoring foundation: Gneiting &amp; Raftery 2007; priormap research (pre-registered).</p>
 </section>
 <section class="story">
   <div class="eyebrow">A few years out · the vision</div>
   <h2>Let the rescanning drive itself.</h2>
-  <p>The confidence layer decides <i>which</i> miles to rescan. The research question: could the rescanning decide itself? We trained a swarm to do it — and its training reward is the <b>same ground-truth-free audit</b> that scores each road's confidence. No answer key is used: not for the confidence, not for the training.</p>
+  <p>The confidence layer decides <i>which</i> miles to rescan. The research question: could the rescanning decide itself? We trained a swarm to do it — and its teacher is the <b>same ground-truth-free audit</b> that scores each road's confidence: the honesty check that grades the roads is the reward that trains the swarm. No answer key is used: not for the confidence, not for the training.</p>
   <p class="small"><b>Left:</b> the real city, changing. <b>Middle:</b> what the swarm believes, agents at work. <b>Right:</b> that belief graded, <span style="color:#e8483f">red</span> where wrong. The world keeps changing, so the goal isn't a perfect map — it's staying accurate as it shifts. The trained swarm holds a more accurate map than a greedy or random driver:</p>
   <div class="bars"><canvas id="iouchart"></canvas></div>
   <p class="small">Map accuracy (IoU) of a changing city, higher is better. Simulation, seed 10000, pre-registered. A research result and the far edge of the vision — not a driver replacement today. The shippable half is the confidence layer above.</p>
@@ -191,6 +193,18 @@
   <div class="hint">drag to orbit · scroll to zoom</div>
   <div id="fallback">This 3D view needs WebGL. Try a desktop browser.<br>The story above explains the whole idea.</div>
 </section>
+
+<div class="story-wrap">
+<section class="story" id="closing">
+  <div class="eyebrow">Built this hackathon</div>
+  <h2>Two contributions, one loop.</h2>
+  <p><b>1.</b> A self-supervised confidence layer, running on 2,531 real Massillon segments — calibrated, no ground truth, shippable now. <b>2.</b> A heterogeneous multi-agent swarm trained on that same audit signal — the research edge of where it goes.</p>
+  <p>The confidence layer is the data spine for <b>Time&nbsp;Machine</b>: the deterioration models forecast the curve, confidence says where the curve can't be trusted, and the targeted rescan closes the loop. Ten Year-2 rescans land in the next 120 days, six pre-renewal, and <b>Atlanta wants monthly</b> — every one of them could ship with a defensible number attached.</p>
+  <p class="small">And pavement is just the first layer. The same no-answer-key audit applies to anything we score — signs, sidewalks, ADA ramps. <b>Confidence on everything.</b></p>
+  <p class="srcline">Timing: <a href="https://app.notion.com/p/3a5b7cd936868037b74efe87c9135eaa">Framing: Time Machine, Jul 2026</a> (Atlanta monthly; 10 second scans in 120 days). Deterioration bridge: roadgnar/deterioration-modeling (semi-Markov, Gate-2) + the shipped PMP curve.</p>
+  <div class="cue"><a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="text-decoration:none">↑ back to the story</a></div>
+</section>
+</div>
 
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
@@ -346,6 +360,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     const dd=d.filter(p=>typeof p.d==='number').map(p=>({c:p.c,a:Math.abs(Math.max(0,Math.min(100,p.s+p.d))-det(p.s,1))}));
     const B=[[0,.2],[.2,.4],[.4,.6],[.6,.8],[.8,1.01]];
     bars=B.map(([lo,hi])=>{ const g=dd.filter(p=>p.c>=lo&&p.c<hi); return {lo,hi,mid:(lo+Math.min(hi,1))/2,m:g.length?g.reduce((s,p)=>s+p.a,0)/g.length:0}; });
+    // Pearson corr(confidence, |deviation|), computed from the same array the bars use
+    const n=dd.length,mc=dd.reduce((s,p)=>s+p.c,0)/n,ma=dd.reduce((s,p)=>s+p.a,0)/n;
+    const cov=dd.reduce((s,p)=>s+(p.c-mc)*(p.a-ma),0),sd=Math.sqrt(dd.reduce((s,p)=>s+(p.c-mc)**2,0)*dd.reduce((s,p)=>s+(p.a-ma)**2,0));
+    const ce=document.getElementById('confcorr'); if(ce&&sd>0) ce.textContent=(cov/sd).toFixed(2).replace('-','−');
     draw();
   }).catch(()=>{});
   function draw(){ if(!bars)return; const dpr=Math.min(devicePixelRatio||1,2),w=cv.clientWidth,h=cv.clientHeight; if(!w||!h)return;
@@ -357,7 +375,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
       ctx.fillStyle='#fff'; ctx.font='700 13px ui-monospace,Menlo,monospace'; ctx.fillText(b.m.toFixed(1),x+bw/2,y-7);
       ctx.fillStyle='#cfcfcf'; ctx.font='11px ui-monospace,Menlo,monospace'; ctx.fillText((b.lo*100|0)+'–'+(Math.min(b.hi,1)*100|0),x+bw/2,padT+gh+16); });
     ctx.fillStyle='#8a8a86'; ctx.font='11px ui-monospace,Menlo,monospace';
-    ctx.fillText('confidence percentile (low → high)   ·   bar height = avg PCI deviation from the prediction',w/2,padT+gh+34);
+    ctx.fillText('confidence (binned 0–100, low → high)   ·   bar height = avg PCI deviation from the prediction',w/2,padT+gh+34);
   }
   addEventListener('resize',draw);
   const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) draw(); }),{threshold:0.2}); io.observe(cv);
@@ -429,14 +447,21 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     pci:'PCI score, this year\'s scan, on the real Massillon street grid. Red is failing pavement, green is good. Source: Massillon, OH production data (2,531 segments).',
     conf:'Self-supervised confidence for those scores — no hand-measured ground truth. Red = least likely to still be true next year. Predicts change, not a same-scan mistake.',
     gt:'The following year\'s actual scan — the ground truth. Grey = not re-scanned. Hold it against the confidence map: the flagged roads are where the two years disagree.',
-    model:'Actual next-year PCI minus Cyvl\'s shipped deterioration curve (piecewise-linear, Residential rates). Measured after the rescan — the retrospective twin of the forward Confidence layer.'
+    model:'Actual next-year PCI minus Cyvl\'s shipped deterioration curve (piecewise-linear, Residential rates). Measured after the rescan — the retrospective twin of the forward Confidence layer. Cutoffs are asymmetric (−5 / +8) because upward moves need a higher bar: a genuine treatment lifts a road far more than scan noise does.'
   };
-  function stats(){ const cpct=Math.round(100*pts.filter(p=>p.c<0.5).length/pts.length);
+  // all headline numbers derived live from the loaded points, so they can never drift from the map
+  function stats(){ const N=pts.length, fmt=n=>n.toLocaleString('en-US');
+    const cpct=Math.round(100*pts.filter(p=>p.c<0.5).length/N);
+    const healthy=pts.filter(p=>p.s>=70).length;
+    const resc=pts.filter(p=>typeof p.d==='number');
+    const withRes=resc.filter(p=>p._res!=null);
+    const fell=Math.round(100*withRes.filter(p=>p._res<-5).length/withRes.length);
+    const beat=Math.round(100*withRes.filter(p=>p._res>8).length/withRes.length);
     return {
-      pci:'<b>2,531</b> segments scored. <b>1,356</b> look healthy (PCI ≥ 70). A council sees a mostly-green map and assumes the network is fine.',
+      pci:'<b>'+fmt(N)+'</b> segments scored. <b>'+fmt(healthy)+'</b> look healthy (PCI ≥ 70). A council sees a mostly-green map and assumes the network is fine.',
       conf:'Built from the scan you already paid for. <b>'+cpct+'%</b> of segments are flagged as least likely to survive the next scan (confidence &lt; 0.5), including roads whose score looks perfectly good.',
-      gt:'What actually happened next: <b>1,215</b> segments were re-scanned. The confidence flags land on the movers — <b>AUC 0.71</b> for predicting a ≥15-point shift a year ahead.',
-      model:'Against Cyvl\'s shipped deterioration curve: <b>37%</b> of segments fell faster than the model predicted — the hidden-failure signal (subsurface, trucks, utilities). <b>33%</b> beat the model — visible treatment activity. Confidence flags these a year before the rescan confirms them.'
+      gt:'What actually happened next: <b>'+fmt(resc.length)+'</b> segments were re-scanned. The confidence flags land on the movers — a flagged road outranks a stable one about <b>7 times in 10</b> (AUC 0.71 cross-model; 0.656 this layer alone) for a ≥15-point shift a year ahead.',
+      model:'Against Cyvl\'s shipped deterioration curve: <b>'+fell+'%</b> of segments fell faster than the model predicted — the hidden-failure signal (subsurface, trucks, utilities). <b>'+beat+'%</b> beat the model — visible treatment activity. Confidence flags these a year before the rescan confirms them.'
     }; }
   // Cyvl's shipped PMP deterioration curve (piecewise-linear, Residential rate table; apps/pmp-backend/src/app/deterioration)
   const RES=[[0,50,4.0],[50,70,3.0],[70,85,2.0],[85,100,1.0]];
